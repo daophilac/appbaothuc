@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     public void testPlayingMusic(View view){
         PermissionInquirer.askStoragePermission(this);
         musicPlayer.release();
-        musicPlayer = MediaPlayer.create(this, R.raw.kodoku_na_junrei);
+        musicPlayer = MediaPlayer.create(this, R.raw.boss_battle_a);
         musicPlayer.setLooping(true);
         musicPlayer.start();
     }

@@ -83,7 +83,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                     time.setTimeInMillis(System.currentTimeMillis());
                     time.add(Calendar.SECOND, 5);
                     alarmManager.set(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), pendingIntent);
-                    Toast.makeText(context, "Start Alarm", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Start alarm after 5 seconds", Toast.LENGTH_LONG).show();
                 }
             });
             // TODO:...
