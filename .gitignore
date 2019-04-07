@@ -2,7 +2,8 @@
 .idea
 .gradle
 /build/generated
-/Project/AppBaoThuc/app/build/intermediates
+
+*/build/intermediates
 /build/tmp
 /build/outputs/bundle
 /build/outputs/logs
