@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_snooze"
+        android:src="@drawable/ic_volume_off"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_ok"
+        android:text="OK"
+        app:layout_constraintTop_toBottomOf="@id/button_snooze"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_cancel"
+        android:text="Cancel"
+        app:layout_constraintTop_toBottomOf="@id/button_snooze"
+        app:layout_constraintEnd_toStartOf="@id/button_ok"/>
+</android.support.constraint.ConstraintLayout>
