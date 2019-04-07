@@ -1,4 +1,4 @@
-# AppBaoThuc Prototype phase v0.0.1
+# AppBaoThuc Prototype phase v0.0.2
 
 # Core features, from the system perspective
 1. Navigate between main activities and fragments.
@@ -6,3 +6,6 @@
 3. Play a particular music given a specific file path.
 4. Play a particular music given a specific file path at a specific time.
 5. Get all possible music file paths.
+
+# Demo
+https://drive.google.com/open?id=1QrrsuwkIume1qTo1WlWCHahayYu1QrAW
