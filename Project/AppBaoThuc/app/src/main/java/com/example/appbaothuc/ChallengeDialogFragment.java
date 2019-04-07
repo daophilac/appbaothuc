@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +19,22 @@ import android.widget.Toast;
 
 
 // TODO: WARNING: This class has some high logical handles
-public class ChallengeDialogFragment extends DialogFragment {
+enum ChallengeType{
+    Math, Shake, Qrcode
+}
+public class ChallengeDialogFragment extends DialogFragment implements MathChallengeFragment.OnFinishChallengeListener{
     private MediaPlayer mediaPlayer;
     private String musicFilePath = "/sdcard/download/boss battle a.flac"; //TODO: Hard-coded
+    private ChallengeType challengeType = ChallengeType.Math; // TODO: Hard-coded
     private boolean graduallyIncreaseVolume = true; //TODO: Hard-coded
     private boolean maxVolume = true; //TODO: Hard-coded
     private int snoozeTime = 5; //TODO: Hard-coded
     private ImageButton buttonSnooze;
     private Button buttonOk;
     private Button buttonCancel;
+
+    private FragmentManager fragmentManager;
+    private MathChallengeFragment mathChallengeFragment;
 
     // flags for communication with background threads
     private boolean isDismissed = false;
@@ -43,7 +52,17 @@ public class ChallengeDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_challenge_dialog, container, false);
+        View view = inflater.inflate(R.layout.fragment_challenge_dialog, container, false);
+        fragmentManager = getChildFragmentManager();
+        switch(challengeType){
+            case Math:
+                mathChallengeFragment = new MathChallengeFragment();
+                fragmentManager.beginTransaction().replace(R.id.challenge_fragment_container, mathChallengeFragment).commit();
+                break;
+            default:
+                break;
+        }
+        return view;
     }
 
     @Override
@@ -65,28 +84,6 @@ public class ChallengeDialogFragment extends DialogFragment {
                 else{
                     snoozeAgain = true;
                 }
-            }
-        });
-        buttonOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AlarmService.class);
-                getActivity().stopService(intent);
-                isDismissed = true;
-                mediaPlayer.release();
-                getDialog().dismiss();
-                getActivity().finish();
-            }
-        });
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AlarmService.class);
-                getActivity().stopService(intent);
-                isDismissed = true;
-                mediaPlayer.release();
-                getDialog().dismiss();
-                getActivity().finish();
             }
         });
 
@@ -155,5 +152,31 @@ public class ChallengeDialogFragment extends DialogFragment {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onFinishChallenge() {
+        buttonOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), AlarmService.class);
+                getActivity().stopService(intent);
+                isDismissed = true;
+                mediaPlayer.release();
+                getDialog().dismiss();
+                getActivity().finish();
+            }
+        });
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), AlarmService.class);
+                getActivity().stopService(intent);
+                isDismissed = true;
+                mediaPlayer.release();
+                getDialog().dismiss();
+                getActivity().finish();
+            }
+        });
     }
 }
