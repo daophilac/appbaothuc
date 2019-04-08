@@ -36,6 +36,7 @@ public class UpcomingAlarmFragment extends Fragment {
         return view;
     }
     public void addAlarm(View view){
+        // Khi người dùng bấm vào nút thêm alarm
         Alarm alarm = new Alarm(5,0,0,true);
         listAlarm.add(alarm);
         alarmAdapter.notifyItemInserted(listAlarm.size() - 1);
