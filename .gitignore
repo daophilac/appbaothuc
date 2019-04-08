@@ -6,4 +6,4 @@
 **/build/tmp
 **/outputs/bundle
 **/outputs/logs
-output.json
+/output.json
