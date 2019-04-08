@@ -1,4 +1,8 @@
 #Android
 .idea
 .gradle
-build
+**/build/generated
+**/build/intermediates
+**/build/tmp
+**/outputs/bundle
+**/outputs/logs
