@@ -1,7 +1,5 @@
 package com.example.appbaothuc;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -11,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.Calendar;
+import com.example.appbaothuc.services.NotificationService;
+
 import java.util.List;
 
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
@@ -76,14 +74,8 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
             textViewHour.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                    Intent intent = new Intent(context.getApplicationContext(), AlarmService.class);
-                    PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent , 0);
-                    Calendar time = Calendar.getInstance();
-                    time.setTimeInMillis(System.currentTimeMillis());
-                    time.add(Calendar.SECOND, 5);
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), pendingIntent);
-                    Toast.makeText(context, "Start alarm after 5 seconds", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(context.getApplicationContext(), NotificationService.class);
+                    context.startService(intent);
                 }
             });
             // TODO:...

@@ -8,14 +8,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import com.example.appbaothuc.services.AlarmService;
 
 
 // TODO: WARNING: This class has some high logical handles
@@ -91,12 +93,11 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
 
 
         if(maxVolume){
-            AudioManager am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
-
-            am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
+            AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
         }
         mediaPlayer = MediaPlayer.create(getContext(), R.raw.boss_battle_a); //TODO
-        mediaPlayer.setLooping(true);
+        mediaPlayer.setLooping(false);
         if(!graduallyIncreaseVolume){
             mediaPlayer.start();
         }
@@ -117,6 +118,8 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
                             mediaPlayer.setVolume(i / 1000,i / 1000);
                             Thread.sleep(10);
                         } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch(IllegalStateException e){
                             e.printStackTrace();
                         }
                     }
@@ -150,6 +153,8 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
                     Thread.sleep(10);
                 }
             } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch(IllegalStateException e){
                 e.printStackTrace();
             }
         }

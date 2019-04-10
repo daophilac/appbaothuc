@@ -22,7 +22,7 @@ enum Difficulty{
 }
 public class MathChallengeFragment extends Fragment {
     private Difficulty difficulty = Difficulty.Easy; // TODO: Hard-coded
-    private int numberOfCalculation = 2; // TODO: Hard-coded
+    private int numberOfCalculation = 1; // TODO: Hard-coded
     private int numberOfDoneCalculation = 0;
     private List<String> listCalculation;
     private List<Integer> listResult;
