@@ -1,4 +1,4 @@
-# AppBaoThuc Prototype phase v0.0.2
+# AppBaoThuc Prototype phase v0.0.4
 
 # Core features, from the system perspective
 1. Navigate between main activities and fragments.
