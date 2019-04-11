@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.appbaothuc.services.AlarmService;
+import com.example.appbaothuc.services.ServiceCreator;
 
 
 // TODO: WARNING: This class has some high logical handles
@@ -171,6 +172,7 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
                 mediaPlayer.release();
                 getDialog().dismiss();
                 getActivity().finish();
+                ServiceCreator.enqueueWork(getContext(), new Intent());
             }
         });
         buttonCancel.setOnClickListener(new View.OnClickListener() {
@@ -181,6 +183,7 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
                 isDismissed = true;
                 mediaPlayer.release();
                 getDialog().dismiss();
+
                 getActivity().finish();
             }
         });

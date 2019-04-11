@@ -25,12 +25,14 @@
         <activity android:name=".SettingAlarmActivity"/>
         <service android:name=".services.AlarmService" />
         <service android:name=".services.NotificationService"/>
-        <service android:name=".services.ServiceReviver"
+        <service android:name=".services.ServiceCreator"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
-        <receiver android:name=".services.BootReceiver">
+        <receiver android:name=".services.ActionReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE"/>
+                <action android:name="android.intent.action.TIME_SET"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
             </intent-filter>
         </receiver>
     </application>

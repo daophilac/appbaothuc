@@ -18,6 +18,7 @@ import com.example.appbaothuc.DatabaseHandler;
 import com.example.appbaothuc.R;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class NotificationService extends Service {
     private static final int NOTIFICATION_ID = 1;
@@ -32,23 +33,34 @@ public class NotificationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         databaseHandler = new DatabaseHandler(this);
-        String nextAlarm = databaseHandler.getNextAlarmFromNow();
-        if(nextAlarm != null){
-            String[] alarmContent = nextAlarm.split(",");
+        if(databaseHandler.checkIfThereIsAnyAlarm()){
+            HashMap<String, String> alarmProperty = databaseHandler.getTheNearestAlarm();
             Calendar timeNow = Calendar.getInstance();
             Calendar timeFuture = Calendar.getInstance();
             Calendar timeDelta = Calendar.getInstance();
-            timeFuture.set(Calendar.HOUR_OF_DAY, Integer.parseInt(alarmContent[1]));
-            timeFuture.set(Calendar.MINUTE, Integer.parseInt(alarmContent[2]));
+            timeFuture.set(Calendar.DAY_OF_WEEK, Integer.parseInt(alarmProperty.get("DayOfWeek")));
+            timeFuture.set(Calendar.HOUR_OF_DAY, Integer.parseInt(alarmProperty.get("Hour")));
+            timeFuture.set(Calendar.MINUTE, Integer.parseInt(alarmProperty.get("Minute")));
             timeFuture.set(Calendar.SECOND, 0);
-            long deltaInMillisecond = timeFuture.getTimeInMillis() - timeNow.getTimeInMillis();
+            long deltaInMillisecond = Math.abs(timeFuture.getTimeInMillis() - timeNow.getTimeInMillis());
             timeDelta.setTimeInMillis(timeNow.getTimeInMillis() + deltaInMillisecond);
-
             AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
             Intent alarmServiceIntent = new Intent(this.getApplicationContext(), AlarmService.class);
             PendingIntent pendingIntent = PendingIntent.getService(this, 0, alarmServiceIntent, 0);
             alarmManager.set(AlarmManager.RTC_WAKEUP, timeDelta.getTimeInMillis(), pendingIntent);
-            Toast.makeText(this, "Set alarm for " + alarmContent[0] + ", at " + alarmContent[1] + ":" + alarmContent[2], Toast.LENGTH_LONG).show();
+
+
+
+            String nextAlarmTextDayOfWeek = databaseHandler.getDayOfWeekInString(timeFuture.get(Calendar.DAY_OF_WEEK));
+            String nextAlarmTextTime;
+            if(Integer.parseInt(alarmProperty.get("Minute")) < 10){
+                nextAlarmTextTime = alarmProperty.get("Hour") + ":0" + alarmProperty.get("Minute");
+            }
+            else{
+                nextAlarmTextTime = alarmProperty.get("Hour") + ":" + alarmProperty.get("Minute");
+            }
+            String nextAlarmText = nextAlarmTextDayOfWeek + " " + nextAlarmTextTime;
+
 
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -61,7 +73,7 @@ public class NotificationService extends Service {
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
                 Notification notification = notificationBuilder.setOngoing(true)
                         .setSmallIcon(R.drawable.ic_add) // TODO
-                        .setContentTitle("Báo thức vào lúc:") // TODO
+                        .setContentTitle("[Next Alarm] " + nextAlarmText) // TODO
                         .setPriority(NotificationManager.IMPORTANCE_MIN)
                         .setCategory(Notification.CATEGORY_SERVICE)
                         .build();
@@ -72,11 +84,12 @@ public class NotificationService extends Service {
                         .setOngoing(true)
                         .setSmallIcon(R.drawable.ic_add)
                         .setContentTitle(getString(R.string.app_name))
-                        .setContentText("Báo thức vào lúc:")
+                        .setContentText("[Next Alarm] " + nextAlarmText)
                         .setContentIntent(pendingIntent)
                         .build();
                 startForeground(NOTIFICATION_ID, notification);
             }
+            Toast.makeText(this, "Set alarm at " + nextAlarmText, Toast.LENGTH_LONG).show();
         }
         return super.onStartCommand(intent, flags, startId);
     }
