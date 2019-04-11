@@ -19,7 +19,7 @@ public class BootReceiver extends BroadcastReceiver {
         //ExternalFileWriter externalFileWriter = new ExternalFileWriter("/sdcard","test.txt", (Activity)context);
         //externalFileWriter.write("it can", false);
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-            ServiceRestarter.enqueueWork(context, new Intent());
+            ServiceReviver.enqueueWork(context, new Intent());
         }
     }
 }

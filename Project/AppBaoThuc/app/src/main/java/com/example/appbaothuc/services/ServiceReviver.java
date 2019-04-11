@@ -6,10 +6,10 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 
-public class ServiceRestarter extends JobIntentService {
+public class ServiceReviver extends JobIntentService {
     private static final int JOB_ID = 0x01;
     public static void enqueueWork(Context context, Intent work) {
-        enqueueWork(context, ServiceRestarter.class, JOB_ID, work);
+        enqueueWork(context, ServiceReviver.class, JOB_ID, work);
     }
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
