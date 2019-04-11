@@ -6,6 +6,7 @@
 3. Play a particular music given a specific file path.
 4. Play a particular music given a specific file path at a specific time.
 5. Get all possible music file paths.
+6. The app now can make a pending alarm even after the phone reboots.
 
 # Demo
 https://drive.google.com/open?id=1QrrsuwkIume1qTo1WlWCHahayYu1QrAW
