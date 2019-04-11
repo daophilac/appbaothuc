@@ -7,7 +7,7 @@
 4. Play a particular music given a specific file path at a specific time.
 5. Get all possible music file paths.
 6. Re-create the next alarm after the phone reboots.
-7. Automatically set the next alarm after the user dismiss current alarm.
+7. Automatically set the next alarm after the user dismisses current alarm.
 8. Automatically set the next alarm in the exact order even when the user reboots, changes the system time or time zone.
 
 # Demo
