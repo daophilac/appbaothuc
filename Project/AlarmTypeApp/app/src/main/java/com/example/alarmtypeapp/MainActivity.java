@@ -41,19 +41,15 @@ public class MainActivity extends AppCompatActivity implements LableDialogFragme
     private Switch aSwitch; // bật tắt rung
 
     public static YourRingTone yourRingTone;
-    public static String outputLabel, outputAgaint, outputRepeat;
-    public static Integer outputHour, outputMinute;
-    public static ArrayList<Boolean> listRepeatDay;
+    public static String label, outputAgaint, outputRepeat;
+    public static Integer hour, minute, vibrate, snoozeTime, volumn;
+    public static ArrayList<Integer> listRepeatDay;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        //set up full screen
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
         setControll();
@@ -96,12 +92,14 @@ public class MainActivity extends AppCompatActivity implements LableDialogFragme
             @Override
             public void onClick(View view) {
                 outputAgaint = textViewAgain.getText().toString();
-                outputLabel = textViewLabel.getText().toString();
-                outputHour = timePicker.getHour();
-                outputMinute = timePicker.getMinute();
-
-                String tst = outputLabel + " _ " + outputAgaint + " _ "
-                        + outputHour + " _ " + outputMinute;
+                label = textViewLabel.getText().toString();
+                hour = timePicker.getHour();
+                minute = timePicker.getMinute();
+                volumn = seekBar.getProgress();
+                if(aSwitch.isChecked()) vibrate = 1;
+                else vibrate = 0;
+                String tst = label + " _ " + outputAgaint + " _ "
+                        + hour + " _ " + minute;
 
                 Toast.makeText(MainActivity.this, tst, Toast.LENGTH_SHORT).show();
             }
@@ -196,8 +194,10 @@ public class MainActivity extends AppCompatActivity implements LableDialogFragme
         againDialogFragment.show(getSupportFragmentManager(), "fragment_choice");
     }
     @Override
-    public void onFinishChoiceDialog(String input) {
-        textViewAgain.setText(input);
+    public void onFinishChoiceDialog(Integer input) {
+        snoozeTime = input;
+        if(input == 0) textViewAgain.setText("Tắt");
+        else textViewAgain.setText(input + " Phút.");
     }
 
     private void showRepeatDialog() { // fragment chọn các ngày báo thức
@@ -206,20 +206,20 @@ public class MainActivity extends AppCompatActivity implements LableDialogFragme
         repeatDialogFragment.show(getSupportFragmentManager(), "fragment_repeat");
     }
     @Override
-    public void onFinishCheckDialog(ArrayList<Boolean> input) {
+    public void onFinishCheckDialog(ArrayList<Integer> input) {
         listRepeatDay = new ArrayList<>();
         for(int i = 0; i < 7; i++){
-            listRepeatDay.add(i, false);
+            listRepeatDay.add(i, 0);
             listRepeatDay.set(i, input.get(i));
         }
         createStringRepeat(input);
     }
 
-    public void createStringRepeat(ArrayList<Boolean> listDays){
+    public void createStringRepeat(ArrayList<Integer> listDays){
         String repeatString = "";
         int i = 0;
         for(i = 0; i < 7; i++){
-            if(listDays.get(i) == false) break;
+            if(listDays.get(i) == 0) break;
         }
         if(i == 7) {
             outputRepeat = "Hằng ngày.";
@@ -233,16 +233,16 @@ public class MainActivity extends AppCompatActivity implements LableDialogFragme
         }
         i = 0;
         for(i = 0; i < 5; i++){
-            if(listDays.get(i) == true) break;
+            if(listDays.get(i) == 1) break;
         }
-        if(i == 5 && listDays.get(5) == true && listDays.get(6) == true ){
+        if(i == 5 && listDays.get(5) == 1 && listDays.get(6) == 1 ){
             outputRepeat = "Cuối tuần.";
             textViewRepeat.setText(outputRepeat);
             return;
         }
         else {
             for(int j = 0; j < 7; j++){
-                if(listDays.get(j) == true){
+                if(listDays.get(j) == 1){
                     if(j == 6) repeatString += " CN";
                     else repeatString += " T" + (j+2);
                 }

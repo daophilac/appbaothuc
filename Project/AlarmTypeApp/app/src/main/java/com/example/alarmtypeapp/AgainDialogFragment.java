@@ -16,7 +16,7 @@ public class AgainDialogFragment extends DialogFragment {
     private RadioGroup radioGroupAgain;
 
     public interface AgainDialogListener{
-        void onFinishChoiceDialog(String input);
+        void onFinishChoiceDialog(Integer input);
     }
     private AgainDialogListener listener;
     public AgainDialogFragment() {
@@ -39,7 +39,11 @@ public class AgainDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 int selectedId = radioGroupAgain.getCheckedRadioButtonId(); //get text on RadioButton checked
                 RadioButton radioButton = viewDialog.findViewById(selectedId);
-                listener.onFinishChoiceDialog(radioButton.getText().toString());
+                Integer index = radioGroupAgain.indexOfChild(radioButton), input;
+                if(index == 0) input = 0;
+                else if(index == 1) input = 1;
+                else input = (index - 1) * 5;
+                 listener.onFinishChoiceDialog(input);
                 getDialog().dismiss();
             }
         });
