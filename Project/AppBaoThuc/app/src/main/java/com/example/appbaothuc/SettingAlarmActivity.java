@@ -46,7 +46,6 @@ public class SettingAlarmActivity extends AppCompatActivity implements LableDial
     public static ArrayList<Integer> listRepeatDay;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
