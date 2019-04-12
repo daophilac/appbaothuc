@@ -3,6 +3,7 @@ package com.example.alarmtypeapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -72,6 +73,20 @@ public class TypeActivity extends AppCompatActivity {
                 Intent intent = new Intent(TypeActivity.this, TypePlayShakeActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
+            }
+        });
+        imageButtonMath.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(TypeActivity.this, TypePlayMathActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+            }
+        });
+        imageButtonQRCode.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.v("hihi", "haha");
             }
         });
     }
