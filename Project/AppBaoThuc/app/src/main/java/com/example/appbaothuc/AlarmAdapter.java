@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.example.appbaothuc.alarmsetting.SettingAlarmActivity;
 import com.example.appbaothuc.services.NotificationService;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
     }
     public void openAlarmSetting(View v){
         Intent intent = new Intent(context, SettingAlarmActivity.class);
+        intent.putExtra("idAlarm", 99); //TODO:
         context.startActivity(intent);
     }
     @NonNull
@@ -60,6 +62,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
+        //public int idAlarm = 99;// TODO
         private CheckBox checkBoxEnable;
         private TextView textViewHour;
         private TextView textViewMinute;

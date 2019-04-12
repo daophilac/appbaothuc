@@ -36,7 +36,7 @@
         <activity android:name=".alarmsetting.TypePlayCameraActivity" />
         <activity android:name=".alarmsetting.TypePlayDefaultActivity" />
         <activity android:name=".alarmsetting.TypeActivity" />
-        <activity android:name=".SettingAlarmActivity"/>
+        <activity android:name=".alarmsetting.SettingAlarmActivity"/>
         <service android:name=".services.AlarmService" />
         <service android:name=".services.NotificationService"/>
         <service android:name=".services.ServiceCreator"

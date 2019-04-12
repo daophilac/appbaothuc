@@ -55,8 +55,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         listAlarmColumn.add("RingtoneURL");
         listAlarmColumn.add("RingtoneName");
         listAlarmColumn.add("Label");
-        listAlarmColumn.add("CanSnooze");
-        listAlarmColumn.add("SnoozeTime");
+        listAlarmColumn.add("CanSnooze"); //////////////////////////////
+        listAlarmColumn.add("SnoozeTime"); //////////////////////////////
         listAlarmColumn.add("SnoozeIn");
         listAlarmColumn.add("Vibrate");
         listAlarmColumn.add("MaxVolume");

@@ -10,7 +10,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.example.appbaothuc.R;
-import com.example.appbaothuc.SettingAlarmActivity;
 
 public class TypeActivity extends AppCompatActivity {
     private Button btnCancel, btnOK;

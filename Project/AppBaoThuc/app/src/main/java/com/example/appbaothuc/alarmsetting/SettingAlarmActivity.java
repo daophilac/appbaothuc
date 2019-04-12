@@ -1,4 +1,4 @@
-package com.example.appbaothuc;
+package com.example.appbaothuc.alarmsetting;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,11 +21,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.appbaothuc.alarmsetting.AgainDialogFragment;
-import com.example.appbaothuc.alarmsetting.LableDialogFragment;
-import com.example.appbaothuc.alarmsetting.RepeatDialogFragment;
-import com.example.appbaothuc.alarmsetting.TypeActivity;
-import com.example.appbaothuc.alarmsetting.YourRingTone;
+import com.example.appbaothuc.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +29,7 @@ import java.util.Map;
 
 public class SettingAlarmActivity extends AppCompatActivity implements LableDialogFragment.LabelDialogListener,
         AgainDialogFragment.AgainDialogListener, RepeatDialogFragment.RepeatDialogListener, View.OnClickListener {
-
+    private int idAlarm;
     private TimePicker timePicker; // Chọn giờ
     private Button btnPlayMusic, btnCancel, btnDelete, btnOk; //Phát nhạc đang chọn, Hủy thao tác, Xóa báo thức, Hoàn tất
     private LinearLayout linearLayoutLabel, linearLayoutType, linearLayoutRingTone,
@@ -48,15 +44,16 @@ public class SettingAlarmActivity extends AppCompatActivity implements LableDial
 
     public static YourRingTone yourRingTone;
     public static String label, outputAgaint, outputRepeat;
-    public static Integer hour, minute, vibrate, snoozeTime, volumn;
+    public static Integer hour, minute, vibrate, snoozeTime, volume;
     public static ArrayList<Integer> listRepeatDay;
+    public static Integer challengeType; // chua co
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_alarm);
-
+        idAlarm = getIntent().getExtras().getInt("idAlarm");
         setControll();
     }
     void setControll(){
@@ -100,7 +97,7 @@ public class SettingAlarmActivity extends AppCompatActivity implements LableDial
                 label = textViewLabel.getText().toString();
                 hour = timePicker.getHour();
                 minute = timePicker.getMinute();
-                volumn = seekBar.getProgress();
+                volume = seekBar.getProgress();
                 if(aSwitch.isChecked()) vibrate = 1;
                 else vibrate = 0;
                 String tst = label + " _ " + outputAgaint + " _ "
@@ -312,7 +309,13 @@ public class SettingAlarmActivity extends AppCompatActivity implements LableDial
         return list;
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
 
+        int test = idAlarm;
+        //databaseHandler.updateAlarm(idAlarm, bla, bla, bla) //TODO
+    }
 }
 
 class PlayAudioManager {
