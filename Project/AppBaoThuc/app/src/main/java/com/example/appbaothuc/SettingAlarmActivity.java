@@ -21,6 +21,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.appbaothuc.alarmsetting.AgainDialogFragment;
+import com.example.appbaothuc.alarmsetting.LableDialogFragment;
+import com.example.appbaothuc.alarmsetting.RepeatDialogFragment;
+import com.example.appbaothuc.alarmsetting.TypeActivity;
+import com.example.appbaothuc.alarmsetting.YourRingTone;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
