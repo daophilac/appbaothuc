@@ -31,11 +31,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-<activity android:name=".TypePlayMathActivity"></activity>
-        <activity android:name=".TypePlayShakeActivity" />
-        <activity android:name=".TypePlayCameraActivity" />
-        <activity android:name=".TypePlayDefaultActivity" />
-        <activity android:name=".TypeActivity" />
+<activity android:name=".alarmsetting.TypePlayMathActivity"></activity>
+        <activity android:name=".alarmsetting.TypePlayShakeActivity" />
+        <activity android:name=".alarmsetting.TypePlayCameraActivity" />
+        <activity android:name=".alarmsetting.TypePlayDefaultActivity" />
+        <activity android:name=".alarmsetting.TypeActivity" />
         <activity android:name=".SettingAlarmActivity"/>
         <service android:name=".services.AlarmService" />
         <service android:name=".services.NotificationService"/>

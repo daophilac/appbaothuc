@@ -1,4 +1,4 @@
-package com.example.appbaothuc;
+package com.example.appbaothuc.alarmsetting;
 
 import android.app.WallpaperManager;
 import android.graphics.drawable.Drawable;
@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.example.appbaothuc.R;
 
 public class TypePlayDefaultActivity extends AppCompatActivity {
 

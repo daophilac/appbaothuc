@@ -1,4 +1,4 @@
-package com.example.appbaothuc;
+package com.example.appbaothuc.alarmsetting;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
+import com.example.appbaothuc.R;
 
 public class AgainDialogFragment extends DialogFragment {
     private Button btnOK, btnCancel;

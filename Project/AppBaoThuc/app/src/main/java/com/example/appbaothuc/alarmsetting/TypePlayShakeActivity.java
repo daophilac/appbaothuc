@@ -1,4 +1,4 @@
-package com.example.appbaothuc;
+package com.example.appbaothuc.alarmsetting;
 
 import android.app.WallpaperManager;
 import android.graphics.drawable.Drawable;
@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+
+import com.example.appbaothuc.R;
 
 public class TypePlayShakeActivity extends AppCompatActivity {
 

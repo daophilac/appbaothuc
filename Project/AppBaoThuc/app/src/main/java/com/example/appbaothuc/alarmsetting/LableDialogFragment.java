@@ -1,4 +1,4 @@
-package com.example.appbaothuc;
+package com.example.appbaothuc.alarmsetting;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.example.appbaothuc.R;
 
 public class LableDialogFragment extends DialogFragment {
     private Button btnOk;
