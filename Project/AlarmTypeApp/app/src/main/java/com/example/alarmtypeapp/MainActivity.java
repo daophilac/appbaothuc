@@ -1,53 +1,59 @@
 package com.example.alarmtypeapp;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.support.v4.app.DialogFragment;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements LableDialogFragment.EditNameDialogListener {
-    @Override
-    public void onFinishEditDialog(String inputText) {
-        textViewLabel.setText(inputText);
-    }
+public class MainActivity extends AppCompatActivity implements LableDialogFragment.LabelDialogListener,
+        AgainDialogFragment.AgainDialogListener, RepeatDialogFragment.RepeatDialogListener, View.OnClickListener {
 
-    private TimePicker timePicker;
-    private Button btnPlayMusic, btnCancel, btnDelete, btnOk;
+    private TimePicker timePicker; // Chọn giờ
+    private Button btnPlayMusic, btnCancel, btnDelete, btnOk; //Phát nhạc đang chọn, Hủy thao tác, Xóa báo thức, Hoàn tất
     private LinearLayout linearLayoutLabel, linearLayoutType, linearLayoutRingTone,
             linearLayoutRepeat, linearLayoutAgain;
-    public TextView textViewTimeLeft, textViewPlus10M, textViewMinus10M, textViewPlus1H,
-            textViewMinus1H, textViewType, textViewRepeat, textViewRingTone, textViewAgain,
-            textViewLabel;
-    private ImageView imageViewType;
-    private SeekBar seekBar;
-    private Switch aSwitch;
-    public EditText txt_your_name;
-    public static YourRingTone yourRingTone;
+    private  TextView textViewPlus10M, textViewMinus10M, textViewPlus1H,
+            textViewMinus1H;
+    public TextView textViewTimeLeft /*thời gian còn lại*/, textViewType, textViewRepeat,
+            textViewRingTone, textViewAgain, textViewLabel;
+    private ImageView imageViewType; //cái hình điện thoại rung
+    private SeekBar seekBar; // thanh âm lượng
+    private Switch aSwitch; // bật tắt rung
 
-    public static String stringLabel, stringAgaint;
-    public TextView textViewLabelString;
+    public static YourRingTone yourRingTone;
+    public static String outputLabel, outputAgaint, outputRepeat;
+    public static Integer outputHour, outputMinute;
+    public static ArrayList<Boolean> listRepeatDay;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        //set up full screen
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
         setControll();
@@ -57,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements LableDialogFragme
         btnCancel = findViewById(R.id.btnCancel);
         btnDelete = findViewById(R.id.btnDelete);
         btnOk = findViewById(R.id.btnOk);
-        txt_your_name = findViewById(R.id.txt_your_name);
         linearLayoutType = findViewById(R.id.linearLayoutType);
         linearLayoutRingTone = findViewById(R.id.linearLayoutRingTone);
         linearLayoutRepeat = findViewById(R.id.linearLayoutRepeat);
@@ -81,8 +86,40 @@ public class MainActivity extends AppCompatActivity implements LableDialogFragme
         timePicker = findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
 
-       // textViewLabelString = findViewById(R.id.txt_your_name);
+        textViewMinus1H.setOnClickListener(this); // event trong hàm onClick()
+        textViewMinus10M.setOnClickListener(this);
+        textViewPlus1H.setOnClickListener(this);
+        textViewPlus10M.setOnClickListener(this);
 
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                outputAgaint = textViewAgain.getText().toString();
+                outputLabel = textViewLabel.getText().toString();
+                outputHour = timePicker.getHour();
+                outputMinute = timePicker.getMinute();
+
+                String tst = outputLabel + " _ " + outputAgaint + " _ "
+                        + outputHour + " _ " + outputMinute;
+
+                Toast.makeText(MainActivity.this, tst, Toast.LENGTH_SHORT).show();
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        linearLayoutType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, TypeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+            }
+        });
         linearLayoutLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,24 +133,125 @@ public class MainActivity extends AppCompatActivity implements LableDialogFragme
                 showAgainDialog();
             }
         });
+
+        linearLayoutRepeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showRepeatDialog();
+            }
+        });
+        btnPlayMusic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                playMusic();
+            }
+        });
     }
-    private void showLableDialog() {
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onClick(View view) {
+        int timeHour = timePicker.getHour();
+        int timeMinute = timePicker.getMinute();
+        switch (view.getId()){
+            case R.id.textViewMinus1H:  // bấm trừ 1 giờ
+                if(timeHour == 0) timePicker.setHour(23);
+                else  timePicker.setHour(timeHour - 1);
+                break;
+            case R.id.textViewPlus1H:   // bấm cộng 1 giờ
+                if(timeHour == 23) timePicker.setHour(0);
+                else  timePicker.setHour(timeHour + 1);
+                break;
+            case R.id.textViewMinus10M: // Bấm trừ 10 phút
+                if(timeMinute - 10 < 0) {   // nếu trừ 10 phút mà ra số âm thì phải trừ giờ xuống 1.
+                    if(timeHour == 0) timePicker.setHour(23);
+                    else  timePicker.setHour(timeHour - 1);
+                    timePicker.setMinute(60 - (10 - timeMinute));   // phút thì còn tầm 5 mươi mấy đó theo công thức
+                }
+                else timePicker.setMinute(timeMinute - 10);
+                break;
+            case R.id.textViewPlus10M:
+                if(timeMinute + 10 > 59) {
+                    if(timeHour == 23) timePicker.setHour(0);
+                    else timePicker.setHour(timeHour + 1);
+                    timePicker.setMinute(10 + timeMinute - 60);
+                }
+                else timePicker.setMinute(timeMinute + 10);
+                break;
+        }
+    }
+    private void showLableDialog() { // show fragment để Sửa tên báo thức
 
         LableDialogFragment lableDialogFragment = new LableDialogFragment();
         lableDialogFragment.show(getSupportFragmentManager(), "fragment_edit_name");
     }
-    private void showAgainDialog() {
+    @Override
+    public void onFinishEditDialog(String inputText) { //get text ở label dialog fragment
+        textViewLabel.setText(inputText);
+    }
+
+
+    private void showAgainDialog() { // fragment chọn thời gian báo thức lại
         AgainDialogFragment againDialogFragment = new AgainDialogFragment();
         againDialogFragment.show(getSupportFragmentManager(), "fragment_choice");
     }
-
-    protected void onResume() {
-
-        super.onResume();
-        //textViewLabel.setText(textViewLabelString.getText());
+    @Override
+    public void onFinishChoiceDialog(String input) {
+        textViewAgain.setText(input);
     }
 
-//
+    private void showRepeatDialog() { // fragment chọn các ngày báo thức
+
+        RepeatDialogFragment repeatDialogFragment = new RepeatDialogFragment();
+        repeatDialogFragment.show(getSupportFragmentManager(), "fragment_repeat");
+    }
+    @Override
+    public void onFinishCheckDialog(ArrayList<Boolean> input) {
+        listRepeatDay = new ArrayList<>();
+        for(int i = 0; i < 7; i++){
+            listRepeatDay.add(i, false);
+            listRepeatDay.set(i, input.get(i));
+        }
+        createStringRepeat(input);
+    }
+
+    public void createStringRepeat(ArrayList<Boolean> listDays){
+        String repeatString = "";
+        int i = 0;
+        for(i = 0; i < 7; i++){
+            if(listDays.get(i) == false) break;
+        }
+        if(i == 7) {
+            outputRepeat = "Hằng ngày.";
+            textViewRepeat.setText(outputRepeat);
+            return;
+        }
+        else if(i == 5){
+            outputRepeat = "Các ngày làm việc.";
+            textViewRepeat.setText(outputRepeat);
+            return;
+        }
+        i = 0;
+        for(i = 0; i < 5; i++){
+            if(listDays.get(i) == true) break;
+        }
+        if(i == 5 && listDays.get(5) == true && listDays.get(6) == true ){
+            outputRepeat = "Cuối tuần.";
+            textViewRepeat.setText(outputRepeat);
+            return;
+        }
+        else {
+            for(int j = 0; j < 7; j++){
+                if(listDays.get(j) == true){
+                    if(j == 6) repeatString += " CN";
+                    else repeatString += " T" + (j+2);
+                }
+            }
+            outputRepeat = repeatString;
+            textViewRepeat.setText(outputRepeat);
+        }
+    }
+
     static boolean play = false;
     public void getMusic(){
         Map<String, String> list = new HashMap<>();
@@ -130,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements LableDialogFragme
 
     }
     public void playMusic(){
-
+        getMusic();
 
 
         if(play == true){
@@ -139,15 +277,18 @@ public class MainActivity extends AppCompatActivity implements LableDialogFragme
         }
         else {
             try {
-                PlayAudioManager.playAudio(this, "content://media/internal/audio/media/104");
+
+        Uri defaultRintoneUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(), RingtoneManager.TYPE_RINGTONE);
+        Ringtone defaultRingtone = RingtoneManager.getRingtone(getApplicationContext(), defaultRintoneUri);
+        defaultRingtone.play();
+//                Ringtone defaultRingtone = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("content://media/internal/audio/media/156"));
+//                defaultRingtone.play();
             } catch (Exception e) {
                 e.printStackTrace();
             }
             play = true;
             btnPlayMusic.setBackgroundResource(R.drawable.ic_pause_black_24dp);
         }
-        // TODO...
-
     }
 
 
@@ -165,6 +306,8 @@ public class MainActivity extends AppCompatActivity implements LableDialogFragme
         }
         return list;
     }
+
+
 }
 
 class PlayAudioManager {

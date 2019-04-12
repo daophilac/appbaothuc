@@ -2,19 +2,13 @@ package com.example.alarmtypeapp;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class LableDialogFragment extends DialogFragment {
     private Button btnOk;
@@ -22,10 +16,10 @@ public class LableDialogFragment extends DialogFragment {
     private EditText mEditText;
 
 
-    public interface EditNameDialogListener {
+    public interface LabelDialogListener {
         void onFinishEditDialog(String inputText);
     }
-    private EditNameDialogListener listener;
+    private LabelDialogListener listener;
 
     public LableDialogFragment() {
         // Empty constructor required for DialogFragment
@@ -67,6 +61,6 @@ public class LableDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.listener = (EditNameDialogListener) context;
+        this.listener = (LabelDialogListener) context;
     }
 }

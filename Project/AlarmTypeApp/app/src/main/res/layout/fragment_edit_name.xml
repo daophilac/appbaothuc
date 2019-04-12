@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:background="@color/backgroundlayout"
             android:text="hủy"
-            android:textColor="#008FFF" />
+            android:textColor="@color/colorBlue" />
 
         <Button
             android:id="@+id/btnOk"
@@ -54,6 +54,6 @@
             android:layout_height="wrap_content"
             android:background="@color/backgroundlayout"
             android:text="OK"
-            android:textColor="#008FFF" />
+            android:textColor="@color/colorBlue" />
     </LinearLayout>
 </LinearLayout>
