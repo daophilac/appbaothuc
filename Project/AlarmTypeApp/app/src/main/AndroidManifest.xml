@@ -14,7 +14,7 @@
         <activity android:name=".TypePlayCameraActivity" />
         <activity android:name=".TypePlayDefaultActivity" />
         <activity android:name=".TypeActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".SettingAlarmActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
