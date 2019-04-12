@@ -1,16 +1,26 @@
 package com.example.appbaothuc;
 
 public class Alarm {
+    private int id;
     private int hour;
     private int minute;
     private int alarmType;
     private boolean enable;
 
-    public Alarm(int hour, int minute, int alarmType, boolean enable) {
+    public Alarm(int id, int hour, int minute, int alarmType, boolean enable) {
+        this.id = id;
         this.hour = hour;
         this.minute = minute;
         this.alarmType = alarmType;
         this.enable = enable;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getHour() {

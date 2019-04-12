@@ -9,6 +9,8 @@ public class SettingAlarmActivity extends AppCompatActivity {
     // TODO: public String fileMusic;
     // TODO: public boolean snooze;
     // TODO: public int snoozeTime;
+    public boolean maxVolume;
+    public int number;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
