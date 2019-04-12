@@ -281,8 +281,8 @@ public class MainActivity extends AppCompatActivity {
 //                .getSystemService(Context.ACTIVITY_SERVICE);
 //
 //        activityManager.moveTaskToFront(getTaskId(), 0);
-        Intent intent = new Intent(this,MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+//        Intent intent = new Intent(this,MainActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(intent);
     }
 }
