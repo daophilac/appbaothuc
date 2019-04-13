@@ -1,11 +1,13 @@
-#Android
+# Android
 .idea
 .gradle
+
 **/local.properties
+**/output.json
+**/abc.txt
+
 **/build/generated
 **/build/intermediates
 **/build/tmp
 **/outputs/bundle
 **/outputs/logs
-/output.json
-**/abc.txt
