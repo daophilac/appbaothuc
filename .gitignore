@@ -1,6 +1,7 @@
 #Android
 .idea
 .gradle
+/local.properties
 **/build/generated
 **/build/intermediates
 **/build/tmp
