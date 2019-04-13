@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -56,56 +55,56 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         listAlarmColumn.add("RingtoneName");
         listAlarmColumn.add("Label");
         listAlarmColumn.add("Vibrate");
-        listAlarmColumn.add("SnoozeIn");
+        listAlarmColumn.add("SnoozeTime");
         listAlarmColumn.add("Volume");
         listAlarmColumn.add("ChallengeType");
 
         sql = "create table if not exists Alarm(" +
                 "IdAlarm integer primary key autoincrement," +
-                "Enable binary not null," +
+                "Enable bit not null," +
                 "Hour integer not null," +
                 "Minute integer not null," +
-                "Monday binary not null," +
-                "Tuesday binary not null," +
-                "Wednesday binary not null," +
-                "Thursday binary not null," +
-                "Friday binary not null," +
-                "Saturday binary not null," +
-                "Sunday binary not null," +
+                "Monday bit not null," +
+                "Tuesday bit not null," +
+                "Wednesday bit not null," +
+                "Thursday bit not null," +
+                "Friday bit not null," +
+                "Saturday bit not null," +
+                "Sunday bit not null," +
                 "RingtoneUrl nvarchar(256)," +
                 "RingtoneName nvarchar(256)," +
                 "Label nvarchar(256)," +
-                "Vibrate binary," +
-                "SnoozeIn integer," +
+                "Vibrate bit," +
+                "SnoozeTime integer," +
                 "Volume integer," +
                 "ChallengeType integer)";
         db.execSQL(sql);
     }
-    public void insertAlarm(boolean enable, int hour, int minute, List<Integer> listRepeatDay, String ringtoneUrl, String ringtoneName,
-                            boolean vibrate, String label, boolean canSnooze, int snoozeIn, int volume, int challengeType) {
+    public void insertAlarm(boolean enable, int hour, int minute, List<Boolean> listRepeatDay, String ringtoneUrl, String ringtoneName,
+                            boolean vibrate, String label, int snoozeTime, int volume, int challengeType) {
         sqlFormat = "insert into Alarm (" +
                 " Enable, Hour, Minute," +
                 " Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday," +
-                " RingtoneUrl, RingtoneName, Label, Vibrate, SnoozeIn, Volume, ChallengeType)" +
+                " RingtoneUrl, RingtoneName, Label, Vibrate, SnoozeTime, Volume, ChallengeType)" +
                 " values (" +
-                " %d, %d, %d," +
-                " %d, %d, %d, %d, %d, %d, %d," +
-                " '%s', '%s', '%s', %d, %d, %d, %d)";
+                " '%b', %d, %d," +
+                " '%b', '%b', '%b', '%b', '%b', '%b', '%b'," +
+                " '%s', '%s', '%s', '%b', %d, %d, %d)";
         sql = String.format(sqlFormat,
-                booleanToInt(enable), hour, minute,
+                enable, hour, minute,
                 listRepeatDay.get(0), listRepeatDay.get(1), listRepeatDay.get(2), listRepeatDay.get(3), listRepeatDay.get(4), listRepeatDay.get(5), listRepeatDay.get(6),
-                ringtoneUrl, ringtoneName, label, booleanToInt(vibrate), snoozeIn, volume, challengeType);
+                ringtoneUrl, ringtoneName, label, vibrate, snoozeTime, volume, challengeType);
         db.execSQL(sql);
     }
-    public void insertAlarm(boolean enable, int hour, int minute, List<Integer> listRepeatDay) {
+    public void insertAlarm(boolean enable, int hour, int minute, List<Boolean> listRepeatDay) {
         sqlFormat = "insert into Alarm (" +
                 " Enable, Hour, Minute," +
                 " Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)" +
                 " values (" +
-                " %d, %d, %d," +
-                " %d, %d, %d, %d, %d, %d, %d)";
+                " '%b', %d, %d," +
+                " '%b', '%b', '%b', '%b', '%b', '%b', '%b')";
         sql = String.format(sqlFormat,
-                booleanToInt(enable), hour, minute,
+                enable, hour, minute,
                 listRepeatDay.get(0), listRepeatDay.get(1), listRepeatDay.get(2), listRepeatDay.get(3), listRepeatDay.get(4), listRepeatDay.get(5), listRepeatDay.get(6));
         db.execSQL(sql);
     }
@@ -113,27 +112,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         boolean enable = alarm.isEnable();
         int hour = alarm.getHour();
         int minute = alarm.getMinute();
-        List<Integer> listRepeatDay = alarm.getListRepeatDay();
+        List<Boolean> listRepeatDay = alarm.getListRepeatDay();
         String ringtoneUrl = alarm.getRingtoneUrl();
         String ringtoneName = alarm.getRingtoneName();
         String label = alarm.getLabel();
         boolean vibrate = alarm.isVibrate();
-        int snoozeIn = alarm.getSnoozeIn();
+        int snoozeTime = alarm.getSnoozeTime();
         int volume = alarm.getVolume();
         int challengeType = alarm.getChallengeType();
 
         sqlFormat = "insert into Alarm (" +
                 " Enable, Hour, Minute," +
                 " Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday," +
-                " RingtoneUrl, RingtoneName, Label, Vibrate, SnoozeIn, Volume, ChallengeType)" +
+                " RingtoneUrl, RingtoneName, Label, Vibrate, SnoozeTime, Volume, ChallengeType)" +
                 " values (" +
-                " %d, %d, %d," +
-                " %d, %d, %d, %d, %d, %d, %d," +
-                " '%s', '%s', '%s', %d, %d, %d, %d)";
+                " '%b', %d, %d," +
+                " '%b', '%b', '%b', '%b', '%b', '%b', '%b'," +
+                " '%s', '%s', '%s', '%b', %d, %d, %d)";
         sql = String.format(sqlFormat,
-                booleanToInt(enable), hour, minute,
+                enable, hour, minute,
                 listRepeatDay.get(0), listRepeatDay.get(1), listRepeatDay.get(2), listRepeatDay.get(3), listRepeatDay.get(4), listRepeatDay.get(5), listRepeatDay.get(6),
-                ringtoneUrl, ringtoneName, label, booleanToInt(vibrate), snoozeIn, volume, challengeType);
+                ringtoneUrl, ringtoneName, label, vibrate, snoozeTime, volume, challengeType);
         db.execSQL(sql);
     }
     public HashMap<String, String> getLastAlarm(){
@@ -142,9 +141,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         cursor.moveToNext();
         return buildAlarmProperty(cursor, true);
     }
-    private int booleanToInt(boolean input){
-        return input ? 1 : 0;
-    }
     public HashMap<String, String> getTodayNextAlarm(){
         Calendar now = Calendar.getInstance();
         int nowWeekDay = now.get(Calendar.DAY_OF_WEEK);
@@ -152,7 +148,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         int nowMinute = now.get(Calendar.MINUTE);
         String dayOfWeek = getDayOfWeekInString(nowWeekDay);
         sqlFormat = "select * from Alarm" +
-                " where %s = 1 and ((Hour > %d) or (Hour = %d and Minute > %d))" +
+                " where %s = 'true' and ((Hour > %d) or (Hour = %d and Minute > %d))" +
                 " order by Hour, Minute";
         sql = String.format(sqlFormat, dayOfWeek, nowHour, nowHour, nowMinute);
         Cursor cursor = db.rawQuery(sql, null);
@@ -172,7 +168,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String weekDayToCompare = getDayOfWeekInString(nowWeekDay);
         sqlFormat = "select * from Alarm" +
-                " where %s = 1 and ((Hour > %d) or (Hour = %d and Minute > %d))" +
+                " where %s = 'true' and ((Hour > %d) or (Hour = %d and Minute > %d))" +
                 " order by Hour, Minute";
         sql = String.format(sqlFormat, weekDayToCompare, nowHour, nowHour, nowMinute);
         cursor = db.rawQuery(sql, null);
@@ -185,7 +181,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
         sqlFormat = "select * from Alarm" +
-                " where %s = 1" +
+                " where %s = 'true'" +
                 " order by Hour, Minute";
         for(int i = nowWeekDay + 1; i <= 7; i++){
             weekDayToCompare = getDayOfWeekInString(i);

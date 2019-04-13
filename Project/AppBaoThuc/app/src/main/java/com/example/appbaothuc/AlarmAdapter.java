@@ -15,47 +15,86 @@ import com.example.appbaothuc.services.NotificationService;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
-public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
-    private Context context;
-    private List<Alarm> listAlarm;
+public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
+    private Context context;                                // Context là class cha của Activity, nó có nhiều phương thức quan trọng chịu trách nhiệm xử lý liên quan tới hệ thống và giao diện. Vì vậy ta thường truyền Context đi vòng vòng khắp mọi nơi
+    private List<Alarm> listAlarm;                          // Dĩ nhiên là một Adapter thì phải được nhận vào một list các item
+    private HashMap<Integer, Alarm> hashMapIdViewAlarm;     // Giải thích ở phương thức openAlarmSetting
 
+
+    // Phương thức khởi tạo AlarmAdapter, đòi hỏi nhận vào cái Context và một list các Alarm
     public AlarmAdapter(Context context, List<Alarm> listAlarm) {
+        // Lấy context và listAlarm
         this.context = context;
         this.listAlarm = listAlarm;
+
+        // Khởi tạo hashMapIdViewAlarm
+        hashMapIdViewAlarm = new HashMap<>();
     }
 
-    public void openAlarmSetting(View v) {
-        Intent intent = new Intent(context, SettingAlarmActivity.class);
-        intent.putExtra("alarm", listAlarm.get(0));
-        //int a = ((RecyclerView.ViewHolder)v).idAlarm;
-        //intent.putExtra("idAlarm", (ViewHolder)v).getItemId());
-        context.startActivity(intent);
+    // Phương thức này chỉ dùng để trả về số lượng item trong list
+    @Override
+    public int getItemCount() {
+        return this.listAlarm.size();
     }
 
+
+    // Phương thức onCreateViewHolder được gọi khi có một item được thêm vào list
+    // Nó nhận vào 2 tham số. ViewGroup là class cha của RecyclerView, nó có khả năng nhét thêm View vào trong RecyclerView
+    // i là một con số đại diện cho loại của View mà sẽ được thêm vào list RecyclerView. Ở đây chúng ta không quan tâm giá trị này
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public AlarmViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        // Để nhét thêm View vào RecyclerView, đầu tiên ta tạo ra một biến kiểu LayoutInflater
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
+
+        // LayoutInflater có khả năng tạo ra một View từ một layout cho trước, rồi đưa cho ViewGroup. Ở đây ta không cần quan tâm attachToRoot làm gì
         View alarmView = layoutInflater.inflate(R.layout.alarm_item, viewGroup, false);
+
+        // TODO Lưu ý: Để đạt được mục địch cuối cùng là truyền một Alarm sang cho SettingAlarmActivity, ta cần chuẩn bị trước một điều, đó là gán Id cho cái View vừa tạo
+        // TODO Lưu ý: Tuy ta có thể hoàn toàn đặt các Id trùng nhau cho các View mà không bị lỗi, nhưng để việc làm việc với các View sau này diễn ra một cách chính xác, như findViewById
+        // TODO Lưu ý: thì ta nên sử dụng phương thức View.generateViewId để sinh ra các Id không bao giờ trùng nhau
+        alarmView.setId(View.generateViewId());
+
+        // Đăng ký sự kiện click cho cái alarmView vừa tạo
         alarmView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Ở đây v chính là alarmView
                 openAlarmSetting(v);
             }
         });
-        return new ViewHolder(alarmView);
+
+        // TODO Lưu ý: Để đạt được mục đích cuối cùng là truyền một Alarm sang cho SettingAlarmActivity, ta cần làm một công việc tiếp theo nữa, đó là
+        // TODO Lưu ý: cất cái Id (key) của cái alarmView vừa tạo và cái Alarm (value) vừa mới thêm vào listAlarm vào trong hashMapIdViewAlarm
+        hashMapIdViewAlarm.put(alarmView.getId(), listAlarm.get(getItemCount() - 1));
+
+        // Ta bắt buộc phải trả về một cái ViewHolder, đó là yêu cầu của cái phương thức mà chúng ta đang ghi đè này
+        // Bây giờ hãy xem tiếp class AlarmViewHolder ở bên dưới
+        return new AlarmViewHolder(alarmView);
+
+        // Sau khi lệnh return được chạy, một cái AlarmViewHolder sẽ được nhả ra và truyền vào cái phương thức onBindViewHolder bên dưới
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        Alarm alarm = listAlarm.get(i);
-        viewHolder.idAlarm = alarm.getIdAlarm();
-        CheckBox checkBoxEnable = viewHolder.checkBoxEnable;
-        TextView textViewHour = viewHolder.textViewHour;
-        TextView textViewMinute = viewHolder.textViewMinute;
 
+    // Phương thức onBindViewHolder nhận vào một cái AlarmViewHolder do phương thức onCreateViewHolder bên trên trả về
+    // và i chính là cái vị trí position của cái View mà vừa được thêm vào RecyclerView
+    @Override
+    public void onBindViewHolder(@NonNull AlarmViewHolder alarmViewHolder, int i) {
+        // Lấy ra cái Alarm từ vị trí i
+        Alarm alarm = listAlarm.get(i);
+
+        // Lúc này, chắc chắn cái checkBoxEnable là của đúng cái item tại vị trí thứ i trong cái RecyclerView, chứ không phải của cái checkBoxEnable của cái item tại vị trí nào khác
+        // Chắc chắn cái textViewHour là của đúng cái item tại vị trí thứ i trong cái RecyclerView, chứ không phải của cái textViewHour của cái item tại vị trí nào khác
+        // Chắc chắn cái textViewMinute là của đúng cái item tại vị trí thứ i trong cái RecyclerView, chứ không phải của cái textViewMinute của cái item tại vị trí nào khác
+        CheckBox checkBoxEnable = alarmViewHolder.checkBoxEnable;
+        TextView textViewHour = alarmViewHolder.textViewHour;
+        TextView textViewMinute = alarmViewHolder.textViewMinute;
+
+        // Nhờ việc lấy ra đúng chính xác các CheckBox và TextView tại vị trí thứ i
+        // ta có thể đặt thuộc tính cho chúng một cách chính xác, dựa theo cái Alarm tại vị trí thứ i đã được lấy ra bên trên
         checkBoxEnable.setChecked(alarm.isEnable());
         textViewHour.setText(String.valueOf(alarm.getHour()));
         if (alarm.getMinute() < 10) {
@@ -65,25 +104,38 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return this.listAlarm.size();
+    public void openAlarmSetting(View v) {
+        Intent intent = new Intent(context, SettingAlarmActivity.class);
+
+        // TODO Lưu ý: Bởi vì ta đã cất từng cái Id (key) của cái View mà được thêm vào RecyclerView, với cái Alarm (value) tương ứng
+        // TODO Lưu ý: Nên ở bước này, ta có thể lấy ra được đúng chính xác Alarm, bất kể người dùng chọn vào item nào trong RecyclerView
+        // TODO Lưu ý: Bởi vì mỗi khi người dùng chọn vào một item, thì phương thức openAlarmSetting này được gọi tới
+        // TODO Lưu ý: Và View v chính là cái View mà người dùng chọn vào
+        // TODO Lưu ý: Rồi từ đó, ta sử dụng v.getId để ra được đúng cái Alarm của cái View đó, rồi truyền cho SettingAlarmActivity
+        intent.putExtra("alarm", hashMapIdViewAlarm.get(v.getId()));
+        context.startActivity(intent);
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        private int idAlarm;
+
+
+    // Class AlarmViewHolder chứa các thuộc tính là các View như CheckBox, TextView nằm bên trong một cái View nằm bên trong RecyclerView
+    class AlarmViewHolder extends RecyclerView.ViewHolder {
         private CheckBox checkBoxEnable;
         private TextView textViewHour;
         private TextView textViewMinute;
 
-        public ViewHolder(@NonNull View itemView) {
+        public AlarmViewHolder(@NonNull View itemView) {
             super(itemView);
+            // Lấy ra các View con như CheckBox, TextView nằm trong cái itemView. Mà cái itemView thực ra chính là một cái item bên trong RecyclerView
             checkBoxEnable = itemView.findViewById(R.id.checkBox_enable);
             textViewHour = itemView.findViewById(R.id.textView_hour);
             textViewMinute = itemView.findViewById(R.id.textView_minute);
 
-            final DatabaseHandler databaseHandler = new DatabaseHandler(context);
+
+
+
             // TODO: Debug purpose.
+            final DatabaseHandler databaseHandler = new DatabaseHandler(context);
             textViewHour.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -127,16 +179,16 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                     int minute8 = time8.get(Calendar.MINUTE);
                     int minute9 = time9.get(Calendar.MINUTE);
                     int minute0 = time0.get(Calendar.MINUTE);
-                    List<Integer> listRepeatDay1 = Arrays.asList(1, 1, 1, 1, 1, 1, 1);
-                    List<Integer> listRepeatDay2 = Arrays.asList(1, 1, 1, 1, 1, 1, 1);
-                    List<Integer> listRepeatDay3 = Arrays.asList(1, 1, 1, 1, 1, 1, 1);
-                    List<Integer> listRepeatDay4 = Arrays.asList(1, 1, 1, 1, 1, 1, 1);
-                    List<Integer> listRepeatDay5 = Arrays.asList(1, 1, 1, 1, 1, 1, 1);
-                    List<Integer> listRepeatDay6 = Arrays.asList(1, 1, 1, 1, 1, 1, 1);
-                    List<Integer> listRepeatDay7 = Arrays.asList(1, 1, 1, 1, 1, 1, 1);
-                    List<Integer> listRepeatDay8 = Arrays.asList(1, 1, 1, 1, 1, 1, 1);
-                    List<Integer> listRepeatDay9 = Arrays.asList(1, 1, 1, 1, 1, 1, 1);
-                    List<Integer> listRepeatDay0 = Arrays.asList(1, 1, 1, 1, 1, 1, 1);
+                    List<Boolean> listRepeatDay1 = Arrays.asList(true, true, true, true, true, true, true);
+                    List<Boolean> listRepeatDay2 = Arrays.asList(true, true, true, true, true, true, true);
+                    List<Boolean> listRepeatDay3 = Arrays.asList(true, true, true, true, true, true, true);
+                    List<Boolean> listRepeatDay4 = Arrays.asList(true, true, true, true, true, true, true);
+                    List<Boolean> listRepeatDay5 = Arrays.asList(true, true, true, true, true, true, true);
+                    List<Boolean> listRepeatDay6 = Arrays.asList(true, true, true, true, true, true, true);
+                    List<Boolean> listRepeatDay7 = Arrays.asList(true, true, true, true, true, true, true);
+                    List<Boolean> listRepeatDay8 = Arrays.asList(true, true, true, true, true, true, true);
+                    List<Boolean> listRepeatDay9 = Arrays.asList(true, true, true, true, true, true, true);
+                    List<Boolean> listRepeatDay0 = Arrays.asList(true, true, true, true, true, true, true);
                     databaseHandler.insertAlarm(true, hour1, minute1, listRepeatDay1);
                     databaseHandler.insertAlarm(true, hour2, minute2, listRepeatDay2);
                     databaseHandler.insertAlarm(true, hour3, minute3, listRepeatDay3);

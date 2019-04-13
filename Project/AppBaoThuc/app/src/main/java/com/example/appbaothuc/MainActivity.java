@@ -46,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         databaseHandler = new DatabaseHandler(this, DATABASE_NAME, null, 1);
-
+//        databaseHandler.insertAlarm(true, 5,0, Arrays.asList(true, true, true, true, true, true, true), "a", "a", true, "a", 1, 1, 1);
+//        databaseHandler.insertAlarm(true,5,0, Arrays.asList(1,1,1,1,1,1,1));
 
         // TODO: debug purpose
 //        Calendar time1 = Calendar.getInstance();

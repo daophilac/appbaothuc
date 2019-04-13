@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.Toast;
 
-import com.example.appbaothuc.ChallengeActivity;
+import com.example.appbaothuc.challenge.ChallengeActivity;
 
 public class AlarmService extends Service {
     @Override

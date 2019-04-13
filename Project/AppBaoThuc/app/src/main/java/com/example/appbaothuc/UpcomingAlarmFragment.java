@@ -41,7 +41,7 @@ public class UpcomingAlarmFragment extends Fragment {
     }
     public void addAlarm(View view){
         // Khi người dùng bấm vào nút thêm alarm
-        List<Integer> listRepeatDay = Arrays.asList(1, 1, 1, 1, 1, 1, 1);
+        List<Boolean> listRepeatDay = Arrays.asList(true, true, true, true, true, true, true);
         Alarm alarm = new Alarm(true, 5,0, listRepeatDay);
         databaseHandler.insertAlarm(alarm);
         alarm.setIdAlarm(Integer.parseInt(databaseHandler.getLastAlarm().get("IdAlarm")));

@@ -8,16 +8,16 @@ public class Alarm implements Serializable {
     private boolean enable;
     private int hour;
     private int minute;
-    private List<Integer> listRepeatDay;
+    private List<Boolean> listRepeatDay;
     private String ringtoneUrl;
     private String ringtoneName;
     private String label;
-    private int snoozeIn;
+    private int snoozeTime;
     private boolean vibrate;
     private int volume;
     private int challengeType;
 
-    public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Integer> listRepeatDay, String ringtoneUrl, String ringtoneName, String label, int snoozeIn, boolean vibrate, int volume, int challengeType) {
+    public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Boolean> listRepeatDay, String ringtoneUrl, String ringtoneName, String label, int snoozeTime, boolean vibrate, int volume, int challengeType) {
         this.idAlarm = idAlarm;
         this.enable = enable;
         this.hour = hour;
@@ -26,13 +26,13 @@ public class Alarm implements Serializable {
         this.ringtoneUrl = ringtoneUrl;
         this.ringtoneName = ringtoneName;
         this.label = label;
-        this.snoozeIn = snoozeIn;
+        this.snoozeTime = snoozeTime;
         this.vibrate = vibrate;
         this.volume = volume;
         this.challengeType = challengeType;
     }
 
-    public Alarm(boolean enable, int hour, int minute, List<Integer> listRepeatDay, String ringtoneUrl, String ringtoneName, String label, int snoozeIn, boolean vibrate, int volume, int challengeType) {
+    public Alarm(boolean enable, int hour, int minute, List<Boolean> listRepeatDay, String ringtoneUrl, String ringtoneName, String label, int snoozeTime, boolean vibrate, int volume, int challengeType) {
         this.enable = enable;
         this.hour = hour;
         this.minute = minute;
@@ -40,13 +40,13 @@ public class Alarm implements Serializable {
         this.ringtoneUrl = ringtoneUrl;
         this.ringtoneName = ringtoneName;
         this.label = label;
-        this.snoozeIn = snoozeIn;
+        this.snoozeTime = snoozeTime;
         this.vibrate = vibrate;
         this.volume = volume;
         this.challengeType = challengeType;
     }
 
-    public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Integer> listRepeatDay) {
+    public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Boolean> listRepeatDay) {
         this.idAlarm = idAlarm;
         this.enable = enable;
         this.hour = hour;
@@ -54,7 +54,7 @@ public class Alarm implements Serializable {
         this.listRepeatDay = listRepeatDay;
     }
 
-    public Alarm(boolean enable, int hour, int minute, List<Integer> listRepeatDay) {
+    public Alarm(boolean enable, int hour, int minute, List<Boolean> listRepeatDay) {
         this.enable = enable;
         this.hour = hour;
         this.minute = minute;
@@ -93,11 +93,11 @@ public class Alarm implements Serializable {
         this.minute = minute;
     }
 
-    public List<Integer> getListRepeatDay() {
+    public List<Boolean> getListRepeatDay() {
         return listRepeatDay;
     }
 
-    public void setListRepeatDay(List<Integer> listRepeatDay) {
+    public void setListRepeatDay(List<Boolean> listRepeatDay) {
         this.listRepeatDay = listRepeatDay;
     }
 
@@ -125,12 +125,12 @@ public class Alarm implements Serializable {
         this.label = label;
     }
 
-    public int getSnoozeIn() {
-        return snoozeIn;
+    public int getSnoozeTime() {
+        return snoozeTime;
     }
 
-    public void setSnoozeIn(int snoozeIn) {
-        this.snoozeIn = snoozeIn;
+    public void setSnoozeTime(int snoozeTime) {
+        this.snoozeTime = snoozeTime;
     }
 
     public boolean isVibrate() {
