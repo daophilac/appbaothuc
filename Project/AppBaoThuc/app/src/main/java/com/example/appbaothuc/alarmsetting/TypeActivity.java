@@ -88,7 +88,13 @@ public class TypeActivity extends AppCompatActivity {
         imageButtonQRCode.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Log.v("hihi", "haha");
+
+            }
+        });
+        linearLayoutCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }

@@ -53,7 +53,11 @@ public class SettingAlarmActivity extends AppCompatActivity implements LableDial
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_alarm);
-        idAlarm = getIntent().getExtras().getInt("idAlarm");
+
+        // TODO: remove
+        try{
+            idAlarm = getIntent().getExtras().getInt("idAlarm");
+        } catch(Exception ex){}
         setControll();
     }
     void setControll(){
