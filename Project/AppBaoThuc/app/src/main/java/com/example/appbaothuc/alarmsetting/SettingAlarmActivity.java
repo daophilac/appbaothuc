@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.appbaothuc.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,11 +54,8 @@ public class SettingAlarmActivity extends AppCompatActivity implements LableDial
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_alarm);
-
-        // TODO: remove
-        try{
-            idAlarm = getIntent().getExtras().getInt("idAlarm");
-        } catch(Exception ex){}
+        Alarm alarm = (Alarm) getIntent().getExtras().getSerializable("alarm");
+        alarm.getIdAlarm();
         setControll();
     }
     void setControll(){

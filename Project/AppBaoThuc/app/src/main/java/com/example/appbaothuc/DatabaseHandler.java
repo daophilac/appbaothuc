@@ -52,14 +52,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         listAlarmColumn.add("Friday");
         listAlarmColumn.add("Saturday");
         listAlarmColumn.add("Sunday");
-        listAlarmColumn.add("RingtoneURL");
+        listAlarmColumn.add("RingtoneUrl");
         listAlarmColumn.add("RingtoneName");
         listAlarmColumn.add("Label");
-        listAlarmColumn.add("CanSnooze"); //////////////////////////////
-        listAlarmColumn.add("SnoozeTime"); //////////////////////////////
-        listAlarmColumn.add("SnoozeIn");
         listAlarmColumn.add("Vibrate");
-        listAlarmColumn.add("MaxVolume");
+        listAlarmColumn.add("SnoozeIn");
         listAlarmColumn.add("Volume");
         listAlarmColumn.add("ChallengeType");
 
@@ -75,35 +72,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 "Friday binary not null," +
                 "Saturday binary not null," +
                 "Sunday binary not null," +
-                "RingtoneURL nvarchar(256)," +
+                "RingtoneUrl nvarchar(256)," +
                 "RingtoneName nvarchar(256)," +
                 "Label nvarchar(256)," +
-                "CanSnooze binary," +
-                "SnoozeTime integer," +
-                "SnoozeIn integer," +
                 "Vibrate binary," +
-                "MaxVolume binary," +
+                "SnoozeIn integer," +
                 "Volume integer," +
                 "ChallengeType integer)";
         db.execSQL(sql);
     }
-    public void insertAlarm(boolean enable, int hour, int minute, List<Integer> listRepeatDay, String ringtoneURL, String ringtoneName,
-                             String label, boolean canSnooze, int snoozeTime, int snoozeIn, boolean vibrate, boolean maxVolume, int volume, int challengeType) {
+    public void insertAlarm(boolean enable, int hour, int minute, List<Integer> listRepeatDay, String ringtoneUrl, String ringtoneName,
+                            boolean vibrate, String label, boolean canSnooze, int snoozeIn, int volume, int challengeType) {
         sqlFormat = "insert into Alarm (" +
                 " Enable, Hour, Minute," +
                 " Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday," +
-                " RingtoneURL, RingtoneName, Label, CanSnooze, SnoozeTime, SnoozeIn," +
-                " Vibrate, MaxVolume, Volume, ChallengeType)" +
+                " RingtoneUrl, RingtoneName, Label, Vibrate, SnoozeIn, Volume, ChallengeType)" +
                 " values (" +
-                " '%s', %d, %d," +
+                " %d, %d, %d," +
                 " %d, %d, %d, %d, %d, %d, %d," +
-                " '%s', '%s', '%s', %d, %d, %d," +
-                " %d, %d, %d, %d)";
+                " '%s', '%s', '%s', %d, %d, %d, %d)";
         sql = String.format(sqlFormat,
                 booleanToInt(enable), hour, minute,
                 listRepeatDay.get(0), listRepeatDay.get(1), listRepeatDay.get(2), listRepeatDay.get(3), listRepeatDay.get(4), listRepeatDay.get(5), listRepeatDay.get(6),
-                ringtoneURL, ringtoneName, label, booleanToInt(canSnooze), snoozeTime, snoozeIn,
-                booleanToInt(vibrate), booleanToInt(maxVolume), volume, challengeType);
+                ringtoneUrl, ringtoneName, label, booleanToInt(vibrate), snoozeIn, volume, challengeType);
         db.execSQL(sql);
     }
     public void insertAlarm(boolean enable, int hour, int minute, List<Integer> listRepeatDay) {
@@ -111,12 +102,45 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 " Enable, Hour, Minute," +
                 " Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)" +
                 " values (" +
-                " '%s', %d, %d," +
+                " %d, %d, %d," +
                 " %d, %d, %d, %d, %d, %d, %d)";
         sql = String.format(sqlFormat,
                 booleanToInt(enable), hour, minute,
                 listRepeatDay.get(0), listRepeatDay.get(1), listRepeatDay.get(2), listRepeatDay.get(3), listRepeatDay.get(4), listRepeatDay.get(5), listRepeatDay.get(6));
         db.execSQL(sql);
+    }
+    public void insertAlarm(Alarm alarm){
+        boolean enable = alarm.isEnable();
+        int hour = alarm.getHour();
+        int minute = alarm.getMinute();
+        List<Integer> listRepeatDay = alarm.getListRepeatDay();
+        String ringtoneUrl = alarm.getRingtoneUrl();
+        String ringtoneName = alarm.getRingtoneName();
+        String label = alarm.getLabel();
+        boolean vibrate = alarm.isVibrate();
+        int snoozeIn = alarm.getSnoozeIn();
+        int volume = alarm.getVolume();
+        int challengeType = alarm.getChallengeType();
+
+        sqlFormat = "insert into Alarm (" +
+                " Enable, Hour, Minute," +
+                " Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday," +
+                " RingtoneUrl, RingtoneName, Label, Vibrate, SnoozeIn, Volume, ChallengeType)" +
+                " values (" +
+                " %d, %d, %d," +
+                " %d, %d, %d, %d, %d, %d, %d," +
+                " '%s', '%s', '%s', %d, %d, %d, %d)";
+        sql = String.format(sqlFormat,
+                booleanToInt(enable), hour, minute,
+                listRepeatDay.get(0), listRepeatDay.get(1), listRepeatDay.get(2), listRepeatDay.get(3), listRepeatDay.get(4), listRepeatDay.get(5), listRepeatDay.get(6),
+                ringtoneUrl, ringtoneName, label, booleanToInt(vibrate), snoozeIn, volume, challengeType);
+        db.execSQL(sql);
+    }
+    public HashMap<String, String> getLastAlarm(){
+        sql = "select * from Alarm order by IdAlarm desc limit 1";
+        Cursor cursor = db.rawQuery(sql, null);
+        cursor.moveToNext();
+        return buildAlarmProperty(cursor, true);
     }
     private int booleanToInt(boolean input){
         return input ? 1 : 0;
@@ -190,6 +214,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return null;
     }
     private HashMap<String, String> buildAlarmProperty(Cursor cursor, boolean closeCursorWhenDone){
+        if(cursor.isBeforeFirst()){
+            throw new RuntimeException("Cursor is at position -1. Either there is not any row in the query or the cursor has not moved to the first row in the result set yet.");
+        }
         HashMap<String, String> alarmProperty = new HashMap<>();
         for(int i = 0; i < listAlarmColumn.size(); i++){
             alarmProperty.put(listAlarmColumn.get(i), cursor.getString(i));
