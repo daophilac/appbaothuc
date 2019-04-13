@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#222222"
+    tools:context=".MainFragment">
+
+    <TextView
+        android:id="@+id/tvTimeRemain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:gravity="center"
+        android:text="@string/btnTimeRemain"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycleViewListAlarm"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        tools:listitem="@layout/main_fragment_recycleview_item" />
+
+    <ImageButton
+        android:id="@+id/btnAddAlarm"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="-70dp"
+        android:contentDescription="@string/btnAddAlarm"
+        android:src="@android:drawable/ic_input_add" />
+
+</LinearLayout>
