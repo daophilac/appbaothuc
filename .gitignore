@@ -2,7 +2,7 @@
 .idea
 .gradle
 
-
+**/local.properties
 **/output.json
 
 **/build/generated
