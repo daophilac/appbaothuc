@@ -10,7 +10,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.example.appbaothuc.R;
-import com.example.appbaothuc.SettingAlarmActivity;
 
 public class TypeActivity extends AppCompatActivity {
     private Button btnCancel, btnOK;
@@ -89,7 +88,13 @@ public class TypeActivity extends AppCompatActivity {
         imageButtonQRCode.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Log.v("hihi", "haha");
+
+            }
+        });
+        linearLayoutCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }

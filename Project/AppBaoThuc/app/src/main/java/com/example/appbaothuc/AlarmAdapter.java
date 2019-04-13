@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.example.appbaothuc.alarmsetting.SettingAlarmActivity;
 import com.example.appbaothuc.services.NotificationService;
 
 import java.util.Arrays;
