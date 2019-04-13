@@ -55,11 +55,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         listAlarmColumn.add("RingtoneURL");
         listAlarmColumn.add("RingtoneName");
         listAlarmColumn.add("Label");
-        listAlarmColumn.add("CanSnooze");
-        listAlarmColumn.add("SnoozeTime");
         listAlarmColumn.add("SnoozeIn");
         listAlarmColumn.add("Vibrate");
-        listAlarmColumn.add("MaxVolume");
         listAlarmColumn.add("Volume");
         listAlarmColumn.add("ChallengeType");
 
@@ -78,32 +75,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 "RingtoneURL nvarchar(256)," +
                 "RingtoneName nvarchar(256)," +
                 "Label nvarchar(256)," +
-                "CanSnooze binary," +
-                "SnoozeTime integer," +
                 "SnoozeIn integer," +
                 "Vibrate binary," +
-                "MaxVolume binary," +
                 "Volume integer," +
                 "ChallengeType integer)";
         db.execSQL(sql);
     }
     public void insertAlarm(boolean enable, int hour, int minute, List<Integer> listRepeatDay, String ringtoneURL, String ringtoneName,
-                             String label, boolean canSnooze, int snoozeTime, int snoozeIn, boolean vibrate, boolean maxVolume, int volume, int challengeType) {
+                             String label, boolean canSnooze, int snoozeIn, boolean vibrate, int volume, int challengeType) {
         sqlFormat = "insert into Alarm (" +
                 " Enable, Hour, Minute," +
                 " Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday," +
-                " RingtoneURL, RingtoneName, Label, CanSnooze, SnoozeTime, SnoozeIn," +
-                " Vibrate, MaxVolume, Volume, ChallengeType)" +
+                " RingtoneURL, RingtoneName, Label, SnoozeIn, Vibrate, Volume, ChallengeType)" +
                 " values (" +
-                " '%s', %d, %d," +
+                " %d, %d, %d," +
                 " %d, %d, %d, %d, %d, %d, %d," +
-                " '%s', '%s', '%s', %d, %d, %d," +
-                " %d, %d, %d, %d)";
+                " '%s', '%s', '%s', %d, %d, %d, %d)";
         sql = String.format(sqlFormat,
                 booleanToInt(enable), hour, minute,
                 listRepeatDay.get(0), listRepeatDay.get(1), listRepeatDay.get(2), listRepeatDay.get(3), listRepeatDay.get(4), listRepeatDay.get(5), listRepeatDay.get(6),
-                ringtoneURL, ringtoneName, label, booleanToInt(canSnooze), snoozeTime, snoozeIn,
-                booleanToInt(vibrate), booleanToInt(maxVolume), volume, challengeType);
+                ringtoneURL, ringtoneName, label, booleanToInt(canSnooze), snoozeIn,
+                booleanToInt(vibrate), volume, challengeType);
         db.execSQL(sql);
     }
     public void insertAlarm(boolean enable, int hour, int minute, List<Integer> listRepeatDay) {
@@ -111,7 +103,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 " Enable, Hour, Minute," +
                 " Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)" +
                 " values (" +
-                " '%s', %d, %d," +
+                " %d, %d, %d," +
                 " %d, %d, %d, %d, %d, %d, %d)";
         sql = String.format(sqlFormat,
                 booleanToInt(enable), hour, minute,

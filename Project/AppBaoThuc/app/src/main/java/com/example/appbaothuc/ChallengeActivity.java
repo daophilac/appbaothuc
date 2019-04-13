@@ -16,20 +16,9 @@ public class ChallengeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
         FragmentManager fragmentManager = getSupportFragmentManager();
         ChallengeDialogFragment challengeDialogFragment = ChallengeDialogFragment.newInstance("");
-        //keyPressListener = challengeDialogFragment;
-        //challengeDialogFragment.show(fragmentManager, "challenge_dialog_fragment");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        ActivityManager activityManager = (ActivityManager) getApplicationContext()
-                .getSystemService(Context.ACTIVITY_SERVICE);
-
-        activityManager.moveTaskToFront(getTaskId(), 0);
+        challengeDialogFragment.show(fragmentManager, "challenge_dialog_fragment");
     }
 
     @Override
