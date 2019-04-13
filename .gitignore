@@ -2,9 +2,8 @@
 .idea
 .gradle
 
-**/local.properties
+
 **/output.json
-**/abc.txt
 
 **/build/generated
 **/build/intermediates
