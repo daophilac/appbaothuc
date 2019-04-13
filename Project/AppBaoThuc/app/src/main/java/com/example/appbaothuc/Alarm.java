@@ -1,14 +1,15 @@
 package com.example.appbaothuc;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Alarm {
+public class Alarm implements Serializable {
     private int idAlarm;
     private boolean enable;
     private int hour;
     private int minute;
     private List<Integer> listRepeatDay;
-    private String ringtoneURL;
+    private String ringtoneUrl;
     private String ringtoneName;
     private String label;
     private int snoozeIn;
@@ -16,13 +17,27 @@ public class Alarm {
     private int volume;
     private int challengeType;
 
-    public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Integer> listRepeatDay, String ringtoneURL, String ringtoneName, String label, int snoozeIn, boolean vibrate, int volume, int challengeType) {
+    public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Integer> listRepeatDay, String ringtoneUrl, String ringtoneName, String label, int snoozeIn, boolean vibrate, int volume, int challengeType) {
         this.idAlarm = idAlarm;
         this.enable = enable;
         this.hour = hour;
         this.minute = minute;
         this.listRepeatDay = listRepeatDay;
-        this.ringtoneURL = ringtoneURL;
+        this.ringtoneUrl = ringtoneUrl;
+        this.ringtoneName = ringtoneName;
+        this.label = label;
+        this.snoozeIn = snoozeIn;
+        this.vibrate = vibrate;
+        this.volume = volume;
+        this.challengeType = challengeType;
+    }
+
+    public Alarm(boolean enable, int hour, int minute, List<Integer> listRepeatDay, String ringtoneUrl, String ringtoneName, String label, int snoozeIn, boolean vibrate, int volume, int challengeType) {
+        this.enable = enable;
+        this.hour = hour;
+        this.minute = minute;
+        this.listRepeatDay = listRepeatDay;
+        this.ringtoneUrl = ringtoneUrl;
         this.ringtoneName = ringtoneName;
         this.label = label;
         this.snoozeIn = snoozeIn;
@@ -33,6 +48,13 @@ public class Alarm {
 
     public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Integer> listRepeatDay) {
         this.idAlarm = idAlarm;
+        this.enable = enable;
+        this.hour = hour;
+        this.minute = minute;
+        this.listRepeatDay = listRepeatDay;
+    }
+
+    public Alarm(boolean enable, int hour, int minute, List<Integer> listRepeatDay) {
         this.enable = enable;
         this.hour = hour;
         this.minute = minute;
@@ -79,12 +101,12 @@ public class Alarm {
         this.listRepeatDay = listRepeatDay;
     }
 
-    public String getRingtoneURL() {
-        return ringtoneURL;
+    public String getRingtoneUrl() {
+        return ringtoneUrl;
     }
 
-    public void setRingtoneURL(String ringtoneURL) {
-        this.ringtoneURL = ringtoneURL;
+    public void setRingtoneUrl(String ringtoneUrl) {
+        this.ringtoneUrl = ringtoneUrl;
     }
 
     public String getRingtoneName() {

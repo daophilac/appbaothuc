@@ -27,6 +27,7 @@ import com.example.appbaothuc.alarmsetting.RepeatDialogFragment;
 import com.example.appbaothuc.alarmsetting.TypeActivity;
 import com.example.appbaothuc.alarmsetting.YourRingTone;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +57,8 @@ public class SettingAlarmActivity extends AppCompatActivity implements LableDial
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_alarm);
-
+        Alarm alarm = (Alarm) getIntent().getExtras().getSerializable("alarm");
+        alarm.getIdAlarm();
         setControll();
     }
     void setControll(){

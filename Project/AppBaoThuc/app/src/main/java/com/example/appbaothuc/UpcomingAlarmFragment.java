@@ -42,8 +42,9 @@ public class UpcomingAlarmFragment extends Fragment {
     public void addAlarm(View view){
         // Khi người dùng bấm vào nút thêm alarm
         List<Integer> listRepeatDay = Arrays.asList(1, 1, 1, 1, 1, 1, 1);
-        Alarm alarm = new Alarm(listAlarm.size(), true, 5,0, listRepeatDay);
-        //databaseHandler.insertAlarm(alarm.isEnable(), alarm.getHour(), alarm.getMinute(), listRepeatDay);
+        Alarm alarm = new Alarm(true, 5,0, listRepeatDay);
+        databaseHandler.insertAlarm(alarm);
+        alarm.setIdAlarm(Integer.parseInt(databaseHandler.getLastAlarm().get("IdAlarm")));
         listAlarm.add(alarm);
         alarmAdapter.notifyItemInserted(listAlarm.size() - 1);
     }

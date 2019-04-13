@@ -27,6 +27,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
 
     public void openAlarmSetting(View v) {
         Intent intent = new Intent(context, SettingAlarmActivity.class);
+        intent.putExtra("alarm", listAlarm.get(0));
         //int a = ((RecyclerView.ViewHolder)v).idAlarm;
         //intent.putExtra("idAlarm", (ViewHolder)v).getItemId());
         context.startActivity(intent);
