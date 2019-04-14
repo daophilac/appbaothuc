@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import com.example.appbaothuc.Alarm;
 import com.example.appbaothuc.DatabaseHandler;
 import com.example.appbaothuc.R;
 
@@ -34,18 +35,19 @@ public class NotificationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         databaseHandler = new DatabaseHandler(this);
         if(databaseHandler.checkIfThereIsAnyAlarm()){
-            HashMap<String, String> alarmProperty = databaseHandler.getTheNearestAlarm();
+            Alarm alarm = databaseHandler.getTheNearestAlarm();
             Calendar timeNow = Calendar.getInstance();
             Calendar timeFuture = Calendar.getInstance();
             Calendar timeDelta = Calendar.getInstance();
-            timeFuture.set(Calendar.DAY_OF_WEEK, Integer.parseInt(alarmProperty.get("DayOfWeek")));
-            timeFuture.set(Calendar.HOUR_OF_DAY, Integer.parseInt(alarmProperty.get("Hour")));
-            timeFuture.set(Calendar.MINUTE, Integer.parseInt(alarmProperty.get("Minute")));
+            timeFuture.set(Calendar.DAY_OF_WEEK, alarm.getImmediateProperty().getDayOfWeek());
+            timeFuture.set(Calendar.HOUR_OF_DAY, alarm.getHour());
+            timeFuture.set(Calendar.MINUTE, alarm.getMinute());
             timeFuture.set(Calendar.SECOND, 0);
             long deltaInMillisecond = Math.abs(timeFuture.getTimeInMillis() - timeNow.getTimeInMillis());
             timeDelta.setTimeInMillis(timeNow.getTimeInMillis() + deltaInMillisecond);
             AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
             Intent alarmServiceIntent = new Intent(this.getApplicationContext(), AlarmService.class);
+            //alarmServiceIntent.putExtra("alarm", alarm);
             PendingIntent pendingIntent = PendingIntent.getService(this, 0, alarmServiceIntent, 0);
             alarmManager.set(AlarmManager.RTC_WAKEUP, timeDelta.getTimeInMillis(), pendingIntent);
 
@@ -53,11 +55,11 @@ public class NotificationService extends Service {
 
             String nextAlarmTextDayOfWeek = databaseHandler.getDayOfWeekInString(timeFuture.get(Calendar.DAY_OF_WEEK));
             String nextAlarmTextTime;
-            if(Integer.parseInt(alarmProperty.get("Minute")) < 10){
-                nextAlarmTextTime = alarmProperty.get("Hour") + ":0" + alarmProperty.get("Minute");
+            if(alarm.getMinute() < 10){
+                nextAlarmTextTime = alarm.getHour() + ":0" + alarm.getMinute();
             }
             else{
-                nextAlarmTextTime = alarmProperty.get("Hour") + ":" + alarmProperty.get("Minute");
+                nextAlarmTextTime = alarm.getHour() + ":" + alarm.getMinute();
             }
             String nextAlarmText = nextAlarmTextDayOfWeek + " " + nextAlarmTextTime;
 

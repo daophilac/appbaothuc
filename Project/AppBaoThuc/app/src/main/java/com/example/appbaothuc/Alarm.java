@@ -1,5 +1,7 @@
 package com.example.appbaothuc;
 
+import android.support.annotation.Nullable;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,6 +18,8 @@ public class Alarm implements Serializable {
     private boolean vibrate;
     private int volume;
     private int challengeType;
+
+    private ImmediateProperty immediateProperty;
 
     public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Boolean> listRepeatDay, String ringtoneUrl, String ringtoneName, String label, int snoozeTime, boolean vibrate, int volume, int challengeType) {
         this.idAlarm = idAlarm;
@@ -153,7 +157,27 @@ public class Alarm implements Serializable {
         return challengeType;
     }
 
+    public ImmediateProperty getImmediateProperty() {
+        return immediateProperty;
+    }
+
+    public void setImmediateProperty(ImmediateProperty immediateProperty) {
+        this.immediateProperty = immediateProperty;
+    }
+
     public void setChallengeType(int challengeType) {
         this.challengeType = challengeType;
+    }
+
+    public static class ImmediateProperty{
+        private Integer dayOfWeek;
+
+        public int getDayOfWeek() {
+            return dayOfWeek;
+        }
+
+        public void setDayOfWeek(Integer dayOfWeek) {
+            this.dayOfWeek = dayOfWeek;
+        }
     }
 }

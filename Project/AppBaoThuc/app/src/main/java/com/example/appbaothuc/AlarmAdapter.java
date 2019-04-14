@@ -21,7 +21,7 @@ import java.util.List;
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
     private Context context;                                // Context là class cha của Activity, nó có nhiều phương thức quan trọng chịu trách nhiệm xử lý liên quan tới hệ thống và giao diện. Vì vậy ta thường truyền Context đi vòng vòng khắp mọi nơi
     private List<Alarm> listAlarm;                          // Dĩ nhiên là một Adapter thì phải được nhận vào một list các item
-    private HashMap<Integer, Alarm> hashMapIdViewAlarm;     // Giải thích ở phương thức openAlarmSetting
+    private HashMap<Integer, Alarm> hashMapIdViewAlarm;
 
 
     // Phương thức khởi tạo AlarmAdapter, đòi hỏi nhận vào cái Context và một list các Alarm

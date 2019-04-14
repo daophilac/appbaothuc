@@ -44,7 +44,7 @@ public class UpcomingAlarmFragment extends Fragment {
         List<Boolean> listRepeatDay = Arrays.asList(true, true, true, true, true, true, true);
         Alarm alarm = new Alarm(true, 5,0, listRepeatDay);
         databaseHandler.insertAlarm(alarm);
-        alarm.setIdAlarm(Integer.parseInt(databaseHandler.getLastAlarm().get("IdAlarm")));
+        alarm.setIdAlarm(databaseHandler.getRecentAddedAlarm().getIdAlarm());
         listAlarm.add(alarm);
         alarmAdapter.notifyItemInserted(listAlarm.size() - 1);
     }
