@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#4E4E4E"
+    android:layout_marginStart="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="5dp"
+    android:weightSum="6">
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/swEnableAlarm"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:theme="@style/ToggleSwitchTheme"/>
+    <TextView
+        android:id="@+id/tvHour"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="00"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tvColon"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:gravity="center"
+        android:text=":"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tvMinute"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="00"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="20sp" />
+    <TextView
+        android:id="@+id/tvRepeat"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="2.8"
+        android:text="Cả tuần"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:textColor="#FFFFFF"/>
+    <ImageView
+        android:id="@+id/imgAlarmType"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="0.1"
+        app:srcCompat="@drawable/ic_math" />
+
+    <ImageButton
+        android:id="@+id/btnMore"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#4E4E4E"
+        android:layout_weight="0.1"
+        app:srcCompat="@drawable/ic_more" />
+
+</LinearLayout>
