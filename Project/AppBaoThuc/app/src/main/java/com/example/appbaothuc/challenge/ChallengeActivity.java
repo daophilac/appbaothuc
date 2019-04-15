@@ -6,21 +6,29 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 
+import com.example.appbaothuc.Alarm;
+import com.example.appbaothuc.R;
+
 public class ChallengeActivity extends AppCompatActivity {
-    private KeyPressListener keyPressListener;
+    private Alarm alarm;
+    public static int defaultRingtoneId = R.raw.boss_battle_a; //TODO
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        alarm = (Alarm) getIntent().getExtras().getSerializable("alarm");
+        // TODO: Debug purpose
+        String ringtoneUrl = "/sdcard/music/7.1. Final Frontier (feat. Merethe Soltvedt).flac";
+        alarm.setRingtoneUrl(ringtoneUrl);
+        alarm.setRingtoneName(ringtoneUrl.substring(ringtoneUrl.lastIndexOf("/") + 1, ringtoneUrl.lastIndexOf(".")));
+        alarm.setLabel("Do exercise");
+        // TODO
         FragmentManager fragmentManager = getSupportFragmentManager();
-        ChallengeDialogFragment challengeDialogFragment = ChallengeDialogFragment.newInstance("");
+        ChallengeDialogFragment challengeDialogFragment = ChallengeDialogFragment.newInstance(alarm,"");
         challengeDialogFragment.show(fragmentManager, "challenge_dialog_fragment");
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return true;
-    }
-    public interface KeyPressListener{
-        void onKeyDown(int keyCode, KeyEvent keyEvent);
     }
 }

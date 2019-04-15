@@ -39,7 +39,7 @@ public class NotificationService extends Service {
             Calendar timeNow = Calendar.getInstance();
             Calendar timeFuture = Calendar.getInstance();
             Calendar timeDelta = Calendar.getInstance();
-            timeFuture.set(Calendar.DAY_OF_WEEK, alarm.getImmediateProperty().getDayOfWeek());
+            timeFuture.set(Calendar.DAY_OF_WEEK, alarm.getDayOfWeek());
             timeFuture.set(Calendar.HOUR_OF_DAY, alarm.getHour());
             timeFuture.set(Calendar.MINUTE, alarm.getMinute());
             timeFuture.set(Calendar.SECOND, 0);
@@ -47,8 +47,9 @@ public class NotificationService extends Service {
             timeDelta.setTimeInMillis(timeNow.getTimeInMillis() + deltaInMillisecond);
             AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
             Intent alarmServiceIntent = new Intent(this.getApplicationContext(), AlarmService.class);
-            //alarmServiceIntent.putExtra("alarm", alarm);
-            PendingIntent pendingIntent = PendingIntent.getService(this, 0, alarmServiceIntent, 0);
+            alarmServiceIntent.putExtra("alarm", alarm);
+            PendingIntent pendingIntent = PendingIntent.getService(this, 0, alarmServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
             alarmManager.set(AlarmManager.RTC_WAKEUP, timeDelta.getTimeInMillis(), pendingIntent);
 
 

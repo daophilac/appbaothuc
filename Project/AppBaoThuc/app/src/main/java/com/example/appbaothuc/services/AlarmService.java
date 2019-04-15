@@ -25,6 +25,7 @@ public class AlarmService extends Service {
         Alarm alarm = (Alarm) intent.getExtras().getSerializable("alarm");
         Intent alarmIntent = new Intent(this, ChallengeActivity.class);
         alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        alarmIntent.putExtra("alarm", alarm);
         startActivity(alarmIntent);
         return super.onStartCommand(intent, flags, startId);
     }

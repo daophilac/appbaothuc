@@ -17,14 +17,18 @@ import android.os.IBinder;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.appbaothuc.challenge.ChallengeActivity;
 import com.example.appbaothuc.services.AlarmService;
 import com.example.appbaothuc.services.NotificationService;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -40,6 +44,14 @@ public class MainActivity extends AppCompatActivity {
     private MediaPlayer musicPlayer;
 
     private boolean settingFragmentIsAdded;
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //upcomingAlarmFragment.getAlarmAdapter().notifyDataSetChanged();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
 
         buttonAlarm = findViewById(R.id.button_alarm);
         buttonSetting = findViewById(R.id.button_setting);
+        settingFragment.setEnterTransition(new Slide(Gravity.END));
+        settingFragment.setExitTransition(new Slide(Gravity.END));
         fragmentManager = getSupportFragmentManager();
         settingFragmentIsAdded = false;
         musicPlayer = new MediaPlayer();
@@ -136,6 +150,11 @@ public class MainActivity extends AppCompatActivity {
             fragmentManager.beginTransaction().add(R.id.fragment_container, settingFragment).commit();
             settingFragmentIsAdded = true;
         }
+    }
+    public static void restartAlarmService(){
+//        MainActivity mainActivity = new MainActivity();
+//        Intent intent = new Intent(mainActivity.getBaseContext(), ChallengeActivity.class);
+//        mainActivity.startActivity(intent);
     }
     public void testPlayingMusic(View view){
         //PermissionInquirer.askStoragePermission(this);

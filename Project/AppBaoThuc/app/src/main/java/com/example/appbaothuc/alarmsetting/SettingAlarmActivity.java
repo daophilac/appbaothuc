@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,16 +23,23 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.appbaothuc.Alarm;
+import com.example.appbaothuc.AlarmAdapter;
+import com.example.appbaothuc.DatabaseHandler;
+import com.example.appbaothuc.MainActivity;
 import com.example.appbaothuc.R;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SettingAlarmActivity extends AppCompatActivity implements LableDialogFragment.LabelDialogListener,
         AgainDialogFragment.AgainDialogListener, RepeatDialogFragment.RepeatDialogListener, View.OnClickListener {
-    private int idAlarm;
+    private Alarm alarm;
+    private List<Alarm> listAlarm;
+    private AlarmAdapter alarmAdapter;
+    private String mode;
     private TimePicker timePicker; // Chọn giờ
     private Button btnPlayMusic, btnCancel, btnDelete, btnOk; //Phát nhạc đang chọn, Hủy thao tác, Xóa báo thức, Hoàn tất
     private LinearLayout linearLayoutLabel, linearLayoutType, linearLayoutRingTone,
@@ -45,21 +53,37 @@ public class SettingAlarmActivity extends AppCompatActivity implements LableDial
     private Switch aSwitch; // bật tắt rung
 
     public static YourRingTone yourRingTone;
-    public static String label, outputAgaint, outputRepeat;
-    public static Integer hour, minute, vibrate, snoozeTime, volume;
-    public static ArrayList<Integer> listRepeatDay;
-    public static Integer challengeType; // chua co
-
+    public static String label, outputAgain, outputRepeat;
+    public static int hour, minute, snoozeTime, volume;
+    public static ArrayList<Boolean> listRepeatDay;
+    public static boolean vibrate;
+    public static int challengeType; // chua co
+    private DatabaseHandler databaseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_alarm);
-        Alarm alarm = (Alarm) getIntent().getExtras().getSerializable("alarm");
-        alarm.getIdAlarm();
+        mode = getIntent().getExtras().getString("mode");
+        if(mode.equals("add")){
+            // Khởi tạo tất cả các thuộc tính mặc định
+            alarm = createDefaultAlarm();
+        }
+        else if(mode.equals("edit")){
+            alarm = getIntent().getExtras().getParcelable("alarm");
+            // Có thể lấy ra các thuộc tính từ alarm
+        }
+        alarmAdapter = getIntent().getExtras().getParcelable("alarmAdapter");
+        listAlarm = alarmAdapter.getListAlarm();
         setControll();
     }
+    private Alarm createDefaultAlarm(){
+        List<Boolean> listRepeatDay = Arrays.asList(true, true, true, true, true, false, false);
+        return new Alarm(true, R.integer.default_hour,R.integer.default_hour, listRepeatDay);
+    }
     void setControll(){
+        databaseHandler = new DatabaseHandler(this);
+        yourRingTone = new YourRingTone(null, null);
         btnPlayMusic = findViewById(R.id.btnPlayMusic);
         btnCancel = findViewById(R.id.btnCancel);
         btnDelete = findViewById(R.id.btnDelete);
@@ -93,20 +117,59 @@ public class SettingAlarmActivity extends AppCompatActivity implements LableDial
         textViewPlus10M.setOnClickListener(this);
 
         btnOk.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
+            //@RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                outputAgaint = textViewAgain.getText().toString();
+                outputAgain = textViewAgain.getText().toString();
                 label = textViewLabel.getText().toString();
-                hour = timePicker.getHour();
-                minute = timePicker.getMinute();
+                if(Build.VERSION.SDK_INT >= 23){
+                    hour = timePicker.getHour();
+                    minute = timePicker.getMinute();
+                }
+                else{
+                    hour = timePicker.getCurrentHour();
+                    minute = timePicker.getCurrentMinute();
+                }
                 volume = seekBar.getProgress();
-                if(aSwitch.isChecked()) vibrate = 1;
-                else vibrate = 0;
-                String tst = label + " _ " + outputAgaint + " _ "
+                if(aSwitch.isChecked()) vibrate = true;
+                else vibrate = false;
+                String tst = label + " _ " + outputAgain + " _ "
                         + hour + " _ " + minute;
 
                 Toast.makeText(SettingAlarmActivity.this, tst, Toast.LENGTH_SHORT).show();
+
+
+
+
+
+                alarm.setHour(hour);
+                alarm.setMinute(minute);
+                alarm.setListRepeatDay(listRepeatDay);
+                alarm.setRingtoneUrl(yourRingTone.getUriRingTone());
+                alarm.setRingtoneName(yourRingTone.getNameRingTone());
+                alarm.setLabel(label);
+                alarm.setVibrate(vibrate);
+                alarm.setSnoozeTime(snoozeTime);
+                alarm.setVolume(volume);
+                alarm.setChallengeType(challengeType);
+                if(mode.equals("edit")){
+                    databaseHandler.updateAlarm(alarm);
+                    for(int i = 0; i < listAlarm.size(); i++){
+                        if(listAlarm.get(i).getIdAlarm() == alarm.getIdAlarm()){
+                            alarmAdapter.notifyItemChanged(i);
+                            break;
+                        }
+                    }
+                    MainActivity.restartAlarmService();
+                }
+                else if(mode.equals("add")){
+                    databaseHandler.insertAlarm(alarm);
+                    alarm.setIdAlarm(databaseHandler.getRecentAddedAlarm().getIdAlarm());
+                    listAlarm.add(alarm);
+                    alarmAdapter.notifyItemInserted(listAlarm.size() - 1);
+                    MainActivity.restartAlarmService();
+                }
+                finish();
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -211,20 +274,20 @@ public class SettingAlarmActivity extends AppCompatActivity implements LableDial
         repeatDialogFragment.show(getSupportFragmentManager(), "fragment_repeat");
     }
     @Override
-    public void onFinishCheckDialog(ArrayList<Integer> input) {
+    public void onFinishCheckDialog(ArrayList<Boolean> input) {
         listRepeatDay = new ArrayList<>();
         for(int i = 0; i < 7; i++){
-            listRepeatDay.add(i, 0);
+            listRepeatDay.add(i, false);
             listRepeatDay.set(i, input.get(i));
         }
         createStringRepeat(input);
     }
 
-    public void createStringRepeat(ArrayList<Integer> listDays){
+    public void createStringRepeat(ArrayList<Boolean> listDays){
         String repeatString = "";
         int i = 0;
         for(i = 0; i < 7; i++){
-            if(listDays.get(i) == 0) break;
+            if(listDays.get(i) == false) break;
         }
         if(i == 7) {
             outputRepeat = "Hằng ngày.";
@@ -238,16 +301,16 @@ public class SettingAlarmActivity extends AppCompatActivity implements LableDial
         }
         i = 0;
         for(i = 0; i < 5; i++){
-            if(listDays.get(i) == 1) break;
+            if(listDays.get(i) == true) break;
         }
-        if(i == 5 && listDays.get(5) == 1 && listDays.get(6) == 1 ){
+        if(i == 5 && listDays.get(5) == true && listDays.get(6) == true ){
             outputRepeat = "Cuối tuần.";
             textViewRepeat.setText(outputRepeat);
             return;
         }
         else {
             for(int j = 0; j < 7; j++){
-                if(listDays.get(j) == 1){
+                if(listDays.get(j) == true){
                     if(j == 6) repeatString += " CN";
                     else repeatString += " T" + (j+2);
                 }
@@ -255,6 +318,11 @@ public class SettingAlarmActivity extends AppCompatActivity implements LableDial
             outputRepeat = repeatString;
             textViewRepeat.setText(outputRepeat);
         }
+    }
+
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs) {
+        return super.onCreateView(name, context, attrs);
     }
 
     static boolean play = false;
@@ -310,14 +378,6 @@ public class SettingAlarmActivity extends AppCompatActivity implements LableDial
             list.put(notificationUri, notificationTitle);
         }
         return list;
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        int test = idAlarm;
-        //databaseHandler.updateAlarm(idAlarm, bla, bla, bla) //TODO
     }
 }
 

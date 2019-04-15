@@ -1,11 +1,11 @@
 package com.example.appbaothuc;
 
-import android.support.annotation.Nullable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class Alarm implements Serializable {
+public class Alarm implements Parcelable {
     private int idAlarm;
     private boolean enable;
     private int hour;
@@ -19,7 +19,8 @@ public class Alarm implements Serializable {
     private int volume;
     private int challengeType;
 
-    private ImmediateProperty immediateProperty;
+    // Non-database property
+    private int dayOfWeek;
 
     public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Boolean> listRepeatDay, String ringtoneUrl, String ringtoneName, String label, int snoozeTime, boolean vibrate, int volume, int challengeType) {
         this.idAlarm = idAlarm;
@@ -157,27 +158,70 @@ public class Alarm implements Serializable {
         return challengeType;
     }
 
-    public ImmediateProperty getImmediateProperty() {
-        return immediateProperty;
-    }
-
-    public void setImmediateProperty(ImmediateProperty immediateProperty) {
-        this.immediateProperty = immediateProperty;
-    }
-
     public void setChallengeType(int challengeType) {
         this.challengeType = challengeType;
     }
 
-    public static class ImmediateProperty{
-        private Integer dayOfWeek;
+    public int getDayOfWeek() {
+        return dayOfWeek;
+    }
 
-        public int getDayOfWeek() {
-            return dayOfWeek;
+    public void setDayOfWeek(int dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+
+
+
+
+
+
+
+    protected Alarm(Parcel in) {
+        idAlarm = in.readInt();
+        enable = in.readByte() != 0;
+        hour = in.readInt();
+        minute = in.readInt();
+        ringtoneUrl = in.readString();
+        ringtoneName = in.readString();
+        label = in.readString();
+        snoozeTime = in.readInt();
+        vibrate = in.readByte() != 0;
+        volume = in.readInt();
+        challengeType = in.readInt();
+        dayOfWeek = in.readInt();
+    }
+
+    public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
+        @Override
+        public Alarm createFromParcel(Parcel in) {
+            return new Alarm(in);
         }
 
-        public void setDayOfWeek(Integer dayOfWeek) {
-            this.dayOfWeek = dayOfWeek;
+        @Override
+        public Alarm[] newArray(int size) {
+            return new Alarm[size];
         }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(idAlarm);
+        dest.writeByte((byte) (enable ? 1 : 0));
+        dest.writeInt(hour);
+        dest.writeInt(minute);
+        dest.writeString(ringtoneUrl);
+        dest.writeString(ringtoneName);
+        dest.writeString(label);
+        dest.writeInt(snoozeTime);
+        dest.writeByte((byte) (vibrate ? 1 : 0));
+        dest.writeInt(volume);
+        dest.writeInt(challengeType);
+        dest.writeInt(dayOfWeek);
     }
 }

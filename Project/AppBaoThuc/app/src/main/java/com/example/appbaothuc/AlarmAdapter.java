@@ -2,6 +2,8 @@ package com.example.appbaothuc;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +20,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
+public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> implements Parcelable {
     private Context context;                                // Context là class cha của Activity, nó có nhiều phương thức quan trọng chịu trách nhiệm xử lý liên quan tới hệ thống và giao diện. Vì vậy ta thường truyền Context đi vòng vòng khắp mọi nơi
     private List<Alarm> listAlarm;                          // Dĩ nhiên là một Adapter thì phải được nhận vào một list các item
     private HashMap<Integer, Alarm> hashMapIdViewAlarm;
@@ -39,7 +41,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     public int getItemCount() {
         return this.listAlarm.size();
     }
-
+    public List<Alarm> getListAlarm(){return listAlarm;}
 
     // Phương thức onCreateViewHolder được gọi khi có một item được thêm vào list
     // Nó nhận vào 2 tham số. ViewGroup là class cha của RecyclerView, nó có khả năng nhét thêm View vào trong RecyclerView
@@ -51,7 +53,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
 
         // LayoutInflater có khả năng tạo ra một View từ một layout cho trước, rồi đưa cho ViewGroup. Ở đây ta không cần quan tâm attachToRoot làm gì
-        View alarmView = layoutInflater.inflate(R.layout.alarm_item, viewGroup, false);
+        View alarmView = layoutInflater.inflate(R.layout.item_alarm, viewGroup, false);
 
         // TODO Lưu ý: Để đạt được mục địch cuối cùng là truyền một Alarm sang cho SettingAlarmActivity, ta cần chuẩn bị trước một điều, đó là gán Id cho cái View vừa tạo
         // TODO Lưu ý: Tuy ta có thể hoàn toàn đặt các Id trùng nhau cho các View mà không bị lỗi, nhưng để việc làm việc với các View sau này diễn ra một cách chính xác, như findViewById
@@ -112,10 +114,10 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         // TODO Lưu ý: Bởi vì mỗi khi người dùng chọn vào một item, thì phương thức openAlarmSetting này được gọi tới
         // TODO Lưu ý: Và View v chính là cái View mà người dùng chọn vào
         // TODO Lưu ý: Rồi từ đó, ta sử dụng v.getId để ra được đúng cái Alarm của cái View đó, rồi truyền cho SettingAlarmActivity
+        intent.putExtra("mode", "edit");
         intent.putExtra("alarm", hashMapIdViewAlarm.get(v.getId()));
         context.startActivity(intent);
     }
-
 
 
     // Class AlarmViewHolder chứa các thuộc tính là các View như CheckBox, TextView nằm bên trong một cái View nằm bên trong RecyclerView
@@ -205,5 +207,36 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             });
             // TODO:...
         }
+    }
+
+
+
+
+
+
+
+    public static final Creator<AlarmAdapter> CREATOR = new Creator<AlarmAdapter>() {
+        @Override
+        public AlarmAdapter createFromParcel(Parcel source) {
+            return new AlarmAdapter(source);
+        }
+
+        @Override
+        public AlarmAdapter[] newArray(int size) {
+            return new AlarmAdapter[size];
+        }
+    };
+    public AlarmAdapter(Parcel source){
+//        this.context = (Context) source.readValue(null);
+        this.listAlarm = source.createTypedArrayList(Alarm.CREATOR);
+    }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(listAlarm);
     }
 }

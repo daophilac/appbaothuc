@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,10 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.appbaothuc.Alarm;
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.services.AlarmService;
+
+import java.io.File;
 
 import static android.content.Context.AUDIO_SERVICE;
 
@@ -29,16 +34,22 @@ enum ChallengeType {
 }
 
 public class ChallengeDialogFragment extends DialogFragment implements MathChallengeFragment.OnFinishChallengeListener{
+    private Alarm alarm;
     private MediaPlayer mediaPlayer;
     private AudioManager audioManager;
     private int currentSystemVolume;
     private int fixedVolume;
-    private String musicFilePath = "/sdcard/download/boss battle a.flac"; //TODO: Hard-coded
+    //private String musicFilePath = "/sdcard/download/boss battle a.flac"; //TODO: Hard-coded
     private ChallengeType challengeType = ChallengeType.Math; // TODO: Hard-coded
     private boolean graduallyIncreaseVolume = true; //TODO: Hard-coded
     private boolean maxVolume = true; //TODO: Hard-coded
-    private int snoozeTime = 5; //TODO: Hard-coded
-    private ImageButton buttonSnooze;
+    private int muteTime = 5; //TODO: Hard-coded
+
+    private TextView textViewLabel;
+    private TextView textViewRingtoneName;
+    private TextView textViewHour;
+    private TextView textViewMinute;
+    private ImageButton buttonMute;
     private Button buttonOk;
     private Button buttonCancel;
 
@@ -47,28 +58,40 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
 
     // flags for communication with background threads
     private boolean isDismissed = false;
-    private boolean isSnoozing = false;
+    private boolean isMuting = false;
     private boolean snoozeAgain = false;
     private Thread threadSnooze;
 
     public ChallengeDialogFragment() {
     }
 
-    public static ChallengeDialogFragment newInstance(String title) {
+    public static ChallengeDialogFragment newInstance(Alarm alarm, String title) {
         ChallengeDialogFragment challengeDialogFragment = new ChallengeDialogFragment();
+        challengeDialogFragment.setAlarm(alarm);
         challengeDialogFragment.setCancelable(false);
         return challengeDialogFragment;
     }
-
+    private void setAlarm(Alarm alarm){
+        this.alarm = alarm;
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_challenge_dialog, container, false);
 
         audioManager = (AudioManager) getContext().getSystemService(AUDIO_SERVICE);
+        textViewLabel = view.findViewById(R.id.textView_label);
+        textViewRingtoneName = view.findViewById(R.id.textView_ringtoneName);
+        textViewHour = view.findViewById(R.id.textView_hour);
+        textViewMinute = view.findViewById(R.id.textView_minute);
         buttonOk = view.findViewById(R.id.button_ok);
         buttonCancel = view.findViewById(R.id.button_cancel);
-        buttonSnooze = view.findViewById(R.id.button_snooze);
+        buttonMute = view.findViewById(R.id.button_mute);
+
+        textViewLabel.setText(alarm.getLabel());
+        textViewRingtoneName.setText("Music: " + alarm.getRingtoneName());
+        textViewHour.setText(String.valueOf(alarm.getHour()));
+        textViewMinute.setText(String.valueOf(alarm.getMinute()));
 
         getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
@@ -81,11 +104,11 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
         });
 
 
-        buttonSnooze.setOnClickListener(new View.OnClickListener() {
+        buttonMute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Snooze for " + String.valueOf(snoozeTime) + " seconds.", Toast.LENGTH_LONG).show();
-                SnoozeManager snoozeManager = new SnoozeManager(mediaPlayer, snoozeTime);
+                Toast.makeText(getContext(), "Mute for " + String.valueOf(muteTime) + " seconds.", Toast.LENGTH_LONG).show();
+                SnoozeManager snoozeManager = new SnoozeManager(mediaPlayer, muteTime);
                 if (threadSnooze == null || !threadSnooze.isAlive()) {
                     threadSnooze = new Thread(snoozeManager);
                     threadSnooze.start();
@@ -104,7 +127,13 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
         else {
 
         }
-        mediaPlayer = MediaPlayer.create(getContext(), R.raw.boss_battle_a); //TODO
+        File file = new File(alarm.getRingtoneUrl());
+        if(file.exists()){
+            mediaPlayer = MediaPlayer.create(getContext(), Uri.fromFile(new File(alarm.getRingtoneUrl())));
+        }
+        else{
+            mediaPlayer = MediaPlayer.create(getContext(), ChallengeActivity.defaultRingtoneId);
+        }
         mediaPlayer.setLooping(false);
         if (!graduallyIncreaseVolume) {
             mediaPlayer.start();
@@ -120,7 +149,7 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
                             if (isDismissed) {
                                 return;
                             }
-                            if (isSnoozing) {
+                            if (isMuting) {
                                 return;
                             }
                             mediaPlayer.setVolume(i / 1000, i / 1000);
@@ -157,11 +186,11 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
         }
 
         public void run() {
-            isSnoozing = true;
+            isMuting = true;
             mediaPlayer.setVolume(0, 0);
             try {
                 Thread.sleep(this.snoozeTime * 1000);
-                isSnoozing = false;
+                isMuting = false;
                 for (float i = 1; i <= 1000; i++) {
                     if (isDismissed) {
                         return;
@@ -210,11 +239,4 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
             }
         });
     }
-
-//    @Override
-//    public void onKeyDown(int keyCode, KeyEvent keyEvent) {
-//        int s = 2;
-//        int b = s;
-//        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, fixedVolume, 0);
-//    }
 }

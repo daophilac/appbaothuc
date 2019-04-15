@@ -162,6 +162,30 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 ringtoneUrl, ringtoneName, label, vibrate, snoozeTime, volume, challengeType);
         db.execSQL(sql);
     }
+    public void updateAlarm(Alarm updatedAlarm){
+        int idAlarm = updatedAlarm.getIdAlarm();
+        boolean enable = updatedAlarm.isEnable();
+        int hour = updatedAlarm.getHour();
+        int minute = updatedAlarm.getMinute();
+        List<Boolean> listRepeatDay = updatedAlarm.getListRepeatDay();
+        String ringtoneUrl = updatedAlarm.getRingtoneUrl();
+        String ringtoneName = updatedAlarm.getRingtoneName();
+        String label = updatedAlarm.getLabel();
+        boolean vibrate = updatedAlarm.isVibrate();
+        int snoozeTime = updatedAlarm.getSnoozeTime();
+        int volume = updatedAlarm.getVolume();
+        int challengeType = updatedAlarm.getChallengeType();
+        sqlFormat = "update Alarm set" +
+                " Enable = '%b', Hour = %d, Minute = %d," +
+                " Monday = '%b', Tuesday = '%b', Wednesday = '%b', Thursday = '%b', Friday = '%b', Saturday = '%b', Sunday = '%b'," +
+                " RingtoneUrl = '%s', RingtoneName = '%s', Label = '%s', Vibrate = '%b', SnoozeTime = %d, Volume = %d, ChallengeType = %d" +
+                " where IdAlarm = %d";
+        sql = String.format(sqlFormat,
+                enable, hour, minute,
+                listRepeatDay.get(0), listRepeatDay.get(1), listRepeatDay.get(2), listRepeatDay.get(3), listRepeatDay.get(4), listRepeatDay.get(5), listRepeatDay.get(6),
+                ringtoneUrl, ringtoneName, label, vibrate, snoozeTime, volume, challengeType, idAlarm);
+        db.execSQL(sql);
+    }
 
     public Alarm getRecentAddedAlarm() {
         sql = "select * from Alarm order by IdAlarm desc limit 1";
@@ -255,10 +279,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (closeCursor) {
             cursor.close();
         }
-        Alarm.ImmediateProperty immediateProperty = new Alarm.ImmediateProperty();
-        immediateProperty.setDayOfWeek(dayOfWeek);
         Alarm alarm = new Alarm(idAlarm, enable, hour, minute, listRepeatDay, ringtoneUrl, ringtoneName, label, snoozeTime, vibrate, volume, challengeType);
-        alarm.setImmediateProperty(immediateProperty);
+        alarm.setDayOfWeek(dayOfWeek);
         return alarm;
     }
     private Alarm buildAlarmFromCursor(Cursor cursor, boolean closeCursor) {
