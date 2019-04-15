@@ -14,6 +14,13 @@ public class SettingFragment extends Fragment {
     // TODO: public boolean preventPhoneTurnOff;
     // TODO: public int maxSnooze;
 
+
+    public static int muteMusicIn; // how many seconds?
+    public static int canMuteMusicFor; // how many times?
+    public static boolean graduallyIncreaseVolume;
+    public static boolean preventTurnOffPhone;
+    public static int dismissAfter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

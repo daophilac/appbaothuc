@@ -18,7 +18,7 @@ import com.example.appbaothuc.alarmsetting.SettingAlarmFragment;
 import com.example.appbaothuc.interfaces.OnOpenSettingAlarmFragment;
 import com.example.appbaothuc.interfaces.SettingAlarmFragmentListener;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -36,11 +36,13 @@ public class UpcomingAlarmFragment extends Fragment implements SettingAlarmFragm
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_upcoming_alarm, container, false);
 
-        recyclerViewListAlarm = view.findViewById(R.id.recyclerView_list_alarm);
+        recyclerViewListAlarm = view.findViewById(R.id.recycler_view_list_alarm);
         buttonAddAlarm = view.findViewById(R.id.button_add_alarm);
 
         databaseHandler = new DatabaseHandler(getContext());
-        listAlarm = new ArrayList<>();
+        listAlarm = databaseHandler.getAllAlarm();
+        Collections.sort(listAlarm);
+        MainActivity.restartAlarmService(getContext());
         alarmAdapter = new AlarmAdapter(getContext(), this, listAlarm);
         settingAlarmFragment = new SettingAlarmFragment();
 
@@ -76,16 +78,15 @@ public class UpcomingAlarmFragment extends Fragment implements SettingAlarmFragm
 
 
 
-
     // Override
     @Override
     public void onAddNewAlarm(Alarm alarm) {
         databaseHandler.insertAlarm(alarm);
         alarm.setIdAlarm(databaseHandler.getRecentAddedAlarm().getIdAlarm());
         listAlarm.add(alarm);
-        alarmAdapter.notifyItemInserted(listAlarm.size() - 1);
-        MainActivity.restartAlarmService();
-        //fragmentManager.beginTransaction().remove(settingAlarmFragment).commit();
+        Collections.sort(listAlarm);
+        alarmAdapter.notifyDataSetChanged();
+        MainActivity.restartAlarmService(getContext());
     }
 
     @Override
@@ -93,11 +94,12 @@ public class UpcomingAlarmFragment extends Fragment implements SettingAlarmFragm
         databaseHandler.updateAlarm(alarm);
         for(int i = 0; i < listAlarm.size(); i++){
             if(listAlarm.get(i).getIdAlarm() == alarm.getIdAlarm()){
-                alarmAdapter.notifyItemChanged(i);
+                listAlarm.set(i, alarm);
+                Collections.sort(listAlarm);
+                alarmAdapter.notifyDataSetChanged();
                 break;
             }
         }
-        MainActivity.restartAlarmService();
-        //fragmentManager.beginTransaction().remove(settingAlarmFragment).commit();
+        MainActivity.restartAlarmService(getContext());
     }
 }

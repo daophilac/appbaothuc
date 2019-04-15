@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import java.util.List;
 
-public class Alarm implements Parcelable {
+public class Alarm implements Parcelable, Comparable<Alarm> {
     private int idAlarm;
     private boolean enable;
     private int hour;
@@ -21,6 +21,7 @@ public class Alarm implements Parcelable {
 
     // Non-database property
     private int dayOfWeek;
+    private String describeRepeatDay;
 
     public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Boolean> listRepeatDay, String ringtoneUrl, String ringtoneName, String label, int snoozeTime, boolean vibrate, int volume, int challengeType) {
         this.idAlarm = idAlarm;
@@ -35,6 +36,8 @@ public class Alarm implements Parcelable {
         this.vibrate = vibrate;
         this.volume = volume;
         this.challengeType = challengeType;
+
+        generateDescribeRepeatDay();
     }
 
     public Alarm(boolean enable, int hour, int minute, List<Boolean> listRepeatDay, String ringtoneUrl, String ringtoneName, String label, int snoozeTime, boolean vibrate, int volume, int challengeType) {
@@ -49,6 +52,8 @@ public class Alarm implements Parcelable {
         this.vibrate = vibrate;
         this.volume = volume;
         this.challengeType = challengeType;
+
+        generateDescribeRepeatDay();
     }
 
     public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Boolean> listRepeatDay) {
@@ -57,6 +62,8 @@ public class Alarm implements Parcelable {
         this.hour = hour;
         this.minute = minute;
         this.listRepeatDay = listRepeatDay;
+
+        generateDescribeRepeatDay();
     }
 
     public Alarm(boolean enable, int hour, int minute, List<Boolean> listRepeatDay) {
@@ -64,6 +71,8 @@ public class Alarm implements Parcelable {
         this.hour = hour;
         this.minute = minute;
         this.listRepeatDay = listRepeatDay;
+
+        generateDescribeRepeatDay();
     }
 
     public int getIdAlarm() {
@@ -104,6 +113,7 @@ public class Alarm implements Parcelable {
 
     public void setListRepeatDay(List<Boolean> listRepeatDay) {
         this.listRepeatDay = listRepeatDay;
+        generateDescribeRepeatDay();
     }
 
     public String getRingtoneUrl() {
@@ -170,12 +180,62 @@ public class Alarm implements Parcelable {
         this.dayOfWeek = dayOfWeek;
     }
 
+    public String getDescribeRepeatDay() {
+        return describeRepeatDay;
+    }
 
+    public void setDescribeRepeatDay(String describeRepeatDay) {
+        this.describeRepeatDay = describeRepeatDay;
+    }
 
-
-
-
-
+    private void generateDescribeRepeatDay(){
+        int amount = 0;
+        for(int i = 0; i < 7; i++){
+            if(listRepeatDay.get(i)){
+                amount++;
+            }
+        }
+        if(amount == 7){
+            this.describeRepeatDay = "Everyday.";
+        }
+        else if(amount == 5 && !listRepeatDay.get(5) && !listRepeatDay.get(6)){
+            this.describeRepeatDay = "Weekdays.";
+        }
+        else if(amount == 2 && listRepeatDay.get(5) && listRepeatDay.get(6)){
+            this.describeRepeatDay = "Weekends.";
+        }
+        else{
+            this.describeRepeatDay = "";
+            for(int i = 0; i < 7; i++){
+                if(listRepeatDay.get(i)){
+                    switch (i){
+                        case 0:
+                            this.describeRepeatDay = this.describeRepeatDay.concat("Mon, ");
+                            break;
+                        case 1:
+                            this.describeRepeatDay = this.describeRepeatDay.concat("Tue, ");
+                            break;
+                        case 2:
+                            this.describeRepeatDay = this.describeRepeatDay.concat("Wed, ");
+                            break;
+                        case 3:
+                            this.describeRepeatDay = this.describeRepeatDay.concat("Thu, ");
+                            break;
+                        case 4:
+                            this.describeRepeatDay = this.describeRepeatDay.concat("Fri, ");
+                            break;
+                        case 5:
+                            this.describeRepeatDay = this.describeRepeatDay.concat("Sat, ");
+                            break;
+                        case 6:
+                            this.describeRepeatDay = this.describeRepeatDay.concat("Sun, ");
+                            break;
+                    }
+                }
+            }
+            this.describeRepeatDay = this.describeRepeatDay.substring(0, this.describeRepeatDay.lastIndexOf(','));
+        }
+    }
 
     protected Alarm(Parcel in) {
         idAlarm = in.readInt();
@@ -223,5 +283,53 @@ public class Alarm implements Parcelable {
         dest.writeInt(volume);
         dest.writeInt(challengeType);
         dest.writeInt(dayOfWeek);
+    }
+
+    @Override
+    public int compareTo(Alarm o) {
+        if(this.isEnable()){
+            if(!o.isEnable()){
+                return -1;
+            }
+            else if(this.getHour() < o.getHour()){
+                return -1;
+            }
+            else if(this.getHour() == o.getHour()){
+                if(this.getMinute() < o.getMinute()){
+                    return -1;
+                }
+                else if(this.getMinute() == o.getMinute()){
+                    return 0;
+                }
+                else{
+                    return 1;
+                }
+            }
+            else{
+                return 1;
+            }
+        }
+        else{
+            if(o.isEnable()){
+                return 1;
+            }
+            else if(this.getHour() < o.getHour()){
+                return -1;
+            }
+            else if(this.getHour() == o.getHour()){
+                if(this.getMinute() < o.getMinute()){
+                    return -1;
+                }
+                else if(this.getMinute() == o.getMinute()){
+                    return 0;
+                }
+                else{
+                    return 1;
+                }
+            }
+            else{
+                return 1;
+            }
+        }
     }
 }

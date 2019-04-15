@@ -25,7 +25,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.appbaothuc.Alarm;
-import com.example.appbaothuc.AlarmAdapter;
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.UpcomingAlarmFragment;
 import com.example.appbaothuc.interfaces.OnOpenSettingAlarmFragment;
@@ -276,9 +275,13 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             listRepeatDay.add(i, false);
             listRepeatDay.set(i, input.get(i));
         }
-        createStringRepeat(input);
+        //createStringRepeat(input);
+        alarm.setListRepeatDay(listRepeatDay);
+        createStringRepeat();
     }
-
+    public void createStringRepeat(){
+        textViewRepeat.setText(alarm.getDescribeRepeatDay());
+    }
     public void createStringRepeat(ArrayList<Boolean> listDays){
         String repeatString = "";
         int i = 0;

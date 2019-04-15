@@ -25,16 +25,6 @@
 
             </FrameLayout>
 
-            <!--<ImageButton-->
-                <!--android:id="@+id/button_add_alarm"-->
-                <!--android:layout_width="64dp"-->
-                <!--android:layout_height="64dp"-->
-                <!--android:layout_marginEnd="10dp"-->
-                <!--android:layout_marginBottom="10dp"-->
-                <!--android:background="@drawable/ic_add"-->
-                <!--app:layout_constraintBottom_toTopOf="@+id/constraint_layout_menu"-->
-                <!--app:layout_constraintRight_toRightOf="parent" />-->
-
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraint_layout_menu"
                 android:layout_width="match_parent"
@@ -65,7 +55,6 @@
                     android:id="@+id/button_music"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="addAlarmAfter1Minute"
                     android:src="@drawable/ic_music"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@+id/button_setting"
@@ -75,7 +64,6 @@
                     android:id="@+id/button_stop"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="addAlarmAfter2Minute"
                     android:src="@drawable/ic_stop"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@+id/button_music"

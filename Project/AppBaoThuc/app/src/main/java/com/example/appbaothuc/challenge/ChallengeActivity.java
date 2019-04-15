@@ -11,11 +11,12 @@ import com.example.appbaothuc.R;
 
 public class ChallengeActivity extends AppCompatActivity {
     private Alarm alarm;
-    public static int defaultRingtoneId = R.raw.boss_battle_a; //TODO
+    public static final int defaultRingtoneId = R.raw.boss_battle_a; //TODO
+    public static final String defaultRingtoneName = "Boss battle A";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        alarm = (Alarm) getIntent().getExtras().getSerializable("alarm");
+        alarm = getIntent().getExtras().getParcelable("alarm");
         // TODO: Debug purpose
         String ringtoneUrl = "/sdcard/music/7.1. Final Frontier (feat. Merethe Soltvedt).flac";
         alarm.setRingtoneUrl(ringtoneUrl);

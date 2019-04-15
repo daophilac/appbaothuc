@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.appbaothuc.Alarm;
+import com.example.appbaothuc.MainActivity;
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.services.AlarmService;
 
@@ -82,16 +83,31 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
         audioManager = (AudioManager) getContext().getSystemService(AUDIO_SERVICE);
         textViewLabel = view.findViewById(R.id.textView_label);
         textViewRingtoneName = view.findViewById(R.id.textView_ringtoneName);
-        textViewHour = view.findViewById(R.id.textView_hour);
-        textViewMinute = view.findViewById(R.id.textView_minute);
+        textViewHour = view.findViewById(R.id.text_view_hour);
+        textViewMinute = view.findViewById(R.id.text_view_minute);
         buttonOk = view.findViewById(R.id.button_ok);
         buttonCancel = view.findViewById(R.id.button_cancel);
         buttonMute = view.findViewById(R.id.button_mute);
 
         textViewLabel.setText(alarm.getLabel());
-        textViewRingtoneName.setText("Music: " + alarm.getRingtoneName());
         textViewHour.setText(String.valueOf(alarm.getHour()));
-        textViewMinute.setText(String.valueOf(alarm.getMinute()));
+        if(alarm.getMinute() < 10){
+            textViewMinute.setText("0" + String.valueOf(alarm.getMinute()));
+        }
+        else{
+            textViewMinute.setText(String.valueOf(alarm.getMinute()));
+        }
+
+        File file = new File(alarm.getRingtoneUrl());
+        if(file.exists()){
+            mediaPlayer = MediaPlayer.create(getContext(), Uri.fromFile(new File(alarm.getRingtoneUrl())));
+            textViewRingtoneName.setText("Music: " + alarm.getRingtoneName());
+        }
+        else{
+            mediaPlayer = MediaPlayer.create(getContext(), ChallengeActivity.defaultRingtoneId);
+            textViewRingtoneName.setText("Music: " + ChallengeActivity.defaultRingtoneName);
+        }
+        mediaPlayer.setLooping(false);
 
         getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
@@ -127,14 +143,6 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
         else {
 
         }
-        File file = new File(alarm.getRingtoneUrl());
-        if(file.exists()){
-            mediaPlayer = MediaPlayer.create(getContext(), Uri.fromFile(new File(alarm.getRingtoneUrl())));
-        }
-        else{
-            mediaPlayer = MediaPlayer.create(getContext(), ChallengeActivity.defaultRingtoneId);
-        }
-        mediaPlayer.setLooping(false);
         if (!graduallyIncreaseVolume) {
             mediaPlayer.start();
         }
@@ -224,19 +232,20 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
                 getActivity().finish();
                 audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentSystemVolume, 0);
+                MainActivity.restartAlarmService(getContext());
             }
         });
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AlarmService.class);
-                getActivity().stopService(intent);
-                isDismissed = true;
-                mediaPlayer.release();
-                getDialog().dismiss();
-
-                getActivity().finish();
-            }
-        });
+//        buttonCancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getContext(), AlarmService.class);
+//                getActivity().stopService(intent);
+//                isDismissed = true;
+//                mediaPlayer.release();
+//                getDialog().dismiss();
+//
+//                getActivity().finish();
+//            }
+//        });
     }
 }

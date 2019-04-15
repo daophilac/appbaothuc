@@ -1,30 +1,18 @@
 package com.example.appbaothuc;
 
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Slide;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-import com.example.appbaothuc.services.AlarmService;
-
-import java.util.Calendar;
+import com.example.appbaothuc.services.NotificationService;
 
 public class MainActivity extends AppCompatActivity {
     private static final String DATABASE_NAME = "APPBAOTHUC.db";
@@ -129,153 +117,13 @@ public class MainActivity extends AppCompatActivity {
             settingFragmentIsAdded = true;
         }
     }
-    public static void restartAlarmService(){
-//        MainActivity mainActivity = new MainActivity();
-//        Intent intent = new Intent(mainActivity.getBaseContext(), ChallengeActivity.class);
-//        mainActivity.startActivity(intent);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // testing methods
-    public void testPlayingMusic(View view){
-        //PermissionInquirer.askStoragePermission(this);
-        musicPlayer.release();
-        musicPlayer = MediaPlayer.create(this, R.raw.boss_battle_a);
-        musicPlayer.setLooping(true);
-        musicPlayer.start();
-    }
-    public void stopMusic(View view){
-        musicPlayer.release();
-    }
-    public void addAlarmAfter1Minute(View v){
-        // TODO: debug purpose
-        final int NOTIFICATION_ID = 1;
-        final String NOTIFICATION_CHANNEL_ID = "com.example.appbaothuc";
-        final String NOTIFICATION_CHANNEL_NAME = "App báo thức";
-        int minute = 1;
-        Calendar time = Calendar.getInstance();
-        time.add(Calendar.MINUTE, minute);
-        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        Intent alarmServiceIntent = new Intent(this.getApplicationContext(), AlarmService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0, alarmServiceIntent, 0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), pendingIntent);
-        Toast.makeText(this, "Set alarm after " + String.valueOf(minute) + ".", Toast.LENGTH_LONG).show();
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_NONE);
-            notificationChannel.setLightColor(Color.BLUE);
-            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            assert manager != null;
-            manager.createNotificationChannel(notificationChannel);
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
-            final Notification notification = notificationBuilder.setOngoing(true)
-                    .setSmallIcon(R.drawable.ic_add) // TODO
-                    .setContentTitle("Báo thức vào lúc:") // TODO
-                    .setPriority(NotificationManager.IMPORTANCE_MIN)
-                    .setCategory(Notification.CATEGORY_SERVICE)
-                    .build();
-            Service service = new Service(){
-                @Override
-                public IBinder onBind(Intent intent) {
-                    return null;
-                }
-            };
-            service.startForeground(NOTIFICATION_ID, notification);
-//            startForeground(new Intent(this, new Service() {
-//                @Override
-//                public IBinder onBind(Intent intent) {
-//                    return null;
-//                }
-//
-//                @Override
-//                public int onStartCommand(Intent intent, int flags, int startId) {
-//                    startForeground(NOTIFICATION_ID, notification);
-//                    return super.onStartCommand(intent, flags, startId);
-//                }
-//            }.getClass()));
+    public static void restartAlarmService(Context context){
+        Intent notificationIntent = new Intent(context, NotificationService.class);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            context.startForegroundService(notificationIntent);
         }
-        else {
-            final Notification notification = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-                    .setOngoing(true)
-                    .setSmallIcon(R.drawable.ic_add)
-                    .setContentTitle(getString(R.string.app_name))
-                    .setContentText("[Next Alarm]")
-                    .setContentIntent(pendingIntent)
-                    .build();
-            Service service = new Service(){
-                @Override
-                public IBinder onBind(Intent intent) {
-                    return null;
-                }
-            };
-            service.startForeground(NOTIFICATION_ID, notification);
-        }
-    }
-    public void addAlarmAfter2Minute(View v){
-        // TODO: debug purpose
-        final int NOTIFICATION_ID = 1;
-        final String NOTIFICATION_CHANNEL_ID = "com.example.appbaothuc";
-        final String NOTIFICATION_CHANNEL_NAME = "App báo thức";
-        int minute = 2;
-        Calendar time = Calendar.getInstance();
-        time.add(Calendar.MINUTE, minute);
-        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        Intent alarmServiceIntent = new Intent(this.getApplicationContext(), AlarmService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0, alarmServiceIntent, 0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), pendingIntent);
-        Toast.makeText(this, "Set alarm after " + String.valueOf(minute) + ".", Toast.LENGTH_LONG).show();
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_NONE);
-            notificationChannel.setLightColor(Color.BLUE);
-            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            assert manager != null;
-            manager.createNotificationChannel(notificationChannel);
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
-            final Notification notification = notificationBuilder.setOngoing(true)
-                    .setSmallIcon(R.drawable.ic_add) // TODO
-                    .setContentTitle("Báo thức vào lúc:") // TODO
-                    .setPriority(NotificationManager.IMPORTANCE_MIN)
-                    .setCategory(Notification.CATEGORY_SERVICE)
-                    .build();
-            Service service = new Service(){
-                @Override
-                public IBinder onBind(Intent intent) {
-                    return null;
-                }
-            };
-            service.startForeground(NOTIFICATION_ID, notification);
-        }
-        else {
-            final Notification notification = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-                    .setOngoing(true)
-                    .setSmallIcon(R.drawable.ic_add)
-                    .setContentTitle(getString(R.string.app_name))
-                    .setContentText("[Next Alarm]")
-                    .setContentIntent(pendingIntent)
-                    .build();
-            Service service = new Service(){
-                @Override
-                public IBinder onBind(Intent intent) {
-                    return null;
-                }
-            };
-            service.startForeground(NOTIFICATION_ID, notification);
+        else{
+            context.startService(notificationIntent);
         }
     }
 }

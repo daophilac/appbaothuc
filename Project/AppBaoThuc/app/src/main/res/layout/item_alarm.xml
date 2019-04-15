@@ -9,43 +9,57 @@
     android:background="#4E4E4E">
 
     <CheckBox
-        android:id="@+id/checkBox_enable"
+        android:id="@+id/check_box_enable"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
-        android:id="@+id/textView_hour"
+        android:id="@+id/text_view_hour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="5"
         android:textColor="@android:color/white"
-        android:textSize="50sp"
-        app:layout_constraintLeft_toRightOf="@+id/checkBox_enable"
-        app:layout_constraintRight_toLeftOf="@+id/textView_colon"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:textSize="40sp"
+        app:layout_constraintBottom_toTopOf="@+id/text_view_describe_repeat_day"
+        app:layout_constraintEnd_toStartOf="@+id/text_view_colon"
+        app:layout_constraintStart_toEndOf="@+id/check_box_enable"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView_colon"
+        android:id="@+id/text_view_colon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=":"
         android:textColor="@android:color/white"
-        android:textSize="50sp"
-        app:layout_constraintLeft_toRightOf="@+id/textView_hour"
-        app:layout_constraintRight_toLeftOf="@+id/textView_minute"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:textSize="40sp"
+        app:layout_constraintBottom_toTopOf="@+id/text_view_describe_repeat_day"
+        app:layout_constraintEnd_toStartOf="@+id/text_view_minute"
+        app:layout_constraintStart_toEndOf="@+id/text_view_hour"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView_minute"
+        android:id="@+id/text_view_minute"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="00"
         android:textColor="@android:color/white"
-        android:textSize="50sp"
-        app:layout_constraintLeft_toRightOf="@+id/textView_colon"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:textSize="40sp"
+        app:layout_constraintBottom_toTopOf="@+id/text_view_describe_repeat_day"
+        app:layout_constraintStart_toEndOf="@+id/text_view_colon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_view_describe_repeat_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="Everyday"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/check_box_enable" />
+
     <ImageButton
         android:id="@+id/button_more"
         android:layout_width="wrap_content"
