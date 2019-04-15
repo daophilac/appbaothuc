@@ -1,6 +1,10 @@
-#Android
+# Android
 .idea
 .gradle
+
+**/local.properties
+**/output.json
+
 **/build/generated
 **/build/intermediates
 **/build/tmp

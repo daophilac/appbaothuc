@@ -9,7 +9,7 @@
         android:id="@+id/button_snooze"
         android:src="@drawable/ic_volume_off"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

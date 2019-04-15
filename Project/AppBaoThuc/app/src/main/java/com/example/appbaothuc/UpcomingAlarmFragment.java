@@ -12,9 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+
 public class UpcomingAlarmFragment extends Fragment {
+    private DatabaseHandler databaseHandler;
     private RecyclerView recyclerViewListAlarm;
     private ImageButton buttonAddAlarm;
     private List<Alarm> listAlarm = new ArrayList<>();
@@ -23,6 +26,7 @@ public class UpcomingAlarmFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_upcoming_alarm, container, false);
+        databaseHandler = new DatabaseHandler(getContext());
         recyclerViewListAlarm = view.findViewById(R.id.recyclerView_list_alarm);
         buttonAddAlarm = view.findViewById(R.id.button_add_alarm);
         buttonAddAlarm.setOnClickListener(new View.OnClickListener(){
@@ -37,7 +41,10 @@ public class UpcomingAlarmFragment extends Fragment {
     }
     public void addAlarm(View view){
         // Khi người dùng bấm vào nút thêm alarm
-        Alarm alarm = new Alarm(5,0,0,true);
+        List<Boolean> listRepeatDay = Arrays.asList(true, true, true, true, true, true, true);
+        Alarm alarm = new Alarm(true, 5,0, listRepeatDay);
+        databaseHandler.insertAlarm(alarm);
+        alarm.setIdAlarm(databaseHandler.getRecentAddedAlarm().getIdAlarm());
         listAlarm.add(alarm);
         alarmAdapter.notifyItemInserted(listAlarm.size() - 1);
     }

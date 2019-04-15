@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AppBaoThuc</string>
+    <string name="textViewTitle">Cách tắt báo thức</string>
 </resources>
