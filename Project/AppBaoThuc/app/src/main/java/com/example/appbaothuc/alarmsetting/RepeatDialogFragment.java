@@ -25,10 +25,13 @@ public class RepeatDialogFragment extends DialogFragment {
     }
 
     public interface RepeatDialogListener{
-        public void onFinishCheckDialog(ArrayList<Boolean> arrayList);
+        void onFinishCheckDialog(ArrayList<Boolean> arrayList);
     }
 
     private RepeatDialogListener listener;
+    public void setListener(SettingAlarmFragment settingAlarmFragment){
+        this.listener = settingAlarmFragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -213,6 +216,6 @@ public class RepeatDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.listener = (RepeatDialogListener) context;
+        //this.listener = (RepeatDialogListener) context;
     }
 }

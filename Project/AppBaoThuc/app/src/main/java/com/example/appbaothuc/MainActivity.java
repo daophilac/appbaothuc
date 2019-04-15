@@ -1,6 +1,5 @@
 package com.example.appbaothuc;
 
-import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -19,19 +18,13 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Slide;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.example.appbaothuc.challenge.ChallengeActivity;
 import com.example.appbaothuc.services.AlarmService;
-import com.example.appbaothuc.services.NotificationService;
 
-import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String DATABASE_NAME = "APPBAOTHUC.db";
@@ -44,23 +37,12 @@ public class MainActivity extends AppCompatActivity {
     private MediaPlayer musicPlayer;
 
     private boolean settingFragmentIsAdded;
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //upcomingAlarmFragment.getAlarmAdapter().notifyDataSetChanged();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         databaseHandler = new DatabaseHandler(this, DATABASE_NAME, null, 1);
-//        databaseHandler.insertAlarm(true, 5,0, Arrays.asList(true, true, true, true, true, true, true), "a", "a", true, "a", 1, 1, 1);
-//        databaseHandler.insertAlarm(true,5,0, Arrays.asList(1,1,1,1,1,1,1));
-
         // TODO: debug purpose
 //        Calendar time1 = Calendar.getInstance();
 //        Calendar time2 = Calendar.getInstance();
@@ -124,10 +106,6 @@ public class MainActivity extends AppCompatActivity {
 //        databaseHandler.insertAlarm(true, hour0, minute0, listRepeatDay0);
 //        Intent intent = new Intent(this, NotificationService.class);
 //        startService(intent);
-
-
-//        Intent intent = new Intent(this, ChallengeActivity.class);
-//        startActivity(intent);
         // TODO
 
 
@@ -139,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
         settingFragmentIsAdded = false;
         musicPlayer = new MediaPlayer();
-        fragmentManager.beginTransaction().add(R.id.fragment_container, upcomingAlarmFragment).commit();
+        fragmentManager.beginTransaction().add(R.id.main_fragment_container, upcomingAlarmFragment).commit();
     }
     public void loadPendingAlarmFragment(View view){
         fragmentManager.beginTransaction().remove(settingFragment).commit();
@@ -147,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void loadSettingFragment(View view){
         if(!settingFragmentIsAdded){
-            fragmentManager.beginTransaction().add(R.id.fragment_container, settingFragment).commit();
+            fragmentManager.beginTransaction().add(R.id.main_fragment_container, settingFragment).commit();
             settingFragmentIsAdded = true;
         }
     }
@@ -156,6 +134,20 @@ public class MainActivity extends AppCompatActivity {
 //        Intent intent = new Intent(mainActivity.getBaseContext(), ChallengeActivity.class);
 //        mainActivity.startActivity(intent);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // testing methods
     public void testPlayingMusic(View view){
         //PermissionInquirer.askStoragePermission(this);
         musicPlayer.release();
@@ -285,24 +277,5 @@ public class MainActivity extends AppCompatActivity {
             };
             service.startForeground(NOTIFICATION_ID, notification);
         }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        int a = 1;
-        int b = a;
-        return true;
-//        return super.onKeyDown(keyCode, event);
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        ActivityManager activityManager = (ActivityManager) getApplicationContext()
-//                .getSystemService(Context.ACTIVITY_SERVICE);
-//
-//        activityManager.moveTaskToFront(getTaskId(), 0);
-//        Intent intent = new Intent(this,MainActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |Intent.FLAG_ACTIVITY_NEW_TASK);
-//        startActivity(intent);
     }
 }

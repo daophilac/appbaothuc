@@ -64,5 +64,4 @@ public class AgainDialogFragment extends DialogFragment {
         super.onAttach(context);
         this.listener = (AgainDialogListener) context;
     }
-
 }

@@ -2,9 +2,9 @@ package com.example.appbaothuc;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +13,8 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.appbaothuc.alarmsetting.SettingAlarmActivity;
+import com.example.appbaothuc.alarmsetting.SettingAlarmFragment;
+import com.example.appbaothuc.interfaces.OnOpenSettingAlarmFragment;
 import com.example.appbaothuc.services.NotificationService;
 
 import java.util.Arrays;
@@ -20,16 +22,18 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> implements Parcelable {
+public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
     private Context context;                                // Context là class cha của Activity, nó có nhiều phương thức quan trọng chịu trách nhiệm xử lý liên quan tới hệ thống và giao diện. Vì vậy ta thường truyền Context đi vòng vòng khắp mọi nơi
+    private UpcomingAlarmFragment upcomingAlarmFragment;
     private List<Alarm> listAlarm;                          // Dĩ nhiên là một Adapter thì phải được nhận vào một list các item
     private HashMap<Integer, Alarm> hashMapIdViewAlarm;
 
 
     // Phương thức khởi tạo AlarmAdapter, đòi hỏi nhận vào cái Context và một list các Alarm
-    public AlarmAdapter(Context context, List<Alarm> listAlarm) {
+    public AlarmAdapter(Context context, UpcomingAlarmFragment upcomingAlarmFragment, List<Alarm> listAlarm) {
         // Lấy context và listAlarm
         this.context = context;
+        this.upcomingAlarmFragment = upcomingAlarmFragment;
         this.listAlarm = listAlarm;
 
         // Khởi tạo hashMapIdViewAlarm
@@ -107,16 +111,17 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     }
 
     public void openAlarmSetting(View v) {
-        Intent intent = new Intent(context, SettingAlarmActivity.class);
-
         // TODO Lưu ý: Bởi vì ta đã cất từng cái Id (key) của cái View mà được thêm vào RecyclerView, với cái Alarm (value) tương ứng
         // TODO Lưu ý: Nên ở bước này, ta có thể lấy ra được đúng chính xác Alarm, bất kể người dùng chọn vào item nào trong RecyclerView
         // TODO Lưu ý: Bởi vì mỗi khi người dùng chọn vào một item, thì phương thức openAlarmSetting này được gọi tới
         // TODO Lưu ý: Và View v chính là cái View mà người dùng chọn vào
         // TODO Lưu ý: Rồi từ đó, ta sử dụng v.getId để ra được đúng cái Alarm của cái View đó, rồi truyền cho SettingAlarmActivity
-        intent.putExtra("mode", "edit");
-        intent.putExtra("alarm", hashMapIdViewAlarm.get(v.getId()));
-        context.startActivity(intent);
+        OnOpenSettingAlarmFragment listener;
+        SettingAlarmFragment settingAlarmFragment = new SettingAlarmFragment();
+        listener = settingAlarmFragment;
+        FragmentManager fragmentManager = ((FragmentActivity)context).getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.full_screen_fragment_container, settingAlarmFragment).commit();
+        listener.onInitialize(upcomingAlarmFragment, hashMapIdViewAlarm.get(v.getId()));
     }
 
 
@@ -207,36 +212,5 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             });
             // TODO:...
         }
-    }
-
-
-
-
-
-
-
-    public static final Creator<AlarmAdapter> CREATOR = new Creator<AlarmAdapter>() {
-        @Override
-        public AlarmAdapter createFromParcel(Parcel source) {
-            return new AlarmAdapter(source);
-        }
-
-        @Override
-        public AlarmAdapter[] newArray(int size) {
-            return new AlarmAdapter[size];
-        }
-    };
-    public AlarmAdapter(Parcel source){
-//        this.context = (Context) source.readValue(null);
-        this.listAlarm = source.createTypedArrayList(Alarm.CREATOR);
-    }
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeTypedList(listAlarm);
     }
 }

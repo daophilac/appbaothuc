@@ -22,7 +22,7 @@ public class AlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
-        Alarm alarm = (Alarm) intent.getExtras().getSerializable("alarm");
+        Alarm alarm = intent.getExtras().getParcelable("alarm");
         Intent alarmIntent = new Intent(this, ChallengeActivity.class);
         alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         alarmIntent.putExtra("alarm", alarm);
