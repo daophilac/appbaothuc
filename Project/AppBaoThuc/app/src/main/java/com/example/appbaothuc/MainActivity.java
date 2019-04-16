@@ -122,8 +122,9 @@ public class MainActivity extends AppCompatActivity {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             context.startForegroundService(notificationIntent);
         }
-        else{
-            context.startService(notificationIntent);
-        }
+//        else{
+//            context.startService(notificationIntent);
+//        }
+        context.startService(notificationIntent);
     }
 }

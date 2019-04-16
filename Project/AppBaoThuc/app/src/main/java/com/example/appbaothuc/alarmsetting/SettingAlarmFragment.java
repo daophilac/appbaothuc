@@ -3,6 +3,7 @@ package com.example.appbaothuc.alarmsetting;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +29,7 @@ import android.widget.Toast;
 import com.example.appbaothuc.Alarm;
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.UpcomingAlarmFragment;
+import com.example.appbaothuc.interfaces.OnOpenRepeatDialogFragment;
 import com.example.appbaothuc.interfaces.OnOpenSettingAlarmFragment;
 import com.example.appbaothuc.interfaces.SettingAlarmFragmentListener;
 
@@ -44,6 +47,8 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     private Context context;
     private UpcomingAlarmFragment upcomingAlarmFragment;
     private SettingAlarmFragmentListener listener;
+
+    private OnOpenRepeatDialogFragment onOpenRepeatDialogFragment;
 
     private SettingAlarmMode settingAlarmMode;
     private Alarm alarm;
@@ -65,6 +70,8 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     public static List<Boolean> listRepeatDay;
     public static boolean vibrate;
     public static int challengeType; // chua co
+    public FragmentManager fragmentManager;
+    public TypeFragment typeFragment;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -112,11 +119,18 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         aSwitch = view.findViewById(R.id.aSwitch);
         timePicker = view.findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
+        setHour(timePicker, alarm.getHour());
+        setMinute(timePicker,alarm.getMinute());
+        textViewRepeat.setText(alarm.getDescribeRepeatDay());
 
         textViewMinus1H.setOnClickListener(this); // event trong hàm onClick()
         textViewMinus10M.setOnClickListener(this);
         textViewPlus1H.setOnClickListener(this);
         textViewPlus10M.setOnClickListener(this);
+
+        fragmentManager = getFragmentManager();
+        typeFragment = new TypeFragment();
+
 
         btnOk.setOnClickListener(new View.OnClickListener() {
             //@RequiresApi(api = Build.VERSION_CODES.M)
@@ -124,6 +138,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             public void onClick(View view) {
                 outputAgain = textViewAgain.getText().toString();
                 label = textViewLabel.getText().toString();
+
                 if(Build.VERSION.SDK_INT >= 23){
                     hour = timePicker.getHour();
                     minute = timePicker.getMinute();
@@ -132,6 +147,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                     hour = timePicker.getCurrentHour();
                     minute = timePicker.getCurrentMinute();
                 }
+                timePicker.getCurrentHour();
                 volume = seekBar.getProgress();
                 if(aSwitch.isChecked()) vibrate = true;
                 else vibrate = false;
@@ -139,9 +155,6 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                         + hour + " _ " + minute;
 
                 Toast.makeText(context, tst, Toast.LENGTH_SHORT).show();
-
-
-
 
 
                 alarm.setHour(hour);
@@ -172,9 +185,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         linearLayoutType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, TypeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                startActivity(intent);
+                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, typeFragment).commit();
             }
         });
         linearLayoutLabel.setOnClickListener(new View.OnClickListener() {
@@ -207,37 +218,67 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
 
 
+    private int getHour(TimePicker timePicker){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            return timePicker.getHour();
+        }
+        else {
+            return timePicker.getCurrentHour();
+        }
+    }
+    private int getMinute(TimePicker timePicker){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            return timePicker.getMinute();
+        }
+        else {
+            return timePicker.getCurrentMinute();
+        }
+    }
+    private void setHour(TimePicker timePicker, int hour){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            timePicker.setHour(hour);
+        }
+        else {
+            timePicker.setCurrentHour(hour);
+        }
+    }
+    private void setMinute(TimePicker timePicker, int minute){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            timePicker.setMinute(minute);
+        }
+        else {
+            timePicker.setCurrentMinute(minute);
+        }
+    }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onClick(View view) {
-        int timeHour = timePicker.getHour();
-        int timeMinute = timePicker.getMinute();
+        int timeHour = getHour(timePicker);
+        int timeMinute = getMinute(timePicker);
         switch (view.getId()){
             case R.id.textViewMinus1H:  // bấm trừ 1 giờ
-                if(timeHour == 0) timePicker.setHour(23);
-                else  timePicker.setHour(timeHour - 1);
+                if(timeHour == 0) setHour(timePicker, 23);
+                else  setHour(timePicker, timeHour - 1);
                 break;
             case R.id.textViewPlus1H:   // bấm cộng 1 giờ
-                if(timeHour == 23) timePicker.setHour(0);
-                else  timePicker.setHour(timeHour + 1);
+                if(timeHour == 23) setHour(timePicker, 0);
+                else  setHour(timePicker, timeHour + 1);
                 break;
             case R.id.textViewMinus10M: // Bấm trừ 10 phút
                 if(timeMinute - 10 < 0) {   // nếu trừ 10 phút mà ra số âm thì phải trừ giờ xuống 1.
-                    if(timeHour == 0) timePicker.setHour(23);
-                    else  timePicker.setHour(timeHour - 1);
-                    timePicker.setMinute(60 - (10 - timeMinute));   // phút thì còn tầm 5 mươi mấy đó theo công thức
+                    if(timeHour == 0) setHour(timePicker, 23);
+                    else  setHour(timePicker, timeHour - 1);
+                    setMinute(timePicker, 60 - (10 - timeMinute));   // phút thì còn tầm 5 mươi mấy đó theo công thức
                 }
-                else timePicker.setMinute(timeMinute - 10);
+                else setMinute(timePicker, timeMinute - 10);
                 break;
             case R.id.textViewPlus10M:
                 if(timeMinute + 10 > 59) {
-                    if(timeHour == 23) timePicker.setHour(0);
-                    else timePicker.setHour(timeHour + 1);
-                    timePicker.setMinute(10 + timeMinute - 60);
+                    if(timeHour == 23) setHour(timePicker, 0);
+                    else setHour(timePicker, timeHour + 1);
+                    setMinute(timePicker, 10 + timeMinute - 60);
                 }
-                else timePicker.setMinute(timeMinute + 10);
+                else setMinute(timePicker, timeMinute + 10);
                 break;
         }
     }
@@ -265,6 +306,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
     private void showRepeatDialog() { // fragment chọn các ngày báo thức
         RepeatDialogFragment repeatDialogFragment = new RepeatDialogFragment();
+
         repeatDialogFragment.setListener(this);
         repeatDialogFragment.show(getChildFragmentManager(), "fragment_repeat");
     }
@@ -283,6 +325,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         textViewRepeat.setText(alarm.getDescribeRepeatDay());
     }
     public void createStringRepeat(ArrayList<Boolean> listDays){
+        //TODO: aaaa
         String repeatString = "";
         int i = 0;
         for(i = 0; i < 7; i++){
@@ -320,32 +363,31 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     }
 
     static boolean play = false;
-    public void getMusic(){
-        Map<String, String> list = getNotifications();
+
+    public void getMusic() {
+        Map<String, String> list = new HashMap<>();
+        list = getNotifications();
         String a = "";
         String b = "";
-        for(HashMap.Entry<String, String> h : list.entrySet())
-        { b = h.getValue();
+        for (HashMap.Entry<String, String> h : list.entrySet()) {
+            b = h.getValue();
             a += h.getKey();
-            a+= h.getValue() + "\n";
+            a += h.getValue() + "\n";
         }
-
-
-
     }
-    public void playMusic(){
+
+    public void playMusic() {
         getMusic();
 
 
-        if(play == true){
+        if (play == true) {
             play = false;
             btnPlayMusic.setBackgroundResource(R.drawable.ic_play_arrow_24dp);
-        }
-        else {
+        } else {
             try {
 
-                Uri defaultRintoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE);
-                Ringtone defaultRingtone = RingtoneManager.getRingtone(context, defaultRintoneUri);
+                Uri defaultRintoneUri = RingtoneManager.getActualDefaultRingtoneUri(getContext(), RingtoneManager.TYPE_RINGTONE);
+                Ringtone defaultRingtone = RingtoneManager.getRingtone(getContext(), defaultRintoneUri);
                 defaultRingtone.play();
 //                Ringtone defaultRingtone = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("content://media/internal/audio/media/156"));
 //                defaultRingtone.play();
@@ -359,26 +401,43 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
 
     public Map<String, String> getNotifications() {
-        RingtoneManager manager = new RingtoneManager(context);
+        RingtoneManager manager = new RingtoneManager(getContext());
         manager.setType(RingtoneManager.TYPE_RINGTONE);
         Cursor cursor = manager.getCursor();
 
         Map<String, String> list = new HashMap<>();
         while (cursor.moveToNext()) {
             String notificationTitle = cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX);
-            String notificationUri = cursor.getString(RingtoneManager.URI_COLUMN_INDEX) + "/" + cursor.getString(RingtoneManager.ID_COLUMN_INDEX);
+            String notificationUri = cursor.getString(RingtoneManager.URI_COLUMN_INDEX) + "/"
+                    + cursor.getString(RingtoneManager.ID_COLUMN_INDEX);
 
             list.put(notificationUri, notificationTitle);
         }
         return list;
     }
 
+    public Uri[] getListRingTone() {
+        RingtoneManager ringtoneMgr = new RingtoneManager(getContext());
+        ringtoneMgr.setType(RingtoneManager.TYPE_ALARM);
+        Cursor alarmsCursor = ringtoneMgr.getCursor();
+        int alarmsCount = alarmsCursor.getCount();
+        if (alarmsCount == 0 && !alarmsCursor.moveToFirst()) {
+            return null;
+        }
+        Uri[] alarms = new Uri[alarmsCount];
+        while (!alarmsCursor.isAfterLast() && alarmsCursor.moveToNext()) {
+            int currentPosition = alarmsCursor.getPosition();
+            alarms[currentPosition] = ringtoneMgr.getRingtoneUri(currentPosition);
+        }
+        alarmsCursor.close();
 
 
-
-
-
-
+        Uri defaultRintoneUri = RingtoneManager.getActualDefaultRingtoneUri(getContext(),
+                RingtoneManager.TYPE_RINGTONE);
+        Ringtone defaultRingtone = RingtoneManager.getRingtone(getContext(), defaultRintoneUri);
+        defaultRingtone.play();
+        return alarms;
+    }
 
 
 
@@ -395,6 +454,35 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         }
         else{
             this.settingAlarmMode = SettingAlarmMode.EDIT;
+        }
+    }
+}
+
+class PlayAudioManager {
+    private static MediaPlayer mediaPlayer;
+
+    public static void playAudio(final Context context, final String url) throws Exception {
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer.create(context, Uri.parse(url));
+        }
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                killMediaPlayer();
+            }
+        });
+        mediaPlayer.start();
+    }
+
+    private static void killMediaPlayer() {
+        if (mediaPlayer != null) {
+            try {
+                mediaPlayer.reset();
+                mediaPlayer.release();
+                mediaPlayer = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
