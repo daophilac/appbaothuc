@@ -19,21 +19,16 @@
         android:theme="@style/AppTheme">
         <activity android:name=".alarmsetting.TypeLinearCameraActivity"></activity>
         <activity android:name=".MainActivity">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
 
-            <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
-            android:name=".ChallengeActivity"
+            android:name=".challenge.ChallengeActivity"
             android:theme="@style/Theme.AppCompat">
-            <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
         <activity android:name=".alarmsetting.TypePlayMathActivity" />
         <activity android:name=".alarmsetting.TypePlayShakeActivity" />
@@ -41,14 +36,13 @@
         <activity android:name=".alarmsetting.TypePlayDefaultActivity" />
         <activity android:name=".alarmsetting.TypeActivity" />
         <activity android:name=".alarmsetting.SettingAlarmActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
-
         <service android:name=".services.AlarmService" />
         <service android:name=".services.NotificationService" />
         <service

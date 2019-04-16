@@ -5,7 +5,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.Toast;
 
-import com.example.appbaothuc.ChallengeActivity;
+import com.example.appbaothuc.Alarm;
+import com.example.appbaothuc.challenge.ChallengeActivity;
 
 public class AlarmService extends Service {
     @Override
@@ -21,8 +22,10 @@ public class AlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
+        Alarm alarm = intent.getExtras().getParcelable("alarm");
         Intent alarmIntent = new Intent(this, ChallengeActivity.class);
         alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        alarmIntent.putExtra("alarm", alarm);
         startActivity(alarmIntent);
         return super.onStartCommand(intent, flags, startId);
     }

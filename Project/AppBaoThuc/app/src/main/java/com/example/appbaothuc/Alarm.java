@@ -1,23 +1,29 @@
 package com.example.appbaothuc;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
-public class Alarm implements Serializable {
+public class Alarm implements Parcelable, Comparable<Alarm> {
     private int idAlarm;
     private boolean enable;
     private int hour;
     private int minute;
-    private List<Integer> listRepeatDay;
+    private List<Boolean> listRepeatDay;
     private String ringtoneUrl;
     private String ringtoneName;
     private String label;
-    private int snoozeIn;
+    private int snoozeTime;
     private boolean vibrate;
     private int volume;
     private int challengeType;
 
-    public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Integer> listRepeatDay, String ringtoneUrl, String ringtoneName, String label, int snoozeIn, boolean vibrate, int volume, int challengeType) {
+    // Non-database property
+    private int dayOfWeek;
+    private String describeRepeatDay;
+
+    public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Boolean> listRepeatDay, String ringtoneUrl, String ringtoneName, String label, int snoozeTime, boolean vibrate, int volume, int challengeType) {
         this.idAlarm = idAlarm;
         this.enable = enable;
         this.hour = hour;
@@ -26,13 +32,15 @@ public class Alarm implements Serializable {
         this.ringtoneUrl = ringtoneUrl;
         this.ringtoneName = ringtoneName;
         this.label = label;
-        this.snoozeIn = snoozeIn;
+        this.snoozeTime = snoozeTime;
         this.vibrate = vibrate;
         this.volume = volume;
         this.challengeType = challengeType;
+
+        generateDescribeRepeatDay();
     }
 
-    public Alarm(boolean enable, int hour, int minute, List<Integer> listRepeatDay, String ringtoneUrl, String ringtoneName, String label, int snoozeIn, boolean vibrate, int volume, int challengeType) {
+    public Alarm(boolean enable, int hour, int minute, List<Boolean> listRepeatDay, String ringtoneUrl, String ringtoneName, String label, int snoozeTime, boolean vibrate, int volume, int challengeType) {
         this.enable = enable;
         this.hour = hour;
         this.minute = minute;
@@ -40,25 +48,31 @@ public class Alarm implements Serializable {
         this.ringtoneUrl = ringtoneUrl;
         this.ringtoneName = ringtoneName;
         this.label = label;
-        this.snoozeIn = snoozeIn;
+        this.snoozeTime = snoozeTime;
         this.vibrate = vibrate;
         this.volume = volume;
         this.challengeType = challengeType;
+
+        generateDescribeRepeatDay();
     }
 
-    public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Integer> listRepeatDay) {
+    public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Boolean> listRepeatDay) {
         this.idAlarm = idAlarm;
         this.enable = enable;
         this.hour = hour;
         this.minute = minute;
         this.listRepeatDay = listRepeatDay;
+
+        generateDescribeRepeatDay();
     }
 
-    public Alarm(boolean enable, int hour, int minute, List<Integer> listRepeatDay) {
+    public Alarm(boolean enable, int hour, int minute, List<Boolean> listRepeatDay) {
         this.enable = enable;
         this.hour = hour;
         this.minute = minute;
         this.listRepeatDay = listRepeatDay;
+
+        generateDescribeRepeatDay();
     }
 
     public int getIdAlarm() {
@@ -93,12 +107,13 @@ public class Alarm implements Serializable {
         this.minute = minute;
     }
 
-    public List<Integer> getListRepeatDay() {
+    public List<Boolean> getListRepeatDay() {
         return listRepeatDay;
     }
 
-    public void setListRepeatDay(List<Integer> listRepeatDay) {
+    public void setListRepeatDay(List<Boolean> listRepeatDay) {
         this.listRepeatDay = listRepeatDay;
+        generateDescribeRepeatDay();
     }
 
     public String getRingtoneUrl() {
@@ -125,12 +140,12 @@ public class Alarm implements Serializable {
         this.label = label;
     }
 
-    public int getSnoozeIn() {
-        return snoozeIn;
+    public int getSnoozeTime() {
+        return snoozeTime;
     }
 
-    public void setSnoozeIn(int snoozeIn) {
-        this.snoozeIn = snoozeIn;
+    public void setSnoozeTime(int snoozeTime) {
+        this.snoozeTime = snoozeTime;
     }
 
     public boolean isVibrate() {
@@ -155,5 +170,166 @@ public class Alarm implements Serializable {
 
     public void setChallengeType(int challengeType) {
         this.challengeType = challengeType;
+    }
+
+    public int getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(int dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public String getDescribeRepeatDay() {
+        return describeRepeatDay;
+    }
+
+    public void setDescribeRepeatDay(String describeRepeatDay) {
+        this.describeRepeatDay = describeRepeatDay;
+    }
+
+    private void generateDescribeRepeatDay(){
+        int amount = 0;
+        for(int i = 0; i < 7; i++){
+            if(listRepeatDay.get(i)){
+                amount++;
+            }
+        }
+        if(amount == 7){
+            this.describeRepeatDay = "Everyday.";
+        }
+        else if(amount == 5 && !listRepeatDay.get(5) && !listRepeatDay.get(6)){
+            this.describeRepeatDay = "Weekdays.";
+        }
+        else if(amount == 2 && listRepeatDay.get(5) && listRepeatDay.get(6)){
+            this.describeRepeatDay = "Weekends.";
+        }
+        else{
+            this.describeRepeatDay = "";
+            for(int i = 0; i < 7; i++){
+                if(listRepeatDay.get(i)){
+                    switch (i){
+                        case 0:
+                            this.describeRepeatDay = this.describeRepeatDay.concat("Mon, ");
+                            break;
+                        case 1:
+                            this.describeRepeatDay = this.describeRepeatDay.concat("Tue, ");
+                            break;
+                        case 2:
+                            this.describeRepeatDay = this.describeRepeatDay.concat("Wed, ");
+                            break;
+                        case 3:
+                            this.describeRepeatDay = this.describeRepeatDay.concat("Thu, ");
+                            break;
+                        case 4:
+                            this.describeRepeatDay = this.describeRepeatDay.concat("Fri, ");
+                            break;
+                        case 5:
+                            this.describeRepeatDay = this.describeRepeatDay.concat("Sat, ");
+                            break;
+                        case 6:
+                            this.describeRepeatDay = this.describeRepeatDay.concat("Sun, ");
+                            break;
+                    }
+                }
+            }
+            this.describeRepeatDay = this.describeRepeatDay.substring(0, this.describeRepeatDay.lastIndexOf(','));
+        }
+    }
+
+    protected Alarm(Parcel in) {
+        idAlarm = in.readInt();
+        enable = in.readByte() != 0;
+        hour = in.readInt();
+        minute = in.readInt();
+        ringtoneUrl = in.readString();
+        ringtoneName = in.readString();
+        label = in.readString();
+        snoozeTime = in.readInt();
+        vibrate = in.readByte() != 0;
+        volume = in.readInt();
+        challengeType = in.readInt();
+        dayOfWeek = in.readInt();
+    }
+
+    public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
+        @Override
+        public Alarm createFromParcel(Parcel in) {
+            return new Alarm(in);
+        }
+
+        @Override
+        public Alarm[] newArray(int size) {
+            return new Alarm[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(idAlarm);
+        dest.writeByte((byte) (enable ? 1 : 0));
+        dest.writeInt(hour);
+        dest.writeInt(minute);
+        dest.writeString(ringtoneUrl);
+        dest.writeString(ringtoneName);
+        dest.writeString(label);
+        dest.writeInt(snoozeTime);
+        dest.writeByte((byte) (vibrate ? 1 : 0));
+        dest.writeInt(volume);
+        dest.writeInt(challengeType);
+        dest.writeInt(dayOfWeek);
+    }
+
+    @Override
+    public int compareTo(Alarm o) {
+        if(this.isEnable()){
+            if(!o.isEnable()){
+                return -1;
+            }
+            else if(this.getHour() < o.getHour()){
+                return -1;
+            }
+            else if(this.getHour() == o.getHour()){
+                if(this.getMinute() < o.getMinute()){
+                    return -1;
+                }
+                else if(this.getMinute() == o.getMinute()){
+                    return 0;
+                }
+                else{
+                    return 1;
+                }
+            }
+            else{
+                return 1;
+            }
+        }
+        else{
+            if(o.isEnable()){
+                return 1;
+            }
+            else if(this.getHour() < o.getHour()){
+                return -1;
+            }
+            else if(this.getHour() == o.getHour()){
+                if(this.getMinute() < o.getMinute()){
+                    return -1;
+                }
+                else if(this.getMinute() == o.getMinute()){
+                    return 0;
+                }
+                else{
+                    return 1;
+                }
+            }
+            else{
+                return 1;
+            }
+        }
     }
 }
