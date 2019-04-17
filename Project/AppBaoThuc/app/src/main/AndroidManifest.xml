@@ -34,15 +34,7 @@
         <activity android:name=".alarmsetting.TypePlayShakeActivity" />
         <activity android:name=".alarmsetting.TypePlayCameraActivity" />
         <activity android:name=".alarmsetting.TypePlayDefaultActivity" />
-        <activity android:name=".alarmsetting.TypeActivity" />
-        <activity android:name=".alarmsetting.SettingAlarmActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
         <service android:name=".services.AlarmService" />
         <service android:name=".services.NotificationService" />
         <service
@@ -50,12 +42,12 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver android:name=".services.ActionReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE" />
-                <action android:name="android.intent.action.TIME_SET" />
-                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
-            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+                <!--<action android:name="android.intent.action.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE" />-->
+                <!--<action android:name="android.intent.action.TIME_SET" />-->
+                <!--<action android:name="android.intent.action.TIMEZONE_CHANGED" />-->
+            <!--</intent-filter>-->
         </receiver>
     </application>
 

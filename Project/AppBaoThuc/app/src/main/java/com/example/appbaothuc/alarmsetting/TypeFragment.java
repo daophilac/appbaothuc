@@ -1,0 +1,107 @@
+package com.example.appbaothuc.alarmsetting;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+
+import com.example.appbaothuc.R;
+
+public class TypeFragment extends Fragment {
+    private Button btnCancel, btnOK;
+    private ImageButton imageButtonDefault, imageButtonCamera, imageButtonShake, imageButtonMath,
+            imageButtonQRCode;
+    private LinearLayout linearLayoutDefault, linearLayoutCamera, linearLayoutShake, linearLayoutMath,
+            linearLayoutQRCode;
+    private Context context;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_type, container, false);
+        setControl(view);
+        return view;
+    }
+
+    public void setControl(View view){
+        btnCancel = view.findViewById(R.id.btnCancel);
+        btnOK = view.findViewById(R.id.btnOK);
+        imageButtonDefault = view.findViewById(R.id.imageButtonDefault);
+        imageButtonCamera = view.findViewById(R.id.imageButtonCamera);
+        imageButtonShake = view.findViewById(R.id.imageButtonShake);
+        imageButtonMath = view.findViewById(R.id.imageButtonMath);
+        imageButtonQRCode = view.findViewById(R.id.imageButtonQRCode);
+        linearLayoutDefault = view.findViewById(R.id.linearLayoutDefault);
+        linearLayoutCamera = view.findViewById(R.id.linearLayoutCamera);
+        linearLayoutShake = view.findViewById(R.id.linearLayoutShake);
+        linearLayoutMath = view.findViewById(R.id.linearLayoutMath);
+        linearLayoutQRCode = view.findViewById(R.id.linearLayoutQRCode);
+
+        btnOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getFragmentManager().beginTransaction().remove(TypeFragment.this).commit();
+                //TODO:
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getFragmentManager().beginTransaction().remove(TypeFragment.this).commit();
+            }
+        });
+        imageButtonDefault.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), TypePlayDefaultActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+            }
+        });
+        imageButtonCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), TypePlayCameraActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+            }
+        });
+        imageButtonShake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), TypePlayShakeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+            }
+        });
+        imageButtonMath.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), TypePlayMathActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+            }
+        });
+        imageButtonQRCode.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        linearLayoutCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+    }
+}

@@ -11,17 +11,24 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 
+import com.example.appbaothuc.Alarm;
 import com.example.appbaothuc.R;
+import com.example.appbaothuc.interfaces.OnOpenRepeatDialogFragment;
 
 import java.util.ArrayList;
 
-public class RepeatDialogFragment extends DialogFragment {
+public class RepeatDialogFragment extends DialogFragment implements OnOpenRepeatDialogFragment {
     private Button btnOK, btnCancel, btnDays, btnWeekend;
     private CheckBox checkBoxT2, checkBoxT3, checkBoxT4, checkBoxT5, checkBoxT6,
             checkBoxT7, checkBoxCN;
     public static ArrayList<Boolean> listDays = new ArrayList<>();
 
     public RepeatDialogFragment(){
+    }
+    private Alarm alarm;
+    @Override
+    public void getAlarm(Alarm alarm) {
+        this.alarm = alarm;
     }
 
     public interface RepeatDialogListener{
