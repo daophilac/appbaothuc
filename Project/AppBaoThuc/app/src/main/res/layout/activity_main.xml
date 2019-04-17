@@ -35,7 +35,7 @@
                     android:id="@+id/button_alarm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="loadPendingAlarmFragment"
+                    android:onClick="loadUpcomingAlarmFragment"
                     android:src="@drawable/ic_alarm"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"

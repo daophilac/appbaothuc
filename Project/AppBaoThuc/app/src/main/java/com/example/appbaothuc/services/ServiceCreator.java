@@ -17,8 +17,6 @@ public class ServiceCreator extends JobIntentService {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             getBaseContext().startForegroundService(notificationIntent);
         }
-        else{
-            getBaseContext().startService(notificationIntent);
-        }
+        getBaseContext().startService(notificationIntent);
     }
 }

@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         musicPlayer = new MediaPlayer();
         fragmentManager.beginTransaction().add(R.id.main_fragment_container, upcomingAlarmFragment).commit();
     }
-    public void loadPendingAlarmFragment(View view){
+    public void loadUpcomingAlarmFragment(View view){
         fragmentManager.beginTransaction().remove(settingFragment).commit();
         settingFragmentIsAdded = false;
     }
@@ -122,8 +122,6 @@ public class MainActivity extends AppCompatActivity {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             context.startForegroundService(notificationIntent);
         }
-        else{
-            context.startService(notificationIntent);
-        }
+        context.startService(notificationIntent);
     }
 }
