@@ -22,6 +22,9 @@ public class LableDialogFragment extends DialogFragment {
         void onFinishEditDialog(String inputText);
     }
     private LabelDialogListener listener;
+    public void setListener(SettingAlarmFragment settingAlarmFragment){
+        this.listener = settingAlarmFragment;
+    }
 
     public LableDialogFragment() {
         // Empty constructor required for DialogFragment
@@ -32,7 +35,7 @@ public class LableDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit_name, container);
         mEditText = view.findViewById(R.id.txt_your_name);
-
+        mEditText.setText(SettingAlarmFragment.alarm.getLabel());
 
         btnOk = view.findViewById(R.id.btnOk);
         btnCancel = view.findViewById(R.id.btnCancel);
@@ -63,6 +66,6 @@ public class LableDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.listener = (LabelDialogListener) context;
+        //this.listener = (LabelDialogListener) context;
     }
 }
