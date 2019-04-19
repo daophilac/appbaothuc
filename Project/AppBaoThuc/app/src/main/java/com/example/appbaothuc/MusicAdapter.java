@@ -77,12 +77,14 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         final Music music = listMusic.get(i);
         CheckBox checkBoxCheck = musicViewHolder.checkBoxCheck;
         TextView textViewMusicName = musicViewHolder.textViewMusicName;
+        TextView textViewMusicUrl = musicViewHolder.textViewMusicUrl;
         ImageButton buttonPlayMusic = musicViewHolder.buttonPlayMusic;
 
         if(alarm.getRingtoneName() != null){
             checkBoxCheck.setChecked(alarm.getRingtoneName().equals(music.getName()));
         }
         textViewMusicName.setText(music.getName());
+        textViewMusicUrl.setText(music.getUrl());
 
         checkBoxCheck.setId(View.generateViewId());
         mapCheckBoxMusic.put(checkBoxCheck.getId(), music);
@@ -145,11 +147,13 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
     class MusicViewHolder extends RecyclerView.ViewHolder{
         private CheckBox checkBoxCheck;
         private TextView textViewMusicName;
+        private TextView textViewMusicUrl;
         private ImageButton buttonPlayMusic;
         MusicViewHolder(View itemView){
             super(itemView);
             checkBoxCheck = itemView.findViewById(R.id.check_box_check);
             textViewMusicName = itemView.findViewById(R.id.text_view_music_name);
+            textViewMusicUrl = itemView.findViewById(R.id.text_view_music_url);
             buttonPlayMusic = itemView.findViewById(R.id.button_play_music);
         }
     }
