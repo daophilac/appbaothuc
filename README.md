@@ -1,4 +1,11 @@
-# AppBaoThuc Alpha phase v0.0.1
+# AppBaoThuc Alpha phase v0.0.2
+
+## Change log v0.0.1
+### New features:
+  1. Delete alarms.
+  2. Sort ringtones list by name and by url.
+### On progress features:
+  1. Add Shaking challenge
 
 ## Change log v0.0.1
 ### New features:
