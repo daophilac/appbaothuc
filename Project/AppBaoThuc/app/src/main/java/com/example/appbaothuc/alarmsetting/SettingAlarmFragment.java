@@ -49,10 +49,8 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     private UpcomingAlarmFragment upcomingAlarmFragment;
     //private SettingAlarmFragmentListener listener;
 
-    private OnOpenRepeatDialogFragment onOpenRepeatDialogFragment;
-
     private SettingAlarmMode settingAlarmMode;
-    private Alarm alarm;
+    public  static Alarm alarm;
     private TimePicker timePicker; // Chọn giờ
     private Button btnPlayMusic, btnCancel, btnDelete, btnOk; //Phát nhạc đang chọn, Hủy thao tác, Xóa báo thức, Hoàn tất
     private LinearLayout linearLayoutLabel, linearLayoutType, linearLayoutRingTone,
@@ -147,6 +145,8 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             setMinute(timePicker,alarm.getMinute());
         }
         textViewRepeat.setText(alarm.getDescribeRepeatDay());
+        seekBar.setProgress(alarm.getVolume());
+        aSwitch.setChecked(alarm.isVibrate());
 
         textViewMinus1H.setOnClickListener(this); // event trong hàm onClick()
         textViewMinus10M.setOnClickListener(this);
