@@ -201,14 +201,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         sql = String.format(sqlFormat, enable, idAlarm);
         db.execSQL(sql);
     }
-//    public void updateAlarmRingtone(int idAlarm, String ringtoneUrl, String ringtoneName){
-//        sqlFormat = "update Alarm set" +
-//                " RingtoneUrl = '%s'," +
-//                " RingtoneName = '%s'" +
-//                " where IdAlarm = %d";
-//        sql = String.format(sqlFormat, ringtoneUrl, ringtoneName, idAlarm);
-//        db.execSQL(sql);
-//    }
+    public void deleteAlarm(int idAlarm){
+        sqlFormat = "delete from Alarm where IdAlarm = %d";
+        sql = String.format(sqlFormat, idAlarm);
+        db.execSQL(sql);
+    }
 
     public Alarm getRecentAddedAlarm() {
         sql = "select * from Alarm order by IdAlarm desc limit 1";
