@@ -2,7 +2,9 @@ package com.example.appbaothuc.alarmsetting;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -97,10 +99,34 @@ public class TypeFragment extends Fragment {
 
             }
         });
-        linearLayoutCamera.setOnClickListener(new View.OnClickListener() {
+        linearLayoutDefault.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                linearLayoutDefault.setBackgroundColor(Color.BLUE);
+                linearLayoutMath.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.colortext2));
+            }
+        });
+        linearLayoutMath.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                linearLayoutMath.setBackgroundColor(Color.BLUE);
+                linearLayoutDefault.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
+            }
+        });
+        linearLayoutShake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                linearLayoutShake.setBackgroundColor(Color.BLUE);
+                linearLayoutDefault.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutMath.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
             }
         });
     }
