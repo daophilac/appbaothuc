@@ -11,7 +11,7 @@ import com.example.appbaothuc.R;
 
 public class ChallengeActivity extends AppCompatActivity {
     enum ChallengeType{
-        Math, Shake
+        Default, Math, Shake
     }
     private Alarm alarm;
     public static final int defaultRingtoneId = R.raw.boss_battle_a; // TODO
