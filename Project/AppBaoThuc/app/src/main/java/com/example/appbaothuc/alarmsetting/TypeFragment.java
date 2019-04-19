@@ -24,6 +24,15 @@ public class TypeFragment extends Fragment {
     private LinearLayout linearLayoutDefault, linearLayoutCamera, linearLayoutShake, linearLayoutMath,
             linearLayoutQRCode;
     private Context context;
+    private Integer challengeType;
+//
+//    public interface TypeFragmentListener{
+//        void onFinishTypeFragment(Integer inputNumber);
+//    }
+//    TypeFragmentListener listener;
+//    public void setListener(SettingAlarmFragment settingAlarmFragment){
+//        this.listener = settingAlarmFragment;
+//    }
 
     @Nullable
     @Override
@@ -48,9 +57,12 @@ public class TypeFragment extends Fragment {
         linearLayoutMath = view.findViewById(R.id.linearLayoutMath);
         linearLayoutQRCode = view.findViewById(R.id.linearLayoutQRCode);
 
+        challengeType = SettingAlarmFragment.challengeType;
+
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SettingAlarmFragment.challengeType = challengeType;
                 getFragmentManager().beginTransaction().remove(TypeFragment.this).commit();
                 //TODO:
             }
@@ -102,6 +114,7 @@ public class TypeFragment extends Fragment {
         linearLayoutDefault.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                challengeType = 0;
                 linearLayoutDefault.setBackgroundColor(Color.BLUE);
                 linearLayoutMath.setBackgroundColor(getResources().getColor(R.color.colortext2));
                 linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
@@ -112,6 +125,7 @@ public class TypeFragment extends Fragment {
         linearLayoutMath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                challengeType = 1;
                 linearLayoutMath.setBackgroundColor(Color.BLUE);
                 linearLayoutDefault.setBackgroundColor(getResources().getColor(R.color.colortext2));
                 linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
@@ -122,6 +136,7 @@ public class TypeFragment extends Fragment {
         linearLayoutShake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                challengeType = 2;
                 linearLayoutShake.setBackgroundColor(Color.BLUE);
                 linearLayoutDefault.setBackgroundColor(getResources().getColor(R.color.colortext2));
                 linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));

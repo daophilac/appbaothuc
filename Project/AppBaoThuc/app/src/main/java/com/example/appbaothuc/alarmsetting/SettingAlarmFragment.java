@@ -30,6 +30,7 @@ import com.example.appbaothuc.Alarm;
 import com.example.appbaothuc.Music;
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.UpcomingAlarmFragment;
+import com.example.appbaothuc.challenge.ChallengeActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,16 +62,15 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     private SeekBar seekBar; // thanh âm lượng
     private Switch aSwitch; // bật tắt rung
 
-    //public static YourRingTone yourRingTone;
     private Music music;
     private String label, outputAgain, outputRepeat;
     private int hour, minute, snoozeTime, volume;
     private List<Boolean> listRepeatDay;
     private boolean vibrate;
-    private int challengeType; // chua co
     private FragmentManager fragmentManager;
     private TypeFragment typeFragment;
     private MusicPickerFragment musicPickerFragment;
+    public static int challengeType; // chua co
     public static SettingAlarmFragment newInstance(UpcomingAlarmFragment upcomingAlarmFragment, Alarm alarm){
         SettingAlarmFragment settingAlarmFragment = new SettingAlarmFragment();
         settingAlarmFragment.upcomingAlarmFragment = upcomingAlarmFragment;
@@ -131,42 +131,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         aSwitch = view.findViewById(R.id.aSwitch);
         timePicker = view.findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
-        if(settingAlarmMode == SettingAlarmMode.ADD_NEW){
-            Calendar now = Calendar.getInstance();
-            now.add(Calendar.MINUTE, 1);
-            setHour(timePicker, now.get(Calendar.HOUR_OF_DAY));
-            setMinute(timePicker, now.get(Calendar.MINUTE));
-        }
-        else if(settingAlarmMode == SettingAlarmMode.EDIT){
-            setHour(timePicker, alarm.getHour());
-            setMinute(timePicker,alarm.getMinute());
-        }
-        textViewRepeat.setText(alarm.getDescribeRepeatDay());
-        seekBar.setProgress(alarm.getVolume());
-        aSwitch.setChecked(alarm.isVibrate());
-        textViewLabel.setText(alarm.getLabel());
 
-        String alarmTextAgain;
-        if(alarm.getSnoozeTime() == 0) alarmTextAgain = "Tắt.";
-        else alarmTextAgain = alarm.getSnoozeTime() + " Phút.";
-        textViewAgain.setText(alarmTextAgain);
-
-        textViewRingTone.setText(alarm.getRingtoneName());
-
-        textViewMinus1H.setOnClickListener(this); // event trong hàm onClick()
-        textViewMinus10M.setOnClickListener(this);
-        textViewPlus1H.setOnClickListener(this);
-        textViewPlus10M.setOnClickListener(this);
-
-        fragmentManager = getFragmentManager();
-        typeFragment = new TypeFragment();
-        typeFragment.setEnterTransition(new Slide(Gravity.TOP));
-        typeFragment.setExitTransition(new Slide(Gravity.TOP));
-        musicPickerFragment = MusicPickerFragment.newInstance(this, alarm);
-        musicPickerFragment.setEnterTransition(new Slide(Gravity.BOTTOM));
-        musicPickerFragment.setExitTransition(new Slide(Gravity.BOTTOM));
-
-        textViewRingTone.setText(alarm.getRingtoneName());
 
         btnOk.setOnClickListener(new View.OnClickListener() {
             //@RequiresApi(api = Build.VERSION_CODES.M)
@@ -261,7 +226,51 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             }
         });
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(settingAlarmMode == SettingAlarmMode.ADD_NEW){
+            Calendar now = Calendar.getInstance();
+            now.add(Calendar.MINUTE, 1);
+            setHour(timePicker, now.get(Calendar.HOUR_OF_DAY));
+            setMinute(timePicker, now.get(Calendar.MINUTE));
+        }
+        else if(settingAlarmMode == SettingAlarmMode.EDIT){
+            setHour(timePicker, alarm.getHour());
+            setMinute(timePicker,alarm.getMinute());
+        }
+        textViewRepeat.setText(alarm.getDescribeRepeatDay());
+        seekBar.setProgress(alarm.getVolume());
+        aSwitch.setChecked(alarm.isVibrate());
+        textViewLabel.setText(alarm.getLabel());
 
+        String alarmTextAgain;
+        if(alarm.getSnoozeTime() == 0) alarmTextAgain = "Tắt.";
+        else alarmTextAgain = alarm.getSnoozeTime() + " Phút.";
+        textViewAgain.setText(alarmTextAgain);
+
+        textViewRingTone.setText(alarm.getRingtoneName());
+
+        textViewMinus1H.setOnClickListener(this); // event trong hàm onClick()
+        textViewMinus10M.setOnClickListener(this);
+        textViewPlus1H.setOnClickListener(this);
+        textViewPlus10M.setOnClickListener(this);
+
+        fragmentManager = getFragmentManager();
+        typeFragment = new TypeFragment();
+        typeFragment.setEnterTransition(new Slide(Gravity.TOP));
+        typeFragment.setExitTransition(new Slide(Gravity.TOP));
+        musicPickerFragment = MusicPickerFragment.newInstance(this, alarm);
+        musicPickerFragment.setEnterTransition(new Slide(Gravity.BOTTOM));
+        musicPickerFragment.setExitTransition(new Slide(Gravity.BOTTOM));
+
+        textViewRingTone.setText(alarm.getRingtoneName());
+        String textType = null;
+        if(challengeType == 0) textType = "Default";
+        else if(challengeType == 1) textType = "Math problems";
+        else if(challengeType == 2) textType = "Shake";
+        textViewType.setText(textType);
+    }
     private int getHour(TimePicker timePicker){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             return timePicker.getHour();
