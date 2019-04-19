@@ -145,6 +145,12 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         textViewRepeat.setText(alarm.getDescribeRepeatDay());
         seekBar.setProgress(alarm.getVolume());
         aSwitch.setChecked(alarm.isVibrate());
+        textViewLabel.setText(alarm.getLabel());
+
+        String alarmTextAgain;
+        if(alarm.getSnoozeTime() == 0) alarmTextAgain = "Tắt.";
+        else alarmTextAgain = alarm.getSnoozeTime() + " Phút.";
+        textViewAgain.setText(alarmTextAgain);
 
         textViewMinus1H.setOnClickListener(this); // event trong hàm onClick()
         textViewMinus10M.setOnClickListener(this);
@@ -180,10 +186,10 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                 volume = seekBar.getProgress();
                 if(aSwitch.isChecked()) vibrate = true;
                 else vibrate = false;
-                String tst = label + " _ " + outputAgain + " _ "
-                        + hour + " _ " + minute;
-
-                Toast.makeText(context, tst, Toast.LENGTH_SHORT).show();
+//                String tst = label + " _ " + outputAgain + " _ "
+//                        + hour + " _ " + minute;
+//
+//                Toast.makeText(context, tst, Toast.LENGTH_SHORT).show();
 
 
                 alarm.setHour(hour);
@@ -316,8 +322,8 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         }
     }
     private void showLableDialog() { // show fragment để Sửa tên báo thức
-
         LableDialogFragment lableDialogFragment = new LableDialogFragment();
+        lableDialogFragment.setListener(this);
         lableDialogFragment.show(getChildFragmentManager(), "fragment_edit_name");
     }
     @Override
@@ -328,18 +334,18 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
     private void showAgainDialog() { // fragment chọn thời gian báo thức lại
         AgainDialogFragment againDialogFragment = new AgainDialogFragment();
+        againDialogFragment.setListener(this);
         againDialogFragment.show(getChildFragmentManager(), "fragment_choice");
     }
     @Override
     public void onFinishChoiceDialog(Integer input) {
         snoozeTime = input;
-        if(input == 0) textViewAgain.setText("Tắt");
+        if(input == 0) textViewAgain.setText("Tắt.");
         else textViewAgain.setText(input + " Phút.");
     }
 
     private void showRepeatDialog() { // fragment chọn các ngày báo thức
         RepeatDialogFragment repeatDialogFragment = new RepeatDialogFragment();
-
         repeatDialogFragment.setListener(this);
         repeatDialogFragment.show(getChildFragmentManager(), "fragment_repeat");
     }

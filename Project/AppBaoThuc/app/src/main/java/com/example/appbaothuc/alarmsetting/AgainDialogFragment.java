@@ -21,6 +21,9 @@ public class AgainDialogFragment extends DialogFragment {
         void onFinishChoiceDialog(Integer input);
     }
     private AgainDialogListener listener;
+    public void setListener(SettingAlarmFragment settingAlarmFragment){
+        this.listener = settingAlarmFragment;
+    }
     public AgainDialogFragment() {
     }
 
@@ -62,6 +65,6 @@ public class AgainDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.listener = (AgainDialogListener) context;
+        //this.listener = (AgainDialogListener) context;
     }
 }
