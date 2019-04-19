@@ -55,7 +55,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             linearLayoutRepeat, linearLayoutAgain;
     private TextView textViewPlus10M, textViewMinus10M, textViewPlus1H,
             textViewMinus1H;
-    public TextView textViewTimeLeft /*thời gian còn lại*/, textViewType, textViewRepeat,
+    private TextView textViewTimeLeft /*thời gian còn lại*/, textViewType, textViewRepeat,
             textViewRingTone, textViewAgain, textViewLabel;
     private ImageView imageViewType; //cái hình điện thoại rung
     private SeekBar seekBar; // thanh âm lượng
@@ -63,13 +63,13 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
     //public static YourRingTone yourRingTone;
     private Music music;
-    public static String label, outputAgain, outputRepeat;
-    public static int hour, minute, snoozeTime, volume;
-    public static List<Boolean> listRepeatDay;
-    public static boolean vibrate;
-    public static int challengeType; // chua co
-    public FragmentManager fragmentManager;
-    public TypeFragment typeFragment;
+    private String label, outputAgain, outputRepeat;
+    private int hour, minute, snoozeTime, volume;
+    private List<Boolean> listRepeatDay;
+    private boolean vibrate;
+    private int challengeType; // chua co
+    private FragmentManager fragmentManager;
+    private TypeFragment typeFragment;
     private MusicPickerFragment musicPickerFragment;
     public static SettingAlarmFragment newInstance(UpcomingAlarmFragment upcomingAlarmFragment, Alarm alarm){
         SettingAlarmFragment settingAlarmFragment = new SettingAlarmFragment();
@@ -103,7 +103,6 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     }
 
     void setControl(View view){
-        //yourRingTone = new YourRingTone(null, null);
         music = new Music(alarm.getRingtoneUrl(), alarm.getRingtoneName());
         listRepeatDay = alarm.getListRepeatDay();
         btnPlayMusic = view.findViewById(R.id.btnPlayMusic);
@@ -152,6 +151,8 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         else alarmTextAgain = alarm.getSnoozeTime() + " Phút.";
         textViewAgain.setText(alarmTextAgain);
 
+        textViewRingTone.setText(alarm.getRingtoneName());
+
         textViewMinus1H.setOnClickListener(this); // event trong hàm onClick()
         textViewMinus10M.setOnClickListener(this);
         textViewPlus1H.setOnClickListener(this);
@@ -186,11 +187,6 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                 volume = seekBar.getProgress();
                 if(aSwitch.isChecked()) vibrate = true;
                 else vibrate = false;
-//                String tst = label + " _ " + outputAgain + " _ "
-//                        + hour + " _ " + minute;
-//
-//                Toast.makeText(context, tst, Toast.LENGTH_SHORT).show();
-
 
                 alarm.setHour(hour);
                 alarm.setMinute(minute);
@@ -261,7 +257,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         btnPlayMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                playMusic();
+                ///playMusic();
             }
         });
     }
@@ -410,7 +406,6 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         }
     }
 
-    static boolean play = false;
 
     public void getMusic(Music music) {
         this.music = music;
@@ -419,113 +414,4 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         textViewRingTone.setText(music.getName());
     }
 
-    public void playMusic() {
-        //getMusic();
-
-
-        if (play == true) {
-            play = false;
-            btnPlayMusic.setBackgroundResource(R.drawable.ic_play_arrow_24dp);
-        } else {
-            try {
-
-                Uri defaultRintoneUri = RingtoneManager.getActualDefaultRingtoneUri(getContext(), RingtoneManager.TYPE_RINGTONE);
-                Ringtone defaultRingtone = RingtoneManager.getRingtone(getContext(), defaultRintoneUri);
-                defaultRingtone.play();
-//                Ringtone defaultRingtone = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("content://media/internal/audio/media/156"));
-//                defaultRingtone.play();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            play = true;
-            btnPlayMusic.setBackgroundResource(R.drawable.ic_pause_black_24dp);
-        }
-    }
-
-
-    public Map<String, String> getNotifications() {
-        RingtoneManager manager = new RingtoneManager(getContext());
-        manager.setType(RingtoneManager.TYPE_RINGTONE);
-        Cursor cursor = manager.getCursor();
-
-        Map<String, String> list = new HashMap<>();
-        while (cursor.moveToNext()) {
-            String notificationTitle = cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX);
-            String notificationUri = cursor.getString(RingtoneManager.URI_COLUMN_INDEX) + "/"
-                    + cursor.getString(RingtoneManager.ID_COLUMN_INDEX);
-
-            list.put(notificationUri, notificationTitle);
-        }
-        return list;
-    }
-
-    public Uri[] getListRingTone() {
-        RingtoneManager ringtoneMgr = new RingtoneManager(getContext());
-        ringtoneMgr.setType(RingtoneManager.TYPE_ALARM);
-        Cursor alarmsCursor = ringtoneMgr.getCursor();
-        int alarmsCount = alarmsCursor.getCount();
-        if (alarmsCount == 0 && !alarmsCursor.moveToFirst()) {
-            return null;
-        }
-        Uri[] alarms = new Uri[alarmsCount];
-        while (!alarmsCursor.isAfterLast() && alarmsCursor.moveToNext()) {
-            int currentPosition = alarmsCursor.getPosition();
-            alarms[currentPosition] = ringtoneMgr.getRingtoneUri(currentPosition);
-        }
-        alarmsCursor.close();
-
-
-        Uri defaultRintoneUri = RingtoneManager.getActualDefaultRingtoneUri(getContext(),
-                RingtoneManager.TYPE_RINGTONE);
-        Ringtone defaultRingtone = RingtoneManager.getRingtone(getContext(), defaultRintoneUri);
-        defaultRingtone.play();
-        return alarms;
-    }
-
-
-
-
-    // Override
-//    @Override
-//    public void onInitialize(UpcomingAlarmFragment upcomingAlarmFragment, Alarm alarm) {
-//        this.upcomingAlarmFragment = upcomingAlarmFragment;
-//        this.listener = upcomingAlarmFragment;
-//        this.alarm = alarm;
-//        if(alarm == null){
-//            this.settingAlarmMode = SettingAlarmMode.ADD_NEW;
-//            this.alarm = createDefaultAlarm();
-//        }
-//        else{
-//            this.settingAlarmMode = SettingAlarmMode.EDIT;
-//        }
-//    }
-}
-
-class PlayAudioManager {
-    private static MediaPlayer mediaPlayer;
-
-    public static void playAudio(final Context context, final String url) throws Exception {
-        if (mediaPlayer == null) {
-            mediaPlayer = MediaPlayer.create(context, Uri.parse(url));
-        }
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                killMediaPlayer();
-            }
-        });
-        mediaPlayer.start();
-    }
-
-    private static void killMediaPlayer() {
-        if (mediaPlayer != null) {
-            try {
-                mediaPlayer.reset();
-                mediaPlayer.release();
-                mediaPlayer = null;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
