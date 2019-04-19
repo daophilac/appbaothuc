@@ -80,6 +80,9 @@ public class UpcomingAlarmFragment extends Fragment {
         }
         MainActivity.restartAlarmService(getContext());
     }
+    public void deleteAlarm(int idAlarm){
+
+    }
     public void updateAlarmEnable(Alarm alarm){
         databaseHandler.updateAlarmEnable(alarm.getIdAlarm(), alarm.isEnable());
         MainActivity.restartAlarmService(getContext());
