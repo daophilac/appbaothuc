@@ -3,9 +3,10 @@ package com.example.appbaothuc;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Alarm implements Parcelable, Comparable<Alarm> {
+public class Alarm implements Comparable<Alarm>, Parcelable {
     private int idAlarm;
     private boolean enable;
     private int hour;
@@ -237,54 +238,7 @@ public class Alarm implements Parcelable, Comparable<Alarm> {
         }
     }
 
-    protected Alarm(Parcel in) {
-        idAlarm = in.readInt();
-        enable = in.readByte() != 0;
-        hour = in.readInt();
-        minute = in.readInt();
-        ringtoneUrl = in.readString();
-        ringtoneName = in.readString();
-        label = in.readString();
-        snoozeTime = in.readInt();
-        vibrate = in.readByte() != 0;
-        volume = in.readInt();
-        challengeType = in.readInt();
-        dayOfWeek = in.readInt();
-    }
-
-    public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
-        @Override
-        public Alarm createFromParcel(Parcel in) {
-            return new Alarm(in);
-        }
-
-        @Override
-        public Alarm[] newArray(int size) {
-            return new Alarm[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(idAlarm);
-        dest.writeByte((byte) (enable ? 1 : 0));
-        dest.writeInt(hour);
-        dest.writeInt(minute);
-        dest.writeString(ringtoneUrl);
-        dest.writeString(ringtoneName);
-        dest.writeString(label);
-        dest.writeInt(snoozeTime);
-        dest.writeByte((byte) (vibrate ? 1 : 0));
-        dest.writeInt(volume);
-        dest.writeInt(challengeType);
-        dest.writeInt(dayOfWeek);
-    }
-
+    // Comparable
     @Override
     public int compareTo(Alarm o) {
         if(this.isEnable()){
@@ -331,5 +285,78 @@ public class Alarm implements Parcelable, Comparable<Alarm> {
                 return 1;
             }
         }
+    }
+
+
+
+    // Parcelable
+    protected Alarm(Parcel in) {
+        idAlarm = in.readInt();
+        enable = in.readByte() != 0;
+        hour = in.readInt();
+        minute = in.readInt();
+        listRepeatDay = new ArrayList<>();
+        in.readList(listRepeatDay, Alarm.class.getClassLoader());
+        ringtoneUrl = in.readString();
+        ringtoneName = in.readString();
+        label = in.readString();
+        snoozeTime = in.readInt();
+        vibrate = in.readByte() != 0;
+        volume = in.readInt();
+        challengeType = in.readInt();
+        dayOfWeek = in.readInt();
+        describeRepeatDay = in.readString();
+    }
+
+    public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
+        @Override
+        public Alarm createFromParcel(Parcel in) {
+            return new Alarm(in);
+        }
+
+        @Override
+        public Alarm[] newArray(int size) {
+            return new Alarm[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(idAlarm);
+        dest.writeByte((byte) (enable ? 1 : 0));
+        dest.writeInt(hour);
+        dest.writeInt(minute);
+        dest.writeList(listRepeatDay);
+        dest.writeString(ringtoneUrl);
+        dest.writeString(ringtoneName);
+        dest.writeString(label);
+        dest.writeInt(snoozeTime);
+        dest.writeByte((byte) (vibrate ? 1 : 0));
+        dest.writeInt(volume);
+        dest.writeInt(challengeType);
+        dest.writeInt(dayOfWeek);
+        dest.writeString(describeRepeatDay);
+    }
+
+    public static byte[] toByteArray(Parcelable parcelable){
+        Parcel parcel = Parcel.obtain();
+        parcelable.writeToParcel(parcel, 0);
+        byte[] result = parcel.marshall();
+        parcel.recycle();
+        return result;
+    }
+
+    public static <T> T toParcelable(byte[] byteArray, Creator<T> creator){
+        Parcel parcel = Parcel.obtain();
+        parcel.unmarshall(byteArray, 0, byteArray.length);
+        parcel.setDataPosition(0);
+        T result = creator.createFromParcel(parcel);
+        parcel.recycle();
+        return result;
     }
 }

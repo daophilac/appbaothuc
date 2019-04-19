@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.appbaothuc.alarmsetting.MusicPickerFragment;
+
 public class SettingFragment extends Fragment {
     // TODO: Khai báo các biến public quy định setting của app ở đây. Ví dụ:
     // TODO: public boolean maxVolume;
@@ -20,6 +22,8 @@ public class SettingFragment extends Fragment {
     public static boolean graduallyIncreaseVolume;
     public static boolean preventTurnOffPhone;
     public static int dismissAfter;
+    public static MusicPickerFragment.ChooseMusicType chooseMusicType = MusicPickerFragment.ChooseMusicType.MUSIC;
+    public static HourMode hourMode; //12h or 24h
 
     @Nullable
     @Override
@@ -29,5 +33,8 @@ public class SettingFragment extends Fragment {
         // TODO: Khởi tạo giá trị cho các biến ở đây, ví dụ button = view.findViewById(R.id.button);
         // TODO: Sau đó viết các phương thức xử lý thao tác của người dùng, rồi lưu kết quả vào các thuộc tính public
         return view;
+    }
+    enum HourMode{
+        H12, H24
     }
 }
