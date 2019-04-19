@@ -19,10 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-enum Difficulty{
-    Easy, Moderate, Hard, Insane, Nightmare, Infernal
-}
+
 public class MathChallengeFragment extends Fragment {
+    enum Difficulty{
+        Easy, Moderate, Hard, Insane, Nightmare, Infernal
+    }
     private Difficulty difficulty = Difficulty.Insane; // TODO: Hard-coded
     private int numberOfCalculation = 2; // TODO: Hard-coded
     private int numberOfDoneCalculation = 0;
