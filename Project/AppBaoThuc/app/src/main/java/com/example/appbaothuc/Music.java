@@ -1,5 +1,7 @@
 package com.example.appbaothuc;
 
+import java.util.Comparator;
+
 public class Music {
     private String url;
     private String name;
@@ -23,5 +25,25 @@ public class Music {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+
+
+
+
+
+
+
+    public static class UrlComparator implements Comparator<Music>{
+        @Override
+        public int compare(Music o1, Music o2) {
+            return o1.url.compareToIgnoreCase(o2.url);
+        }
+    }
+    public static class NameComparator implements Comparator<Music>{
+        @Override
+        public int compare(Music o1, Music o2) {
+            return o1.name.compareToIgnoreCase(o2.name);
+        }
     }
 }

@@ -21,6 +21,7 @@ import com.example.appbaothuc.R;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MusicPickerFragment extends Fragment {
@@ -124,6 +125,7 @@ public class MusicPickerFragment extends Fragment {
             String path = listMusicPath.get(i);
             listMusic.add(new Music(path, path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."))));
         }
+        Collections.sort(listMusic, new Music.NameComparator());
         musicAdapter.setListMusic(listMusic);
         musicAdapter.notifyDataSetChanged();
     }

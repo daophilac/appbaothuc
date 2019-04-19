@@ -30,7 +30,6 @@ import com.example.appbaothuc.Alarm;
 import com.example.appbaothuc.Music;
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.UpcomingAlarmFragment;
-import com.example.appbaothuc.interfaces.OnOpenRepeatDialogFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +46,6 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     }
     private Context context;
     private UpcomingAlarmFragment upcomingAlarmFragment;
-    //private SettingAlarmFragmentListener listener;
 
     private SettingAlarmMode settingAlarmMode;
     public  static Alarm alarm;
@@ -403,8 +401,6 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         this.music = music;
         alarm.setRingtoneUrl(music.getUrl());
         alarm.setRingtoneName(music.getName());
-        //yourRingTone.setUriRingTone(music.getUrl());
-        //yourRingTone.setUriRingTone(music.getName());
         textViewRingTone.setText(music.getName());
     }
 
