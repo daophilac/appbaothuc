@@ -211,6 +211,14 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                 getFragmentManager().beginTransaction().remove(SettingAlarmFragment.this).commit();
             }
         });
+        btnDelete.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if(settingAlarmMode == SettingAlarmMode.EDIT){
+                    upcomingAlarmFragment.deleteAlarm(alarm.getIdAlarm());
+                }
+            }
+        });
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
