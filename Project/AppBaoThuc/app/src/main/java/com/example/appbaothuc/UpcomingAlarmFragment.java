@@ -81,7 +81,15 @@ public class UpcomingAlarmFragment extends Fragment {
         MainActivity.restartAlarmService(getContext());
     }
     public void deleteAlarm(int idAlarm){
-
+        databaseHandler.deleteAlarm(idAlarm);
+        for(int i = 0; i < listAlarm.size(); i++){
+            if(listAlarm.get(i).getIdAlarm() == idAlarm){
+                listAlarm.remove(i);
+                alarmAdapter.notifyItemRemoved(i);
+                MainActivity.restartAlarmService(getContext());
+                break;
+            }
+        }
     }
     public void updateAlarmEnable(Alarm alarm){
         databaseHandler.updateAlarmEnable(alarm.getIdAlarm(), alarm.isEnable());
