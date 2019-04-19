@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
@@ -17,11 +18,13 @@ import android.widget.Toast;
 import com.example.appbaothuc.Alarm;
 import com.example.appbaothuc.DatabaseHandler;
 import com.example.appbaothuc.R;
+import com.example.appbaothuc.challenge.ChallengeActivity;
 
 import java.util.Calendar;
-import java.util.HashMap;
+import java.util.Random;
 
 public class NotificationService extends Service {
+    private static final int REQUEST_CODE = 1;
     private static final int NOTIFICATION_ID = 1;
     private static final String NOTIFICATION_CHANNEL_ID = "com.example.appbaothuc";
     private static final String NOTIFICATION_CHANNEL_NAME = "App báo thức";
@@ -34,7 +37,11 @@ public class NotificationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         databaseHandler = new DatabaseHandler(this);
-        if(databaseHandler.checkIfThereIsAnyAlarm()){
+        if(!databaseHandler.checkIfThereIsAnyAlarm()){
+            Intent intentToStop = new Intent(this, NotificationService.class);
+            stopService(intentToStop);
+        }
+        else{
             Alarm alarm = databaseHandler.getTheNearestAlarm();
             Calendar timeNow = Calendar.getInstance();
             Calendar timeFuture = Calendar.getInstance();
@@ -45,13 +52,12 @@ public class NotificationService extends Service {
             timeFuture.set(Calendar.SECOND, 0);
             long deltaInMillisecond = Math.abs(timeFuture.getTimeInMillis() - timeNow.getTimeInMillis());
             timeDelta.setTimeInMillis(timeNow.getTimeInMillis() + deltaInMillisecond);
-            AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-            Intent alarmServiceIntent = new Intent(this.getApplicationContext(), AlarmService.class);
-            alarmServiceIntent.putExtra("alarm", alarm);
-            PendingIntent pendingIntent = PendingIntent.getService(this, 0, alarmServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent alarmServiceIntent = new Intent(getApplicationContext(), ChallengeActivity.class);
+            byte[] byteAlarm = Alarm.toByteArray(alarm);
+            alarmServiceIntent.putExtra("alarm", byteAlarm);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, REQUEST_CODE, alarmServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, timeDelta.getTimeInMillis(), pendingIntent);
-
 
 
             String nextAlarmTextDayOfWeek = databaseHandler.getDayOfWeekInString(timeFuture.get(Calendar.DAY_OF_WEEK));
@@ -65,7 +71,6 @@ public class NotificationService extends Service {
             String nextAlarmText = nextAlarmTextDayOfWeek + " " + nextAlarmTextTime;
 
 
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_NONE);
                 notificationChannel.setLightColor(Color.BLUE);
@@ -74,6 +79,7 @@ public class NotificationService extends Service {
                 assert manager != null;
                 manager.createNotificationChannel(notificationChannel);
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+                Bundle d = new Bundle();
                 Notification notification = notificationBuilder.setOngoing(true)
                         .setSmallIcon(R.drawable.ic_add) // TODO
                         .setContentTitle("[Next Alarm] " + nextAlarmText) // TODO

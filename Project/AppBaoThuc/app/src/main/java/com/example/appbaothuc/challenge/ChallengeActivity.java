@@ -11,21 +11,19 @@ import com.example.appbaothuc.R;
 
 public class ChallengeActivity extends AppCompatActivity {
     private Alarm alarm;
-    public static final int defaultRingtoneId = R.raw.boss_battle_a; //TODO
-    public static final String defaultRingtoneName = "Boss battle A";
+    public static final int defaultRingtoneId = R.raw.boss_battle_a; // TODO
+    public static final String defaultRingtoneName = "Boss battle A"; // TODO
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        alarm = getIntent().getExtras().getParcelable("alarm");
+        byte[] byteAlarm = getIntent().getExtras().getByteArray("alarm");
+        alarm = Alarm.toParcelable(byteAlarm, Alarm.CREATOR);
         // TODO: Debug purpose
-        String ringtoneUrl = "/sdcard/music/7.1. Final Frontier (feat. Merethe Soltvedt).flac";
-        alarm.setRingtoneUrl(ringtoneUrl);
-        alarm.setRingtoneName(ringtoneUrl.substring(ringtoneUrl.lastIndexOf("/") + 1, ringtoneUrl.lastIndexOf(".")));
         alarm.setLabel("Do exercise");
         // TODO
         FragmentManager fragmentManager = getSupportFragmentManager();
         ChallengeDialogFragment challengeDialogFragment = ChallengeDialogFragment.newInstance(alarm,"");
-        challengeDialogFragment.show(fragmentManager, "challenge_dialog_fragment");
+        challengeDialogFragment.show(fragmentManager, this.getLocalClassName());
     }
 
     @Override

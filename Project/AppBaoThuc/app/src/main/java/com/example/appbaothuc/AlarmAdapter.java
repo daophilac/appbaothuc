@@ -13,7 +13,6 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.appbaothuc.alarmsetting.SettingAlarmFragment;
-import com.example.appbaothuc.interfaces.OnOpenSettingAlarmFragment;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,14 +22,12 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     private UpcomingAlarmFragment upcomingAlarmFragment;
     private List<Alarm> listAlarm;
     private SparseArray<AlarmViewHolder> mapAlarmView;
-    private DatabaseHandler databaseHandler;
 
     public AlarmAdapter(Context context, UpcomingAlarmFragment upcomingAlarmFragment, List<Alarm> listAlarm) {
         this.context = context;
         this.upcomingAlarmFragment = upcomingAlarmFragment;
         this.listAlarm = listAlarm;
 
-        this.databaseHandler = new DatabaseHandler(context);
         this.mapAlarmView = new SparseArray<>();
     }
 
@@ -82,21 +79,17 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             @Override
             public void onClick(View v) {
                 alarm.setEnable(checkBoxEnable.isChecked());
-                databaseHandler.updateAlarmEnable(alarm.getIdAlarm(), alarm.isEnable());
+                upcomingAlarmFragment.updateAlarmEnable(alarm);
                 listAlarm.set(alarmViewHolder.getAdapterPosition(), alarm);
                 Collections.sort(listAlarm);
                 AlarmAdapter.this.notifyDataSetChanged();
-                MainActivity.restartAlarmService(context);
             }
         });
     }
     public void openAlarmSetting(View v) {
-        OnOpenSettingAlarmFragment listener;
-        SettingAlarmFragment settingAlarmFragment = new SettingAlarmFragment();
-        listener = settingAlarmFragment;
+        SettingAlarmFragment settingAlarmFragment = SettingAlarmFragment.newInstance(upcomingAlarmFragment, mapAlarmView.get(v.getId()).alarm);
         FragmentManager fragmentManager = ((FragmentActivity)context).getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.full_screen_fragment_container, settingAlarmFragment).commit();
-        listener.onInitialize(upcomingAlarmFragment, mapAlarmView.get(v.getId()).alarm);
     }
 
     class AlarmViewHolder extends RecyclerView.ViewHolder {

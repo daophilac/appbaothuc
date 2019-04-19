@@ -1,7 +1,6 @@
 package com.example.appbaothuc.challenge;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 import com.example.appbaothuc.Alarm;
 import com.example.appbaothuc.MainActivity;
 import com.example.appbaothuc.R;
-import com.example.appbaothuc.services.AlarmService;
 
 import java.io.File;
 
@@ -30,11 +28,11 @@ import static android.content.Context.AUDIO_SERVICE;
 
 
 // TODO: WARNING: This class has some high logical handles
-enum ChallengeType {
-    Math, Shake, Qrcode
-}
-
-public class ChallengeDialogFragment extends DialogFragment implements MathChallengeFragment.OnFinishChallengeListener{
+public class ChallengeDialogFragment extends DialogFragment implements MathChallengeFragment.OnFinishChallengeListener {
+    enum ChallengeType {
+        Math, Shake, Qrcode
+    }
+    private boolean debugMode = true; // TODO: remove this when release
     private Alarm alarm;
     private MediaPlayer mediaPlayer;
     private AudioManager audioManager;
@@ -44,7 +42,7 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
     private ChallengeType challengeType = ChallengeType.Math; // TODO: Hard-coded
     private boolean graduallyIncreaseVolume = true; //TODO: Hard-coded
     private boolean maxVolume = true; //TODO: Hard-coded
-    private int muteTime = 5; //TODO: Hard-coded
+    private int muteTime = 30; //TODO: Hard-coded
 
     private TextView textViewLabel;
     private TextView textViewRingtoneName;
@@ -72,9 +70,11 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
         challengeDialogFragment.setCancelable(false);
         return challengeDialogFragment;
     }
-    private void setAlarm(Alarm alarm){
+
+    private void setAlarm(Alarm alarm) {
         this.alarm = alarm;
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -91,28 +91,26 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
 
         textViewLabel.setText(alarm.getLabel());
         textViewHour.setText(String.valueOf(alarm.getHour()));
-        if(alarm.getMinute() < 10){
-            textViewMinute.setText("0" + String.valueOf(alarm.getMinute()));
-        }
-        else{
+        if (alarm.getMinute() < 10) {
+            textViewMinute.setText("0" + alarm.getMinute());
+        } else {
             textViewMinute.setText(String.valueOf(alarm.getMinute()));
         }
 
         File file = new File(alarm.getRingtoneUrl());
-        if(file.exists()){
+        if (file.exists()) {
             mediaPlayer = MediaPlayer.create(getContext(), Uri.fromFile(new File(alarm.getRingtoneUrl())));
             textViewRingtoneName.setText("Music: " + alarm.getRingtoneName());
-        }
-        else{
+        } else {
             mediaPlayer = MediaPlayer.create(getContext(), ChallengeActivity.defaultRingtoneId);
             textViewRingtoneName.setText("Music: " + ChallengeActivity.defaultRingtoneName);
         }
-        mediaPlayer.setLooping(false);
+        mediaPlayer.setLooping(true);
 
         getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_MUTE){
+                if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_MUTE) {
                     return true;
                 }
                 return false;
@@ -123,30 +121,42 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
         buttonMute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Mute for " + String.valueOf(muteTime) + " seconds.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Mute for " + muteTime + " seconds.", Toast.LENGTH_LONG).show();
                 SnoozeManager snoozeManager = new SnoozeManager(mediaPlayer, muteTime);
                 if (threadSnooze == null || !threadSnooze.isAlive()) {
                     threadSnooze = new Thread(snoozeManager);
                     threadSnooze.start();
-                }
-                else {
+                } else {
                     snoozeAgain = true;
                 }
             }
         });
 
+        if (debugMode) {
+            buttonCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    isDismissed = true;
+                    mediaPlayer.release();
+                    getDialog().dismiss();
+                    getActivity().finish();
+                    audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentSystemVolume, 0);
+                    MainActivity.restartAlarmService(getContext());
+                }
+            });
+        }
+
         if (maxVolume) {
             currentSystemVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
             audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
             fixedVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        }
-        else {
+        } else {
 
         }
         if (!graduallyIncreaseVolume) {
             mediaPlayer.start();
-        }
-        else {
+        } else {
             mediaPlayer.setVolume(0, 0);
             mediaPlayer.start();
             new Thread(new Runnable() {
@@ -176,7 +186,7 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
         switch (challengeType) {
             case Math:
                 mathChallengeFragment = new MathChallengeFragment();
-                fragmentManager.beginTransaction().replace(R.id.challenge_fragment_container, mathChallengeFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.challenge_fragment_container, mathChallengeFragment).commit();
                 break;
             default:
                 break;
@@ -224,8 +234,6 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
         buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AlarmService.class);
-                getActivity().stopService(intent);
                 isDismissed = true;
                 mediaPlayer.release();
                 getDialog().dismiss();
@@ -235,17 +243,5 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
                 MainActivity.restartAlarmService(getContext());
             }
         });
-//        buttonCancel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getContext(), AlarmService.class);
-//                getActivity().stopService(intent);
-//                isDismissed = true;
-//                mediaPlayer.release();
-//                getDialog().dismiss();
-//
-//                getActivity().finish();
-//            }
-//        });
     }
 }

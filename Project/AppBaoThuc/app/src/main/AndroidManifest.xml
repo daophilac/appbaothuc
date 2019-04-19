@@ -34,8 +34,6 @@
         <activity android:name=".alarmsetting.TypePlayShakeActivity" />
         <activity android:name=".alarmsetting.TypePlayCameraActivity" />
         <activity android:name=".alarmsetting.TypePlayDefaultActivity" />
-
-        <service android:name=".services.AlarmService" />
         <service android:name=".services.NotificationService" />
         <service
             android:name=".services.ServiceCreator"
