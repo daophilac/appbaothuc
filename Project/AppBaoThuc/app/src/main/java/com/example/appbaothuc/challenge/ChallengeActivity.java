@@ -10,6 +10,9 @@ import com.example.appbaothuc.Alarm;
 import com.example.appbaothuc.R;
 
 public class ChallengeActivity extends AppCompatActivity {
+    enum ChallengeType{
+        Math, Shake
+    }
     private Alarm alarm;
     public static final int defaultRingtoneId = R.raw.boss_battle_a; // TODO
     public static final String defaultRingtoneName = "Boss battle A"; // TODO

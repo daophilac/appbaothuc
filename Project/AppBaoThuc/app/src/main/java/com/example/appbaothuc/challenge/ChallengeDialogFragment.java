@@ -29,9 +29,6 @@ import static android.content.Context.AUDIO_SERVICE;
 
 // TODO: WARNING: This class has some high logical handles
 public class ChallengeDialogFragment extends DialogFragment implements MathChallengeFragment.OnFinishChallengeListener {
-    enum ChallengeType {
-        Math, Shake, Qrcode
-    }
     private boolean debugMode = true; // TODO: remove this when release
     private Alarm alarm;
     private MediaPlayer mediaPlayer;
@@ -39,7 +36,7 @@ public class ChallengeDialogFragment extends DialogFragment implements MathChall
     private int currentSystemVolume;
     private int fixedVolume;
     //private String musicFilePath = "/sdcard/download/boss battle a.flac"; //TODO: Hard-coded
-    private ChallengeType challengeType = ChallengeType.Math; // TODO: Hard-coded
+    private ChallengeActivity.ChallengeType challengeType = ChallengeActivity.ChallengeType.Math; // TODO: Hard-coded
     private boolean graduallyIncreaseVolume = true; //TODO: Hard-coded
     private boolean maxVolume = true; //TODO: Hard-coded
     private int muteTime = 30; //TODO: Hard-coded
