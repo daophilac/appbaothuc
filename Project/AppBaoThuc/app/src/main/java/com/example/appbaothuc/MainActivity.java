@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseHandler databaseHandler;
     private ImageButton buttonAlarm;
     private ImageButton buttonSetting;
-    private UpcomingAlarmFragment upcomingAlarmFragment = new UpcomingAlarmFragment();
-    private SettingFragment settingFragment = new SettingFragment();
+    private UpcomingAlarmFragment upcomingAlarmFragment;
+    private SettingFragment settingFragment;
     private FragmentManager fragmentManager;
     private MediaPlayer musicPlayer;
 
@@ -50,8 +50,10 @@ public class MainActivity extends AppCompatActivity {
                 loadSettingFragment(v);
             }
         });
+        settingFragment = SettingFragment.newInstance(); // TODO: should use the default constructor instead.
         settingFragment.setEnterTransition(new Slide(Gravity.END));
         settingFragment.setExitTransition(new Slide(Gravity.END));
+        upcomingAlarmFragment = new UpcomingAlarmFragment();
         fragmentManager = getSupportFragmentManager();
         settingFragmentIsAdded = false;
         musicPlayer = new MediaPlayer();
