@@ -8,6 +8,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,9 @@ public class TypeFragment extends Fragment {
             linearLayoutQRCode;
     private Context context;
     private Integer challengeType;
+
+    private FragmentManager fragmentManager;
+    private TypeLinearMathFragment typeLinearMathFragment;
 //
 //    public interface TypeFragmentListener{
 //        void onFinishTypeFragment(Integer inputNumber);
@@ -125,12 +129,13 @@ public class TypeFragment extends Fragment {
         linearLayoutMath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                challengeType = 1;
                 linearLayoutMath.setBackgroundColor(Color.BLUE);
                 linearLayoutDefault.setBackgroundColor(getResources().getColor(R.color.colortext2));
                 linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
                 linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.colortext2));
                 linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, typeLinearMathFragment).commit();
+                //challengeType = 1;
             }
         });
         linearLayoutShake.setOnClickListener(new View.OnClickListener() {
