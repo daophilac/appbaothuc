@@ -20,7 +20,10 @@ public class ShakeChallengeFragment extends Fragment implements ShakeDetector.Sh
     }
     private Context context;
     private TextView textViewCount;
-    private int countDownFrom = 20; // TODO: hard-code
+    private Difficulty difficulty = Difficulty.Easy; // TODO: hard-coded
+    private int countDownFrom = 20; // TODO: hard-coded
+    private long minInterval;
+    private float minForce;
     private ShakeDetector shakeDetector;
     private ChallengeActivity.OnFinishChallengeListener listener;
     @Nullable
@@ -30,7 +33,19 @@ public class ShakeChallengeFragment extends Fragment implements ShakeDetector.Sh
         textViewCount = view.findViewById(R.id.text_view_count);
         textViewCount.setText(String.valueOf(countDownFrom));
         shakeDetector = ShakeDetector.newInstance(context);
-        shakeDetector.configure(200, 50);
+        minInterval = 200;
+        switch(difficulty){
+            case Easy:
+                minForce = 50;
+                break;
+            case Moderate:
+                minForce = 75;
+                break;
+            case Hard:
+                minForce = 100;
+                break;
+        }
+        shakeDetector.configure(minInterval, minForce);
         shakeDetector.start(this);
         return view;
     }
