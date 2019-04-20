@@ -71,18 +71,20 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     private TypeFragment typeFragment;
     private MusicPickerFragment musicPickerFragment;
     public static int challengeType; // chua co
-    public static SettingAlarmFragment newInstance(UpcomingAlarmFragment upcomingAlarmFragment, Alarm alarm){
+    public static SettingAlarmFragment newInstance(){
         SettingAlarmFragment settingAlarmFragment = new SettingAlarmFragment();
-        settingAlarmFragment.upcomingAlarmFragment = upcomingAlarmFragment;
-        settingAlarmFragment.alarm = alarm;
+        return settingAlarmFragment;
+    }
+    public void configure(UpcomingAlarmFragment upcomingAlarmFragment, Alarm alarm){
+        this.upcomingAlarmFragment = upcomingAlarmFragment;
+        SettingAlarmFragment.alarm = alarm;
         if(alarm == null){
-            settingAlarmFragment.settingAlarmMode = SettingAlarmMode.ADD_NEW;
-            settingAlarmFragment.alarm = settingAlarmFragment.createDefaultAlarm();
+            this.settingAlarmMode = SettingAlarmMode.ADD_NEW;
+            SettingAlarmFragment.alarm = this.createDefaultAlarm();
         }
         else{
-            settingAlarmFragment.settingAlarmMode = SettingAlarmMode.EDIT;
+            this.settingAlarmMode = SettingAlarmMode.EDIT;
         }
-        return settingAlarmFragment;
     }
     @Nullable
     @Override
@@ -97,6 +99,14 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         super.onAttach(context);
         this.context = context;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.upcomingAlarmFragment = null;
+        alarm = null;
+    }
+
     private Alarm createDefaultAlarm(){
         List<Boolean> listRepeatDay = Arrays.asList(true, true, true, true, true, true, true);
         return new Alarm(true, R.integer.default_hour,R.integer.default_hour, listRepeatDay);

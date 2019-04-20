@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.appbaothuc.services.NotificationService;
+import com.peanut.androidlib.permissionmanager.PermissionInquirer;
 
 public class MainActivity extends AppCompatActivity {
     private static final String DATABASE_NAME = "APPBAOTHUC.db";
@@ -71,8 +72,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void test1(View view){
-        FragmentTest fragmentTest = new FragmentTest();
-        fragmentManager.beginTransaction().add(R.id.main_fragment_container, fragmentTest).commit();
+
     }
     public void test2(View view){
 

@@ -12,10 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.appbaothuc.R;
-import com.peanut.library.sensormanager.ShakeDetector;
-import com.peanut.library.sensormanager.ShakeListener;
+import com.peanut.androidlib.sensormanager.ShakeDetector;
 
-public class ShakeChallengeFragment extends Fragment implements ShakeListener{
+public class ShakeChallengeFragment extends Fragment implements ShakeDetector.ShakeListener {
+    enum Difficulty{
+        Easy, Moderate, Hard
+    }
     private Context context;
     private TextView textViewCount;
     private int countDownFrom = 20; // TODO: hard-code

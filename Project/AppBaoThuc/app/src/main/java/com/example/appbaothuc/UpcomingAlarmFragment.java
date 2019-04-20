@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.appbaothuc.alarmsetting.SettingAlarmFragment;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class UpcomingAlarmFragment extends Fragment {
         listAlarm = databaseHandler.getAllAlarm();
         Collections.sort(listAlarm);
         alarmAdapter = new AlarmAdapter(getContext(), this, listAlarm);
-        settingAlarmFragment = SettingAlarmFragment.newInstance(this, null);
+        settingAlarmFragment = SettingAlarmFragment.newInstance();
 
         recyclerViewListAlarm.setAdapter(alarmAdapter);
         recyclerViewListAlarm.setItemAnimator(null);
@@ -51,6 +50,7 @@ public class UpcomingAlarmFragment extends Fragment {
 
         buttonAddAlarm.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
+                settingAlarmFragment.configure(UpcomingAlarmFragment.this, null);
                 fragmentManager.beginTransaction().replace(R.id.full_screen_fragment_container, settingAlarmFragment).commit();
             }
         });

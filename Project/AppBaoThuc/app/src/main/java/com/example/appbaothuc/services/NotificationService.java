@@ -21,7 +21,6 @@ import com.example.appbaothuc.R;
 import com.example.appbaothuc.challenge.ChallengeActivity;
 
 import java.util.Calendar;
-import java.util.Random;
 
 public class NotificationService extends Service {
     private static final int REQUEST_CODE = 1;
@@ -38,8 +37,11 @@ public class NotificationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         databaseHandler = new DatabaseHandler(this);
         if(!databaseHandler.checkIfThereIsAnyAlarm()){
-            Intent intentToStop = new Intent(this, NotificationService.class);
-            stopService(intentToStop);
+            stopService(new Intent(this, NotificationService.class));
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent alarmServiceIntent = new Intent(getApplicationContext(), ChallengeActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, REQUEST_CODE, alarmServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManager.cancel(pendingIntent);
         }
         else{
             Alarm alarm = databaseHandler.getTheNearestAlarm();
@@ -58,7 +60,6 @@ public class NotificationService extends Service {
             alarmServiceIntent.putExtra("alarm", byteAlarm);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, REQUEST_CODE, alarmServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, timeDelta.getTimeInMillis(), pendingIntent);
-
 
             String nextAlarmTextDayOfWeek = databaseHandler.getDayOfWeekInString(timeFuture.get(Calendar.DAY_OF_WEEK));
             String nextAlarmTextTime;
@@ -79,7 +80,6 @@ public class NotificationService extends Service {
                 assert manager != null;
                 manager.createNotificationChannel(notificationChannel);
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
-                Bundle d = new Bundle();
                 Notification notification = notificationBuilder.setOngoing(true)
                         .setSmallIcon(R.drawable.ic_add) // TODO
                         .setContentTitle("[Next Alarm] " + nextAlarmText) // TODO
