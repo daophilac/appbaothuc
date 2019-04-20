@@ -1,4 +1,10 @@
-# AppBaoThuc Alpha phase v0.0.2
+# AppBaoThuc Alpha phase v0.0.3
+
+## Change log v0.0.3
+### New features:
+  1. Shake challenge.
+### On progess features:
+  1. Prevent users from doing anything until they complete the challenge.
 
 ## Change log v0.0.2
 ### New features:
