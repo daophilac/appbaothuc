@@ -14,8 +14,8 @@ public class ChallengeActivity extends AppCompatActivity {
         Default, Math, Shake
     }
     private Alarm alarm;
-    public static final int defaultRingtoneId = R.raw.boss_battle_a; // TODO
-    public static final String defaultRingtoneName = "Boss battle A"; // TODO
+    public static final int defaultRingtoneId = R.raw.in_the_busting_square; // TODO
+    public static final String defaultRingtoneName = "In the busting square"; // TODO
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,5 +32,9 @@ public class ChallengeActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return true;
+    }
+
+    public interface OnFinishChallengeListener{
+        void onFinishChallenge();
     }
 }

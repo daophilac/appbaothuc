@@ -24,8 +24,8 @@ public class MathChallengeFragment extends Fragment {
     enum Difficulty{
         Easy, Moderate, Hard, Insane, Nightmare, Infernal
     }
-    private Difficulty difficulty = Difficulty.Insane; // TODO: Hard-coded
-    private int numberOfCalculation = 2; // TODO: Hard-coded
+    private Difficulty difficulty = Difficulty.Easy; // TODO: Hard-coded
+    private int numberOfCalculation = 1; // TODO: Hard-coded
     private int numberOfDoneCalculation = 0;
     private List<String> listCalculation;
     private List<Integer> listResult;
@@ -36,7 +36,7 @@ public class MathChallengeFragment extends Fragment {
     private EditText editTextResult;
     private ImageButton buttonConfirm;
 
-    private OnFinishChallengeListener listener;
+    private ChallengeActivity.OnFinishChallengeListener listener;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -76,7 +76,7 @@ public class MathChallengeFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        listener = (OnFinishChallengeListener) getParentFragment();
+        listener = (ChallengeActivity.OnFinishChallengeListener) getParentFragment();
     }
 
     private void getNextCalculation(){
@@ -115,8 +115,5 @@ public class MathChallengeFragment extends Fragment {
             listResult.add(result);
         }
         getNextCalculation();
-    }
-    public interface OnFinishChallengeListener {
-        void onFinishChallenge();
     }
 }

@@ -163,7 +163,7 @@ public class MusicPickerFragment extends Fragment {
                     order = Order.Asc;
                     mapSortOrder.put(SortBy.Url, order);
                     Collections.sort(listMusic, new Music.UrlComparator());
-                    imageViewSortByName.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_up));
+                    imageViewSortByUrl.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_up));
                     musicAdapter.notifyDataSetChanged();
                 }
                 else{
@@ -171,7 +171,7 @@ public class MusicPickerFragment extends Fragment {
                     mapSortOrder.put(SortBy.Url, order);
                     Collections.sort(listMusic, new Music.UrlComparator());
                     Collections.reverse(listMusic);
-                    imageViewSortByName.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_down));
+                    imageViewSortByUrl.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_down));
                     musicAdapter.notifyDataSetChanged();
                 }
             }
