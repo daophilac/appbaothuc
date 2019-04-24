@@ -12,12 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.appbaothuc.R;
+import com.example.appbaothuc.interfaces.ChallengeActivityListener;
 import com.peanut.androidlib.sensormanager.ShakeDetector;
 
-public class ShakeChallengeFragment extends Fragment implements ShakeDetector.ShakeListener {
-    enum Difficulty{
-        Easy, Moderate, Hard
-    }
+public class ShakeChallengeFragment extends Fragment implements ChallengeActivityListener, ShakeDetector.ShakeListener {
     private Context context;
     private TextView textViewCount;
     private Difficulty difficulty = Difficulty.Easy; // TODO: hard-coded
@@ -25,10 +23,20 @@ public class ShakeChallengeFragment extends Fragment implements ShakeDetector.Sh
     private long minInterval;
     private float minForce;
     private ShakeDetector shakeDetector;
-    private ChallengeActivity.OnFinishChallengeListener listener;
+    private ChallengeActivityListener hostDialogListener;
+    private ChallengeActivityListener shakeDialogListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+        this.hostDialogListener = (ChallengeActivityListener) context;
+        this.shakeDialogListener = (ChallengeActivityListener) getParentFragment();
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Bundle bundleChallenge = getArguments();
         View view = inflater.inflate(R.layout.fragment_shake_challenge, container, false);
         textViewCount = view.findViewById(R.id.text_view_count);
         textViewCount.setText(String.valueOf(countDownFrom));
@@ -47,20 +55,31 @@ public class ShakeChallengeFragment extends Fragment implements ShakeDetector.Sh
         }
         shakeDetector.configure(minInterval, minForce);
         shakeDetector.start(this);
-        return view;
-    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.context = context;
-        this.listener = (ChallengeActivity.OnFinishChallengeListener) getParentFragment();
+        if(bundleChallenge != null){
+            countDownFrom = bundleChallenge.getInt("countDownFrom");
+            minInterval = bundleChallenge.getLong("minInterval");
+            minForce = bundleChallenge.getFloat("minForce");
+            textViewCount.setText(String.valueOf(countDownFrom));
+        }
+        return view;
     }
 
     @Override
     public void onStop() {
         super.onStop();
         this.shakeDetector.stop();
+    }
+
+
+
+    @Override
+    public Bundle onGetSavedState() {
+        Bundle shakeSavedState = new Bundle();
+        shakeSavedState.putInt("countDownFrom", countDownFrom);
+        shakeSavedState.putLong("minInterval", minInterval);
+        shakeSavedState.putFloat("minForce", minForce);
+        return shakeSavedState;
     }
 
     @Override
@@ -73,10 +92,12 @@ public class ShakeChallengeFragment extends Fragment implements ShakeDetector.Sh
         Toast.makeText(context, "Shake detection.", Toast.LENGTH_SHORT).show();
         countDownFrom--;
         if(countDownFrom == 0){
-            listener.onFinishChallenge();
-            return;
+            hostDialogListener.onFinishChallenge();
+            shakeDialogListener.onFinishChallenge();
         }
-        textViewCount.setText(String.valueOf(countDownFrom));
+        else{
+            textViewCount.setText(String.valueOf(countDownFrom));
+        }
     }
 
     @Override
@@ -92,5 +113,14 @@ public class ShakeChallengeFragment extends Fragment implements ShakeDetector.Sh
     @Override
     public void onStopDetection() {
         Toast.makeText(context, "Shake detection has stopped.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFinishChallenge() {
+
+    }
+
+    enum Difficulty{
+        Easy, Moderate, Hard
     }
 }

@@ -14,32 +14,41 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.appbaothuc.R;
+import com.example.appbaothuc.interfaces.ChallengeActivityListener;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 
-public class MathChallengeFragment extends Fragment {
+public class MathChallengeFragment extends Fragment implements ChallengeActivityListener{
     enum Difficulty{
         Easy, Moderate, Hard, Insane, Nightmare, Infernal
     }
     private Difficulty difficulty = Difficulty.Easy; // TODO: Hard-coded
     private int numberOfCalculation = 1; // TODO: Hard-coded
     private int numberOfDoneCalculation = 0;
-    private List<String> listCalculation;
-    private List<Integer> listResult;
+    private ArrayList<String> listCalculation;
+    private ArrayList<Integer> listResult;
     private Random random;
-
 
     private TextView textViewQuestion;
     private EditText editTextResult;
     private ImageButton buttonConfirm;
 
-    private ChallengeActivity.OnFinishChallengeListener listener;
+    private ChallengeActivityListener hostDialogListener;
+    private ChallengeActivityListener mathDialogListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.hostDialogListener = (ChallengeActivityListener) context;
+        this.mathDialogListener = (ChallengeActivityListener) getParentFragment();
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Bundle bundleChallenge = getArguments();
         View view = inflater.inflate(R.layout.fragment_math_challenge, container, false);
 
         listCalculation = new ArrayList<>();
@@ -49,7 +58,6 @@ public class MathChallengeFragment extends Fragment {
         textViewQuestion = view.findViewById(R.id.textView_question);
         editTextResult = view.findViewById(R.id.editText_result);
         buttonConfirm = view.findViewById(R.id.button_confirm);
-
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +66,8 @@ public class MathChallengeFragment extends Fragment {
                     numberOfDoneCalculation++;
                     if(numberOfDoneCalculation == numberOfCalculation){
                         buttonConfirm.setEnabled(false);
-                        listener.onFinishChallenge();
+                        hostDialogListener.onFinishChallenge();
+                        mathDialogListener.onFinishChallenge();
                         textViewQuestion.setTextColor(Color.GREEN);
                         textViewQuestion.setText("DONE");
                         editTextResult.setText("");
@@ -70,13 +79,29 @@ public class MathChallengeFragment extends Fragment {
                 }
             }
         });
-        generateCalculation();
+
+        if(bundleChallenge != null){
+            numberOfCalculation = bundleChallenge.getInt("numberOfCalculation");
+            numberOfDoneCalculation = bundleChallenge.getInt("numberOfDoneCalculation");
+            listCalculation = bundleChallenge.getStringArrayList("listCalculation");
+            listResult = bundleChallenge.getIntegerArrayList("listResult");
+            editTextResult.setText(bundleChallenge.getString("editTextResultString"));
+            textViewQuestion.setText(listCalculation.get(numberOfDoneCalculation));
+        }
+        else{
+            generateCalculation();
+        }
         return view;
     }
+
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        listener = (ChallengeActivity.OnFinishChallengeListener) getParentFragment();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 
     private void getNextCalculation(){
@@ -109,11 +134,26 @@ public class MathChallengeFragment extends Fragment {
             int a = random.nextInt(maxRange);
             int b = random.nextInt(maxRange);
             int c = random.nextInt(maxRange);
-            String calculation = String.valueOf(a) + " x " + String.valueOf(b) + " + " + String.valueOf(c);
+            String calculation = a + " x " + b + " + " + c;
             int result = a * b + c;
             listCalculation.add(calculation);
             listResult.add(result);
         }
         getNextCalculation();
+    }
+
+    @Override
+    public Bundle onGetSavedState() {
+        Bundle mathSavedState = new Bundle();
+        mathSavedState.putInt("numberOfCalculation", numberOfCalculation);
+        mathSavedState.putInt("numberOfDoneCalculation", numberOfDoneCalculation);
+        mathSavedState.putStringArrayList("listCalculation", listCalculation);
+        mathSavedState.putIntegerArrayList("listResult", listResult);
+        mathSavedState.putString("editTextResultString", editTextResult.getText().toString());
+        return mathSavedState;
+    }
+    @Override
+    public void onFinishChallenge() {
+
     }
 }

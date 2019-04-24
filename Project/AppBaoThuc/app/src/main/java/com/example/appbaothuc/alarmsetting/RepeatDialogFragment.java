@@ -35,8 +35,7 @@ public class RepeatDialogFragment extends DialogFragment{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View viewDialog = inflater.inflate(R.layout.fragment_repeat_dialog, container);
         btnOK = viewDialog.findViewById(R.id.btnOK);
         btnCancel = viewDialog.findViewById(R.id.btnCancel);
