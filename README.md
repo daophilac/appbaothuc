@@ -8,6 +8,8 @@
 ### Open issues:
   1. Bug layout
   2. Bug music
+### Demo alpha v0.0.4
+https://drive.google.com/open?id=16npnCmAWr_P4MrhYwcrcMN7F4uDtduEU
 
 ## Change log v0.0.3
 ### New features:
@@ -30,5 +32,3 @@
 ### On progress features:
   1. Delete alarms.
   2. Sort ringtones list by name and by url.
-# Demo alpha v0.0.4
-https://drive.google.com/open?id=16npnCmAWr_P4MrhYwcrcMN7F4uDtduEU
