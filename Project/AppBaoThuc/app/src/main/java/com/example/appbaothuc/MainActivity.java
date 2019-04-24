@@ -19,8 +19,8 @@ import android.widget.Toast;
 import com.example.appbaothuc.services.NotificationService;
 import com.peanut.androidlib.permissionmanager.PermissionInquirer;
 
+
 public class MainActivity extends AppCompatActivity {
-    private static final String DATABASE_NAME = "APPBAOTHUC.db";
     private DatabaseHandler databaseHandler;
     private ImageButton buttonAlarm;
     private ImageButton buttonSetting;
@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private SettingFragment settingFragment;
     private FragmentManager fragmentManager;
     private MediaPlayer musicPlayer;
-
     private boolean settingFragmentIsAdded;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         PermissionInquirer permissionInquirer = new PermissionInquirer(this);
         permissionInquirer.askPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 1);
-        databaseHandler = new DatabaseHandler(this, DATABASE_NAME, null, 1);
+        databaseHandler = new DatabaseHandler(this);
         buttonAlarm = findViewById(R.id.button_alarm);
         buttonSetting = findViewById(R.id.button_setting);
         buttonAlarm.setOnClickListener(new View.OnClickListener(){

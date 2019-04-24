@@ -109,6 +109,8 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
     private Alarm createDefaultAlarm(){
         List<Boolean> listRepeatDay = Arrays.asList(true, true, true, true, true, true, true);
+        Alarm alarm = new Alarm(true, R.integer.default_hour,R.integer.default_hour, listRepeatDay);
+        alarm.setChallengeType(2);
         return new Alarm(true, R.integer.default_hour,R.integer.default_hour, listRepeatDay);
     }
 
