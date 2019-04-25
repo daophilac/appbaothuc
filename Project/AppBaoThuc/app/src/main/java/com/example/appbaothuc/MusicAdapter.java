@@ -30,6 +30,8 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
     private MediaPlayer mediaPlayer;
     private ImageButton buttonPreviousPlay;
     private ImageButton buttonNextPlay;
+
+    private Music musicForCancelOperation;
     public MusicAdapter(Context context, Alarm alarm, List<Music> listMusic){
         this.context = context;
         this.alarm = alarm;
@@ -38,6 +40,8 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         this.listCheckBoxCheck = new ArrayList<>();
         this.mapCheckBoxMusic = new SparseArray<>();
         this.mediaPlayer = new MediaPlayer();
+
+        this.musicForCancelOperation = new Music(alarm.getRingtoneUrl(), alarm.getRingtoneName());
     }
     public MusicAdapter(Context context, Alarm alarm){
         this.context = context;
@@ -56,6 +60,10 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
             return null;
         }
         return mapCheckBoxMusic.get(checkBoxCurrentChecked.getId());
+    }
+
+    public Music getMusicForCancelOperation(){
+        return this.musicForCancelOperation;
     }
 
     public void stopMusic(){
@@ -102,6 +110,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
                         }
                         checkBoxCurrent.setChecked(true);
                         checkBoxCurrentChecked = checkBoxCurrent;
+                        alarm.setRingtoneName(getCheckedMusic().getName());
                     }
                 }
             }

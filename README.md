@@ -1,4 +1,15 @@
-# AppBaoThuc Alpha phase v0.0.3
+# AppBaoThuc Alpha phase v0.0.4
+
+## Change log v0.0.4
+### New features:
+  1. Prevent users from doing anything until they complete the challenge.
+### On progess features:
+  1. Prevent phone screen to turn off.
+### Open issues:
+  1. Bug layout
+  2. Bug music
+### Demo alpha v0.0.4
+https://drive.google.com/open?id=16npnCmAWr_P4MrhYwcrcMN7F4uDtduEU
 
 ## Change log v0.0.3
 ### New features:
@@ -21,5 +32,3 @@
 ### On progress features:
   1. Delete alarms.
   2. Sort ringtones list by name and by url.
-# Demo alpha v0.0.1
-https://drive.google.com/open?id=1EmSXbk7tkg0f8YrM2YCUq_bYcpGp1lHO

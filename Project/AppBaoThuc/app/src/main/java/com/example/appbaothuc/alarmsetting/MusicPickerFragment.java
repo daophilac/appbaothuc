@@ -52,9 +52,7 @@ public class MusicPickerFragment extends Fragment {
     private List<Music> listRingtone;
     private List<Music> listMusic;
 
-    //private String rootExternalDirectory;
     private ChooseMusicType chooseMusicType;
-    private SortBy sortBy;
     private HashMap<SortBy, Order> mapSortOrder;
 
     public static MusicPickerFragment newInstance(SettingAlarmFragment settingAlarmFragment, Alarm alarm){
@@ -96,7 +94,6 @@ public class MusicPickerFragment extends Fragment {
         musicAdapter = new MusicAdapter(context, alarm, listMusic);
         recyclerViewListMusic.setAdapter(musicAdapter);
         recyclerViewListMusic.setLayoutManager(new LinearLayoutManager(getContext()));
-        sortBy = SortBy.Name;
         mapSortOrder = new HashMap<>();
         mapSortOrder.put(SortBy.Name, Order.Asc);
         mapSortOrder.put(SortBy.Url, Order.Asc);
@@ -121,6 +118,11 @@ public class MusicPickerFragment extends Fragment {
         buttonCancel.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                Music musicForCancelOperation = musicAdapter.getMusicForCancelOperation();
+                if(musicForCancelOperation != null){
+                    alarm.setRingtoneUrl(musicForCancelOperation.getUrl());
+                    alarm.setRingtoneName(musicForCancelOperation.getName());
+                }
                 getFragmentManager().beginTransaction().remove(MusicPickerFragment.this).commit();
             }
         });
