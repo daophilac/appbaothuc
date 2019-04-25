@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +27,7 @@ public class TypeFragment extends Fragment {
     private LinearLayout linearLayoutDefault, linearLayoutCamera, linearLayoutShake, linearLayoutMath,
             linearLayoutQRCode;
     private Context context;
-    private Integer challengeType;
+    public static Integer challengeType;
 
     private FragmentManager fragmentManager;
     private TypeLinearMathFragment typeLinearMathFragment;
@@ -62,6 +64,10 @@ public class TypeFragment extends Fragment {
         linearLayoutQRCode = view.findViewById(R.id.linearLayoutQRCode);
 
         challengeType = SettingAlarmFragment.challengeType;
+        fragmentManager = getFragmentManager();
+        typeLinearMathFragment = new TypeLinearMathFragment();
+        typeLinearMathFragment.setEnterTransition(new Slide(Gravity.TOP));
+        typeLinearMathFragment.setExitTransition(new Slide(Gravity.TOP));
 
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override

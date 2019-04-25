@@ -17,14 +17,14 @@ import com.example.appbaothuc.R;
 public class TypeLinearMathFragment extends Fragment {
 
     private TextView textViewProblems, textViewMath;
-    private EditText editTextProblems;
+
     private SeekBar seekBarDifficult;
     private Button buttonLinearMathCancel, buttonLinearMathOk;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_type, container, false);
+        View view = inflater.inflate(R.layout.fragment_type_linear_math, container, false);
         setControl(view);
         return view;
     }
@@ -34,6 +34,20 @@ public class TypeLinearMathFragment extends Fragment {
         seekBarDifficult = view.findViewById(R.id.seekBarDifficult);
         buttonLinearMathCancel = view.findViewById(R.id.buttonLinearMathCancel);
         buttonLinearMathOk = view.findViewById(R.id.buttonLinearMathOk);
+
+        buttonLinearMathCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().beginTransaction().remove(TypeLinearMathFragment.this).commit();
+            }
+        });
+        buttonLinearMathOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TypeFragment.challengeType = 1;
+                getFragmentManager().beginTransaction().remove(TypeLinearMathFragment.this).commit();
+            }
+        });
     }
 
 }
