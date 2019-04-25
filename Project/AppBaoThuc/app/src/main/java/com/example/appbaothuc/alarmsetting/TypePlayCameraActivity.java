@@ -20,8 +20,8 @@ public class TypePlayCameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_type_play_camera);
         WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
         Drawable wallpaperDrawable = wallpaperManager.getDrawable();
-        linearLayoutTypePlayCamera = findViewById(R.id.linearLayoutTypePlayCamera);
-        linearLayoutTypePlayCamera.setBackground(wallpaperDrawable);
+        //linearLayoutTypePlayCamera = findViewById(R.id.linearLayoutTypePlayCamera);
+        //linearLayoutTypePlayCamera.setBackground(wallpaperDrawable);
 
         imageButtonExit = findViewById(R.id.imageButtonCameraExit);
 //        textViewHour = findViewById(R.id.textViewHourDefault);

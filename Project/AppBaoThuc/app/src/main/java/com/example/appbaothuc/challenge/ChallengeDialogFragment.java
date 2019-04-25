@@ -42,7 +42,6 @@ public class ChallengeDialogFragment extends DialogFragment implements Challenge
     private int fixedVolume;
 
     private ChallengeActivity.ChallengeType challengeType = ChallengeActivity.ChallengeType.SHAKE; // TODO: Hard-coded
->>>>>>> master
     private boolean graduallyIncreaseVolume = true; //TODO: Hard-coded
     private boolean maxVolume = false; //TODO: Hard-coded
     private int muteTime = 30; //TODO: Hard-coded
