@@ -71,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void test1(View view){
-
+        NotificationService.DEBUG_MODE = true;
+        MainActivity.restartAlarmService(this);
     }
     public void test2(View view){
 
