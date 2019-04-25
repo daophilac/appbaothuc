@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:background="@android:color/darker_gray"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView7MH"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mã Mặt Hàng:  "
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textViewMaMHAdapter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="001"
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView9MH"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tên Mặt Hàng:"
+                    android:textColor="@android:color/background_dark" />
+
+                <TextView
+                    android:id="@+id/textView10MH"
+                    android:layout_width="108dp"
+                    android:layout_height="wrap_content"
+                    android:text="Đặc Điểm:"
+                    android:textColor="@android:color/background_dark" />
+
+                <TextView
+                    android:id="@+id/textView8MH"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Đơn Vị Tính:"
+                    android:textColor="@android:color/background_dark" />
+
+                <TextView
+                    android:id="@+id/textView11MH"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Đơn Giá:"
+                    android:textColor="@android:color/background_dark" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewTenMHAdapter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ti vi Sô ny"
+                    android:textColor="@android:color/background_dark" />
+
+                <TextView
+                    android:id="@+id/textViewDacDiemAdapter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cảm ứng"
+                    android:textColor="@android:color/background_dark" />
+
+                <TextView
+                    android:id="@+id/textViewDVTAdapter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cái"
+                    android:textColor="@android:color/background_dark" />
+
+                <TextView
+                    android:id="@+id/textViewDonGiaAdapter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1000000"
+                    android:textColor="@android:color/background_dark" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

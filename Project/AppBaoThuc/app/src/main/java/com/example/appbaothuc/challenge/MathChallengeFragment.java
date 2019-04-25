@@ -26,7 +26,7 @@ public class MathChallengeFragment extends Fragment implements ChallengeActivity
         Easy, Moderate, Hard, Insane, Nightmare, Infernal
     }
     private Difficulty difficulty = Difficulty.Easy; // TODO: Hard-coded
-    private int numberOfCalculation = 1; // TODO: Hard-coded
+    private int numberOfCalculation = 2; // TODO: Hard-coded
     private int numberOfDoneCalculation = 0;
     private ArrayList<String> listCalculation;
     private ArrayList<Integer> listResult;

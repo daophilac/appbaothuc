@@ -40,8 +40,9 @@ public class ChallengeDialogFragment extends DialogFragment implements Challenge
     private AudioManager audioManager;
     private int currentSystemVolume;
     private int fixedVolume;
-    //private String musicFilePath = "/sdcard/download/boss battle a.flac"; //TODO: Hard-coded
+
     private ChallengeActivity.ChallengeType challengeType = ChallengeActivity.ChallengeType.SHAKE; // TODO: Hard-coded
+>>>>>>> master
     private boolean graduallyIncreaseVolume = true; //TODO: Hard-coded
     private boolean maxVolume = false; //TODO: Hard-coded
     private int muteTime = 30; //TODO: Hard-coded
