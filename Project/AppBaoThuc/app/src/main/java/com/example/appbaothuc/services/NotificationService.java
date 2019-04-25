@@ -23,7 +23,7 @@ import com.example.appbaothuc.challenge.ChallengeActivity;
 import java.util.Calendar;
 
 public class NotificationService extends Service {
-    private static final boolean DEBUG_MODE = false;
+    public static boolean DEBUG_MODE = false;
     private static final int REQUEST_CODE = 1;
     private static final int NOTIFICATION_ID = 1;
     private static final String NOTIFICATION_CHANNEL_ID = "com.example.appbaothuc";
