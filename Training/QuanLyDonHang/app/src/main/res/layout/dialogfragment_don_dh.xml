@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
+    android:minWidth="300dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textViewSoDDHDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="10dp"
+        android:text="Số Đơn Đặt Hàng:"
+        android:textColor="@android:color/background_dark"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/textViewMaKHDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="Mã Khách Hàng:"
+        android:textColor="@android:color/background_dark" />
+
+    <Button
+        android:id="@+id/buttonViewCTDDH"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:text="Xem chi tiết đơn đặt hàng" />
+
+    <Button
+        android:id="@+id/buttonUpdateDDH"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="Sửa thông tin" />
+
+    <Button
+        android:id="@+id/buttonDeleteDDH"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="40dp"
+        android:text="Xóa đơn đặt hàng" />
+</LinearLayout>
