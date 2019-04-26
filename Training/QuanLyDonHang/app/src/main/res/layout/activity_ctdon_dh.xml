@@ -12,6 +12,14 @@
         android:gravity="center"
         android:orientation="horizontal">
 
+        <ImageButton
+            android:id="@+id/imageButtonCloseCTDonDH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:background="@color/colorPrimaryDark"
+            app:srcCompat="@drawable/ic_chevron_left_black_24dp" />
+
         <TextView
             android:id="@+id/textViewCTDDH"
             android:layout_width="wrap_content"
@@ -19,18 +27,12 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="Chi Tiết Đơn Đặt Hàng"
             android:textColor="@android:color/background_light"
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <ImageButton
-            android:id="@+id/imageButtonCloseCTDonDH"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:background="@color/colorPrimaryDark"
-            app:srcCompat="@drawable/ic_close_black_24dp" />
     </LinearLayout>
 
     <TableLayout

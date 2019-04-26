@@ -1,15 +1,19 @@
 package com.example.quanlydonhang.khachhang;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -20,7 +24,7 @@ import java.util.ArrayList;
 
 public class KhachHangActivity extends AppCompatActivity implements KhachHangDialogFragment.KhachHangDialogListener, AdapterView.OnItemLongClickListener {
     private ImageButton imageButtonCloseKH;
-    private Button btnEditKH, btnInsertKH, btnClearTextKH;
+    private Button btnEditKH, btnInsertKH, btnClearTextKH, btnFindKH, btnLoadKH;
     private EditText editTextMaKH, editTextTenKH;
     private ListView listViewKH;
     private ArrayList<KhachHang> data;
@@ -45,6 +49,8 @@ public class KhachHangActivity extends AppCompatActivity implements KhachHangDia
         btnInsertKH = findViewById(R.id.btnInsertKH);
         btnClearTextKH = findViewById(R.id.buttonClearTextKH);
         imageButtonCloseKH = findViewById(R.id.imageButtonCloseKH);
+        btnFindKH = findViewById(R.id.btnFindKH);
+        btnLoadKH = findViewById(R.id.btnLoadKH);
 
         listViewKH = findViewById(R.id.listViewKH);
         data = new ArrayList<>();
@@ -52,12 +58,7 @@ public class KhachHangActivity extends AppCompatActivity implements KhachHangDia
         databaseHandler = new DatabaseHandler(KhachHangActivity.this);
         loadDB();
 
-        imageButtonCloseKH.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+
     }
 
     @Override
@@ -68,11 +69,14 @@ public class KhachHangActivity extends AppCompatActivity implements KhachHangDia
         }
         else if(input == 1){
             checkEditInsert = 1;
+            listViewKH.setEnabled(false);
             editTextMaKH.setText(khachHang.getMaKH());
             editTextMaKH.setEnabled(false);
             editTextTenKH.setText(khachHang.getTenKH());
             btnInsertKH.setVisibility(View.GONE);
             btnEditKH.setVisibility(View.VISIBLE);
+            btnFindKH.setVisibility(View.GONE);
+            btnLoadKH.setVisibility(View.GONE);
         }
     }
 
@@ -89,7 +93,12 @@ public class KhachHangActivity extends AppCompatActivity implements KhachHangDia
                 editTextTenKH.setText("");
             }
         });
-
+        imageButtonCloseKH.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         btnEditKH.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,6 +106,8 @@ public class KhachHangActivity extends AppCompatActivity implements KhachHangDia
                 updateDB();
                 btnEditKH.setVisibility(View.GONE);
                 btnInsertKH.setVisibility(View.VISIBLE);
+                btnFindKH.setVisibility(View.VISIBLE);
+                btnLoadKH.setVisibility(View.VISIBLE);
                 listViewKH.setEnabled(true);
                 editTextMaKH.setEnabled(true);
                 loadDB();
@@ -123,6 +134,40 @@ public class KhachHangActivity extends AppCompatActivity implements KhachHangDia
                     editTextMaKH.requestFocus();
                 }
                 db.close();
+            }
+        });
+        btnFindKH.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText txtUrl = new EditText(KhachHangActivity.this);
+                new AlertDialog.Builder(KhachHangActivity.this)
+                        .setTitle("Nhập Mã Khách Hàng:")
+                        .setView(txtUrl)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                String url = txtUrl.getText().toString();
+                                DatabaseHandler db = new DatabaseHandler(KhachHangActivity.this);
+                                if(data!=null) {
+                                    data.clear();
+                                }
+                                db.findByMaKH(data, url);
+                                if (data.size() == 0) {
+                                    Toast.makeText(getApplication(), "Không tìm thấy khách hàng nào", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                adapter.notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                            }
+                        }).show();
+            }
+        });
+        btnLoadKH.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadDB();
             }
         });
     }
@@ -166,7 +211,6 @@ public class KhachHangActivity extends AppCompatActivity implements KhachHangDia
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
         khachHang = data.get(i);
-        listViewKH.setEnabled(false);
         showDDHDialog();
         return true;
     }

@@ -39,7 +39,7 @@ public class CTDonDHDialogfragment extends DialogFragment {
         textViewSoDDHDialogCT.setText("Số Đơn Đặt Hàng: " + CTDonDHActivity.ctDonDH.getSODDH());
         textViewMaMHDialogCT.setText("Mã Mặt Hàng: " + CTDonDHActivity.ctDonDH.getMAHG());
 
-        listener.onFinishCTDonDHDialog(0);
+        //listener.onFinishCTDonDHDialog(0);
 
         buttonUpdateCTDonDH.setOnClickListener(new View.OnClickListener() {
             @Override

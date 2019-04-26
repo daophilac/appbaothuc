@@ -4,32 +4,69 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:background="@color/colorPrimary"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/buttonKhachHang"
+    <TextView
+        android:id="@+id/textView12"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="KHÁCH HÀNG" />
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="50dp"
+        android:background="@color/colorTitleQLDH"
+        android:gravity="center"
+        android:text="QUẢN LÝ ĐƠN HÀNG"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/buttonDDH"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Đơn đặt hàng " />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/buttonCTDDH"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Chi tiết đơn đặt hàng" />
+        <Button
+            android:id="@+id/buttonKhachHang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/customer"
+            android:text="KHÁCH HÀNG" />
 
-    <Button
-        android:id="@+id/buttonMatHang"
+        <Button
+            android:id="@+id/buttonMatHang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/goods"
+            android:text="Mặt hàng" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Mặt hàng" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonDDH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/dondathang"
+            android:text="Đơn đặt hàng " />
+
+        <Button
+            android:id="@+id/buttonCTDDH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ct_dondh"
+            android:text="Chi tiết đơn đặt hàng" />
+    </LinearLayout>
 
 </LinearLayout>

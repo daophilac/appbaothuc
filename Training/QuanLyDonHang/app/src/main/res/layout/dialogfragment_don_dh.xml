@@ -27,15 +27,6 @@
         android:textColor="@android:color/background_dark" />
 
     <Button
-        android:id="@+id/buttonViewCTDDH"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="10dp"
-        android:text="Xem chi tiết đơn đặt hàng" />
-
-    <Button
         android:id="@+id/buttonUpdateDDH"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
