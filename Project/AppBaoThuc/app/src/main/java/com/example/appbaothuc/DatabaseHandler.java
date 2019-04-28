@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -162,6 +161,51 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 ringtoneUrl, ringtoneName, label, vibrate, snoozeTime, volume, challengeType);
         db.execSQL(sql);
     }
+    public void updateAlarm(Alarm updatedAlarm){
+        int idAlarm = updatedAlarm.getIdAlarm();
+        boolean enable = updatedAlarm.isEnable();
+        int hour = updatedAlarm.getHour();
+        int minute = updatedAlarm.getMinute();
+        List<Boolean> listRepeatDay = updatedAlarm.getListRepeatDay();
+        String ringtoneUrl = updatedAlarm.getRingtoneUrl();
+        String ringtoneName = updatedAlarm.getRingtoneName();
+        String label = updatedAlarm.getLabel();
+        boolean vibrate = updatedAlarm.isVibrate();
+        int snoozeTime = updatedAlarm.getSnoozeTime();
+        int volume = updatedAlarm.getVolume();
+        int challengeType = updatedAlarm.getChallengeType();
+        sqlFormat = "update Alarm set" +
+                " Enable = '%b', Hour = %d, Minute = %d," +
+                " Monday = '%b', Tuesday = '%b', Wednesday = '%b', Thursday = '%b', Friday = '%b', Saturday = '%b', Sunday = '%b'," +
+                " RingtoneUrl = '%s', RingtoneName = '%s', Label = '%s', Vibrate = '%b', SnoozeTime = %d, Volume = %d, ChallengeType = %d" +
+                " where IdAlarm = %d";
+        sql = String.format(sqlFormat,
+                enable, hour, minute,
+                listRepeatDay.get(0), listRepeatDay.get(1), listRepeatDay.get(2), listRepeatDay.get(3), listRepeatDay.get(4), listRepeatDay.get(5), listRepeatDay.get(6),
+                ringtoneUrl, ringtoneName, label, vibrate, snoozeTime, volume, challengeType, idAlarm);
+        db.execSQL(sql);
+    }
+    public void updateAlarmEnable(Alarm updatedAlarm){
+        int idAlarm = updatedAlarm.getIdAlarm();
+        boolean enable = updatedAlarm.isEnable();
+        sqlFormat = "update Alarm set" +
+                " Enable = '%b'" +
+                " where IdAlarm = %d";
+        sql = String.format(sqlFormat, enable, idAlarm);
+        db.execSQL(sql);
+    }
+    public void updateAlarmEnable(int idAlarm, boolean enable){
+        sqlFormat = "update Alarm set" +
+                " Enable = '%b'" +
+                " where IdAlarm = %d";
+        sql = String.format(sqlFormat, enable, idAlarm);
+        db.execSQL(sql);
+    }
+    public void deleteAlarm(int idAlarm){
+        sqlFormat = "delete from Alarm where IdAlarm = %d";
+        sql = String.format(sqlFormat, idAlarm);
+        db.execSQL(sql);
+    }
 
     public Alarm getRecentAddedAlarm() {
         sql = "select * from Alarm order by IdAlarm desc limit 1";
@@ -177,7 +221,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         int nowMinute = now.get(Calendar.MINUTE);
         String dayOfWeek = getDayOfWeekInString(nowWeekDay);
         sqlFormat = "select * from Alarm" +
-                " where %s = 'true' and ((Hour > %d) or (Hour = %d and Minute > %d))" +
+                " where Enable = 'true' and %s = 'true' and ((Hour > %d) or (Hour = %d and Minute > %d))" +
                 " order by Hour, Minute";
         sql = String.format(sqlFormat, dayOfWeek, nowHour, nowHour, nowMinute);
         Cursor cursor = db.rawQuery(sql, null);
@@ -185,6 +229,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             return null;
         }
         return buildAlarmFromCursor(cursor, nowWeekDay, true);
+    }
+    public List<Alarm> getAllAlarm(){
+        sql = "select * from Alarm";
+        Cursor cursor = db.rawQuery(sql, null);
+        return buildListAlarmFromCursor(cursor, true);
+    }
+    public List<Alarm> getAllEnabledAlarmInOrder(){
+        List<Alarm> listAlarm = new ArrayList<>();
+        sql = "select * from Alarm where Enable = 'true' order by Hour, Minute";
+        Cursor cursor = db.rawQuery(sql, null);
+        while(cursor.moveToNext()){
+            listAlarm.add(buildAlarmFromCursor(cursor, false));
+        }
+        cursor.close();
+        return listAlarm;
+    }
+    public List<Alarm> getAllDisabledAlarmInOrder(){
+        List<Alarm> listAlarm = new ArrayList<>();
+        sql = "select * from Alarm where Enable = 'false' order by Hour, Minute";
+        Cursor cursor = db.rawQuery(sql, null);
+        return buildListAlarmFromCursor(cursor, true);
     }
 
     public Alarm getTheNearestAlarm() {
@@ -196,7 +261,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String weekDayToCompare = getDayOfWeekInString(nowWeekDay);
         sqlFormat = "select * from Alarm" +
-                " where %s = 'true' and ((Hour > %d) or (Hour = %d and Minute > %d))" +
+                " where Enable = 'true' and %s = 'true' and ((Hour > %d) or (Hour = %d and Minute > %d))" +
                 " order by Hour, Minute";
         sql = String.format(sqlFormat, weekDayToCompare, nowHour, nowHour, nowMinute);
         cursor = db.rawQuery(sql, null);
@@ -206,7 +271,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
         sqlFormat = "select * from Alarm" +
-                " where %s = 'true'" +
+                " where Enable = 'true' and %s = 'true'" +
                 " order by Hour, Minute";
         for (int i = nowWeekDay + 1; i <= 7; i++) {
             weekDayToCompare = getDayOfWeekInString(i);
@@ -255,10 +320,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (closeCursor) {
             cursor.close();
         }
-        Alarm.ImmediateProperty immediateProperty = new Alarm.ImmediateProperty();
-        immediateProperty.setDayOfWeek(dayOfWeek);
         Alarm alarm = new Alarm(idAlarm, enable, hour, minute, listRepeatDay, ringtoneUrl, ringtoneName, label, snoozeTime, vibrate, volume, challengeType);
-        alarm.setImmediateProperty(immediateProperty);
+        alarm.setDayOfWeek(dayOfWeek);
         return alarm;
     }
     private Alarm buildAlarmFromCursor(Cursor cursor, boolean closeCursor) {
@@ -289,6 +352,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         return new Alarm(idAlarm, enable, hour, minute, listRepeatDay, ringtoneUrl, ringtoneName, label, snoozeTime, vibrate, volume, challengeType);
     }
+    private List<Alarm> buildListAlarmFromCursor(Cursor cursor, boolean closeCursor){
+        List<Alarm> listAlarm = new ArrayList<>();
+        while(cursor.moveToNext()){
+            List<Boolean> listRepeatDay = new ArrayList<>();
+            int idAlarm = getValueAtColumn(cursor, "IdAlarm", Integer.class);
+            boolean enable = getValueAtColumn(cursor, "Enable", Boolean.class);
+            int hour = getValueAtColumn(cursor, "Hour", Integer.class);
+            int minute = getValueAtColumn(cursor, "Minute", Integer.class);
+            listRepeatDay.add(getValueAtColumn(cursor, "Monday", Boolean.class));
+            listRepeatDay.add(getValueAtColumn(cursor, "Tuesday", Boolean.class));
+            listRepeatDay.add(getValueAtColumn(cursor, "Wednesday", Boolean.class));
+            listRepeatDay.add(getValueAtColumn(cursor, "Thursday", Boolean.class));
+            listRepeatDay.add(getValueAtColumn(cursor, "Friday", Boolean.class));
+            listRepeatDay.add(getValueAtColumn(cursor, "Saturday", Boolean.class));
+            listRepeatDay.add(getValueAtColumn(cursor, "Sunday", Boolean.class));
+            String ringtoneUrl = getValueAtColumn(cursor, "RingtoneUrl", String.class);
+            String ringtoneName = getValueAtColumn(cursor, "RingtoneName", String.class);
+            String label = getValueAtColumn(cursor, "Label", String.class);
+            boolean vibrate = getValueAtColumn(cursor, "Vibrate", Boolean.class);
+            int snoozeTime = getValueAtColumn(cursor, "SnoozeTime", Integer.class);
+            int volume = getValueAtColumn(cursor, "Volume", Integer.class);
+            int challengeType = getValueAtColumn(cursor, "ChallengeType", Integer.class);
+            Alarm alarm = new Alarm(idAlarm, enable, hour, minute, listRepeatDay, ringtoneUrl, ringtoneName, label, snoozeTime, vibrate, volume, challengeType);
+            listAlarm.add(alarm);
+        }
+        if (closeCursor) {
+            cursor.close();
+        }
+        return listAlarm;
+    }
     private <T> T getValueAtColumn(Cursor cursor, String columnName, Class<T> columnDataType){
         int columnIndex = cursor.getColumnIndex(columnName);
         if(columnIndex == -1){
@@ -298,7 +391,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             return columnDataType.cast(cursor.getInt(columnIndex));
         }
         else if(columnDataType == Boolean.class){
-            return columnDataType.cast(cursor.getInt(columnIndex) > 0);
+            return columnDataType.cast(cursor.getString(columnIndex).equals("true"));
         }
         else if(columnDataType == String.class){
             return columnDataType.cast(cursor.getString(columnIndex));
@@ -330,7 +423,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public boolean checkIfThereIsAnyAlarm() {
-        sql = "select * from Alarm";
+        sql = "select * from Alarm where Enable = 'true'";
         Cursor cursor = db.rawQuery(sql, null);
         if (!cursor.moveToNext()) {
             return false;

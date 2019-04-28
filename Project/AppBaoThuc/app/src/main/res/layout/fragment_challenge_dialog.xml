@@ -1,34 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button_snooze"
-        android:src="@drawable/ic_volume_off"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-    <FrameLayout
+    android:layout_height="wrap_content">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/challenge_fragment_container"
-        app:layout_constraintTop_toBottomOf="@id/button_snooze">
+        android:layout_alignParentTop="true">
 
-    </FrameLayout>
-    <Button
-        android:layout_width="wrap_content"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintLayout_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/textView_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/button_mute"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/button_mute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_volume_off"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/textView_ringtoneName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/constraintLayout_label" />
+
+        <TextView
+            android:id="@+id/text_view_hour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView_ringtoneName" />
+
+        <TextView
+            android:id="@+id/text_view_colon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textSize="30sp"
+            app:layout_constraintStart_toEndOf="@id/text_view_hour"
+            app:layout_constraintTop_toBottomOf="@id/textView_ringtoneName" />
+
+        <TextView
+            android:id="@+id/text_view_minute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            app:layout_constraintStart_toEndOf="@id/text_view_colon"
+            app:layout_constraintTop_toBottomOf="@id/textView_ringtoneName" />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+    <FrameLayout
+        android:id="@+id/challenge_fragment_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/constraintLayout_header" />
+
+    <Button
         android:id="@+id/button_ok"
-        android:text="OK"
-        app:layout_constraintTop_toBottomOf="@id/challenge_fragment_container"
-        app:layout_constraintEnd_toEndOf="parent"/>
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/challenge_fragment_container"
+        android:layout_alignParentEnd="true"
+        android:text="OK" />
+
+    <Button
         android:id="@+id/button_cancel"
-        android:text="Cancel"
-        app:layout_constraintTop_toBottomOf="@id/challenge_fragment_container"
-        app:layout_constraintEnd_toStartOf="@id/button_ok"/>
-</android.support.constraint.ConstraintLayout>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/challenge_fragment_container"
+        android:layout_toStartOf="@id/button_ok"
+        android:text="Cancel" />
+</RelativeLayout>

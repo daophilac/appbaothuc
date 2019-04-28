@@ -11,28 +11,31 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 
+import com.example.appbaothuc.Alarm;
 import com.example.appbaothuc.R;
 
 import java.util.ArrayList;
 
-public class RepeatDialogFragment extends DialogFragment {
+public class RepeatDialogFragment extends DialogFragment{
     private Button btnOK, btnCancel, btnDays, btnWeekend;
     private CheckBox checkBoxT2, checkBoxT3, checkBoxT4, checkBoxT5, checkBoxT6,
             checkBoxT7, checkBoxCN;
-    public static ArrayList<Integer> listDays = new ArrayList<>();
+    public static ArrayList<Boolean> listDays = new ArrayList<>();
 
     public RepeatDialogFragment(){
     }
 
     public interface RepeatDialogListener{
-        public void onFinishCheckDialog(ArrayList<Integer> arrayList);
+        void onFinishCheckDialog(ArrayList<Boolean> arrayList);
     }
 
     private RepeatDialogListener listener;
+    public void setListener(SettingAlarmFragment settingAlarmFragment){
+        this.listener = settingAlarmFragment;
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View viewDialog = inflater.inflate(R.layout.fragment_repeat_dialog, container);
         btnOK = viewDialog.findViewById(R.id.btnOK);
         btnCancel = viewDialog.findViewById(R.id.btnCancel);
@@ -46,68 +49,105 @@ public class RepeatDialogFragment extends DialogFragment {
         checkBoxT6 = viewDialog.findViewById(R.id.checkBoxT6);
         checkBoxT7 = viewDialog.findViewById(R.id.checkBoxT7);
         checkBoxCN = viewDialog.findViewById(R.id.checkBoxCN);
+        for(int i = 0; i < 7; i++){
+            listDays.add(i, false);
+        }
+        Alarm alarm = SettingAlarmFragment.alarm; // Get alarm from database and set checked
+        if(alarm.getListRepeatDay().get(0)) {
+            listDays.set(0, true);
+            checkBoxT2.setChecked(true);
+            checkDays();
+        }
+        if(alarm.getListRepeatDay().get(1)) {
+            listDays.set(1, true);
+            checkBoxT3.setChecked(true);
+            checkDays();
+        }
+        if(alarm.getListRepeatDay().get(2)) {
+            listDays.set(2, true);
+            checkBoxT4.setChecked(true);
+            checkDays();
+        }
+        if(alarm.getListRepeatDay().get(3)) {
+            listDays.set(3, true);
+            checkBoxT5.setChecked(true);
+            checkDays();
+        }
+        if(alarm.getListRepeatDay().get(4)) {
+            listDays.set(4, true);
+            checkBoxT6.setChecked(true);
+            checkDays();
+        }
+        if(alarm.getListRepeatDay().get(5)) {
+            listDays.set(5, true);
+            checkBoxT7.setChecked(true);
+            checkDays();
+        }
+        if(alarm.getListRepeatDay().get(6)) {
+            listDays.set(6, true);
+            checkBoxCN.setChecked(true);
+            checkDays();
+        }
 
         getDialog().setTitle("Hello");
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
-        for(int i = 0; i < 7; i++){
-            listDays.add(i, 0);
-        }
+
 
         checkBoxT2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(checkBoxT2.isChecked() == true) listDays.set(0, 1);
-                else listDays.set(0, 0);
+                if(checkBoxT2.isChecked() == true) listDays.set(0, true);
+                else listDays.set(0, false);
                 checkDays();
             }
         });
         checkBoxT3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(checkBoxT3.isChecked() == true) listDays.set(1, 1);
-                else listDays.set(1, 0);
+                if(checkBoxT3.isChecked() == true) listDays.set(1, true);
+                else listDays.set(1, false);
                 checkDays();
             }
         });
         checkBoxT4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(checkBoxT4.isChecked() == true) listDays.set(2, 1);
-                else listDays.set(2, 0);
+                if(checkBoxT4.isChecked() == true) listDays.set(2, true);
+                else listDays.set(2, false);
                 checkDays();
             }
         });
         checkBoxT5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(checkBoxT5.isChecked() == true) listDays.set(3, 1);
-                else listDays.set(3, 0);
+                if(checkBoxT5.isChecked() == true) listDays.set(3, true);
+                else listDays.set(3, false);
                 checkDays();
             }
         });
         checkBoxT6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(checkBoxT6.isChecked() == true) listDays.set(4, 1);
-                else listDays.set(4, 0);
+                if(checkBoxT6.isChecked() == true) listDays.set(4, true);
+                else listDays.set(4, false);
                 checkDays();
             }
         });
         checkBoxT7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(checkBoxT7.isChecked() == true) listDays.set(5, 1);
-                else listDays.set(5, 0);
+                if(checkBoxT7.isChecked() == true) listDays.set(5, true);
+                else listDays.set(5, false);
                 checkDays();
             }
         });
         checkBoxCN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(checkBoxCN.isChecked() == true) listDays.set(6, 1);
-                else listDays.set(6, 0);
+                if(checkBoxCN.isChecked() == true) listDays.set(6, true);
+                else listDays.set(6, false);
                 checkDays();
             }
         });
@@ -117,13 +157,13 @@ public class RepeatDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 if(btnDays.getCurrentTextColor() == Color.WHITE) {
                     for(int i = 0; i < 5; i++){
-                        listDays.set(i, 0);
+                        listDays.set(i, false);
                     }
                     colorButtonOff(btnDays);
                 }
                 else {
                     for(int i = 0; i < 5; i++){
-                        listDays.set(i, 1);
+                        listDays.set(i, true);
                     }
                     colorButtonOn(btnDays);
                 }
@@ -150,13 +190,13 @@ public class RepeatDialogFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 if(btnWeekend.getCurrentTextColor() == Color.WHITE) {
-                    listDays.set(5, 0);
-                    listDays.set(6, 0);
+                    listDays.set(5, false);
+                    listDays.set(6, false);
                     colorButtonOff(btnWeekend);
                 }
                 else {
-                    listDays.set(5, 1);
-                    listDays.set(6, 1);
+                    listDays.set(5, true);
+                    listDays.set(6, true);
                     colorButtonOn(btnWeekend);
                 }
                 if(checkBoxT7.isChecked()== true && checkBoxCN.isChecked()== true)
@@ -213,6 +253,6 @@ public class RepeatDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.listener = (RepeatDialogListener) context;
+        //this.listener = (RepeatDialogListener) context;
     }
 }

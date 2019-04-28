@@ -4,56 +4,71 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="#222222">
+    android:background="#222222"
+    tools:context=".MainActivity">
+
     <FrameLayout
+        android:id="@+id/full_screen_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/fragment_container"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/menu">
-        <!--<include layout="@layout/fragment_upcoming_alarm"/>-->
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/main_fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@id/constraint_layout_menu"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </FrameLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraint_layout_menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <ImageButton
+                    android:id="@+id/button_alarm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_alarm"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@+id/button_setting" />
+
+                <ImageButton
+                    android:id="@+id/button_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_settings"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/button_alarm"
+                    app:layout_constraintRight_toLeftOf="@+id/button_music" />
+
+                <ImageButton
+                    android:id="@+id/button_music"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_music"
+                    android:onClick="test1"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/button_setting"
+                    app:layout_constraintRight_toLeftOf="@+id/button_stop" />
+
+                <ImageButton
+                    android:id="@+id/button_stop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_stop"
+                    android:onClick="test2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/button_music"
+                    app:layout_constraintRight_toRightOf="parent" />
+            </android.support.constraint.ConstraintLayout>
+        </android.support.constraint.ConstraintLayout>
     </FrameLayout>
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/menu"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/button_alarm"
-            android:src="@drawable/ic_alarm"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/button_setting"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:onClick="loadPendingAlarmFragment"/>
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/button_setting"
-            android:src="@drawable/ic_settings"
-            app:layout_constraintLeft_toRightOf="@+id/button_alarm"
-            app:layout_constraintRight_toLeftOf="@+id/button_music"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:onClick="loadSettingFragment"/>
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/button_music"
-            android:src="@drawable/ic_music"
-            app:layout_constraintLeft_toRightOf="@+id/button_setting"
-            app:layout_constraintRight_toLeftOf="@+id/button_stop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:onClick="addAlarmAfter1Minute"/>
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/button_stop"
-            android:src="@drawable/ic_stop"
-            app:layout_constraintLeft_toRightOf="@+id/button_music"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:onClick="addAlarmAfter2Minute"/>
-    </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>
