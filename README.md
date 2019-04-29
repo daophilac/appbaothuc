@@ -1,14 +1,34 @@
-# AppBaoThuc Prototype phase v0.0.5
+# AppBaoThuc Alpha phase v0.0.4
 
-# Core features, from the system perspective
-1. Navigate between main activities and fragments.
-2. Add alarm to list pending alarms, enable/disable alarms.
-3. Play a particular music given a specific file path.
-4. Play a particular music given a specific file path at a specific time.
-5. Get all possible music file paths.
-6. Re-create the next alarm after the phone reboots.
-7. Automatically set the next alarm after the user dismisses current alarm.
-8. Automatically set the next alarm in the exact order even when the user reboots, changes the system time or time zone.
+## Change log v0.0.4
+### New features:
+  1. Prevent users from doing anything until they complete the challenge.
+### On progess features:
+  1. Prevent phone screen to turn off.
+### Open issues:
+  1. Bug layout
+  2. Bug music
+### Demo alpha v0.0.4
+https://drive.google.com/open?id=16npnCmAWr_P4MrhYwcrcMN7F4uDtduEU
 
-# Demo
-https://drive.google.com/open?id=1QrrsuwkIume1qTo1WlWCHahayYu1QrAW
+## Change log v0.0.3
+### New features:
+  1. Shake challenge.
+### On progess features:
+  1. Prevent users from doing anything until they complete the challenge.
+
+## Change log v0.0.2
+### New features:
+  1. Delete alarms.
+  2. Sort ringtones list by name and by url.
+### On progress features:
+  1. Add Shaking challenge
+
+## Change log v0.0.1
+### New features:
+  1. Add alarms.
+  2. Enable/disable alarms.
+  3. Can choose ringtone.
+### On progress features:
+  1. Delete alarms.
+  2. Sort ringtones list by name and by url.

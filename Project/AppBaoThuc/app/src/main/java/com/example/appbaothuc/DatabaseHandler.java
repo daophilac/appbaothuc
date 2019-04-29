@@ -201,6 +201,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         sql = String.format(sqlFormat, enable, idAlarm);
         db.execSQL(sql);
     }
+    public void deleteAlarm(int idAlarm){
+        sqlFormat = "delete from Alarm where IdAlarm = %d";
+        sql = String.format(sqlFormat, idAlarm);
+        db.execSQL(sql);
+    }
 
     public Alarm getRecentAddedAlarm() {
         sql = "select * from Alarm order by IdAlarm desc limit 1";
@@ -216,7 +221,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         int nowMinute = now.get(Calendar.MINUTE);
         String dayOfWeek = getDayOfWeekInString(nowWeekDay);
         sqlFormat = "select * from Alarm" +
-                " where %s = 'true' and ((Hour > %d) or (Hour = %d and Minute > %d))" +
+                " where Enable = 'true' and %s = 'true' and ((Hour > %d) or (Hour = %d and Minute > %d))" +
                 " order by Hour, Minute";
         sql = String.format(sqlFormat, dayOfWeek, nowHour, nowHour, nowMinute);
         Cursor cursor = db.rawQuery(sql, null);
@@ -256,7 +261,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String weekDayToCompare = getDayOfWeekInString(nowWeekDay);
         sqlFormat = "select * from Alarm" +
-                " where %s = 'true' and ((Hour > %d) or (Hour = %d and Minute > %d))" +
+                " where Enable = 'true' and %s = 'true' and ((Hour > %d) or (Hour = %d and Minute > %d))" +
                 " order by Hour, Minute";
         sql = String.format(sqlFormat, weekDayToCompare, nowHour, nowHour, nowMinute);
         cursor = db.rawQuery(sql, null);
@@ -266,7 +271,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
         sqlFormat = "select * from Alarm" +
-                " where %s = 'true'" +
+                " where Enable = 'true' and %s = 'true'" +
                 " order by Hour, Minute";
         for (int i = nowWeekDay + 1; i <= 7; i++) {
             weekDayToCompare = getDayOfWeekInString(i);
@@ -418,7 +423,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public boolean checkIfThereIsAnyAlarm() {
-        sql = "select * from Alarm";
+        sql = "select * from Alarm where Enable = 'true'";
         Cursor cursor = db.rawQuery(sql, null);
         if (!cursor.moveToNext()) {
             return false;

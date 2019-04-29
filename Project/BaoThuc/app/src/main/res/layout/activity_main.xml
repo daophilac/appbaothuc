@@ -64,6 +64,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_select"
                 android:text="1" />
 
             <Button
@@ -72,6 +73,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_select"
                 android:text="2" />
 
             <Button
@@ -80,6 +82,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_select"
                 android:text="3" />
 
             <ImageButton
@@ -89,6 +92,7 @@
                 android:layout_height="match_parent"
 
                 android:layout_weight="1"
+                android:background="@drawable/button_select"
                 android:src="@android:drawable/ic_input_delete" />
 
         </LinearLayout>
@@ -107,6 +111,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_select"
                 android:text="4" />
 
             <Button
@@ -115,6 +120,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_select"
                 android:text="5" />
 
             <Button
@@ -123,6 +129,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_select"
                 android:text="6" />
 
             <Button
@@ -131,6 +138,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_select"
                 android:text="OK" />
         </LinearLayout>
         <LinearLayout
@@ -147,6 +155,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_select"
                 android:text="7" />
 
             <Button
@@ -155,6 +164,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_select"
                 android:text="8" />
 
             <Button
@@ -163,6 +173,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_select"
                 android:text="9" />
 
             <Button
@@ -171,6 +182,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_select"
                 android:text="0" />
         </LinearLayout>
     </LinearLayout>
