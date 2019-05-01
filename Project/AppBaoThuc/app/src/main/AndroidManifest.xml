@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
-
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -28,27 +28,19 @@
         </activity>
         <activity
             android:name=".challenge.ChallengeActivity"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat">
         </activity>
         <activity android:name=".alarmsetting.TypePlayMathActivity" />
         <activity android:name=".alarmsetting.TypePlayShakeActivity" />
         <activity android:name=".alarmsetting.TypePlayCameraActivity" />
         <activity android:name=".alarmsetting.TypePlayDefaultActivity" />
-
-        <service android:name=".services.AlarmService" />
         <service android:name=".services.NotificationService" />
         <service
             android:name=".services.ServiceCreator"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <receiver android:name=".services.ActionReceiver">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
-                <!--<action android:name="android.intent.action.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE" />-->
-                <!--<action android:name="android.intent.action.TIME_SET" />-->
-                <!--<action android:name="android.intent.action.TIMEZONE_CHANGED" />-->
-            <!--</intent-filter>-->
-        </receiver>
+        <receiver android:name=".services.ActionReceiver"/>
     </application>
 
 </manifest>

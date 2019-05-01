@@ -15,14 +15,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.appbaothuc.alarmsetting.SettingAlarmFragment;
-import com.example.appbaothuc.interfaces.OnOpenSettingAlarmFragment;
-import com.example.appbaothuc.interfaces.SettingAlarmFragmentListener;
-
 import java.util.Collections;
 import java.util.List;
 
 
-public class UpcomingAlarmFragment extends Fragment implements SettingAlarmFragmentListener {
+public class UpcomingAlarmFragment extends Fragment {
     private DatabaseHandler databaseHandler;
     private RecyclerView recyclerViewListAlarm;
     private ImageButton buttonAddAlarm;
@@ -30,7 +27,6 @@ public class UpcomingAlarmFragment extends Fragment implements SettingAlarmFragm
     private AlarmAdapter alarmAdapter;
     private SettingAlarmFragment settingAlarmFragment;
     private FragmentManager fragmentManager;
-    private OnOpenSettingAlarmFragment listener;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
@@ -42,9 +38,8 @@ public class UpcomingAlarmFragment extends Fragment implements SettingAlarmFragm
         databaseHandler = new DatabaseHandler(getContext());
         listAlarm = databaseHandler.getAllAlarm();
         Collections.sort(listAlarm);
-        MainActivity.restartAlarmService(getContext());
         alarmAdapter = new AlarmAdapter(getContext(), this, listAlarm);
-        settingAlarmFragment = new SettingAlarmFragment();
+        settingAlarmFragment = SettingAlarmFragment.newInstance();
 
         recyclerViewListAlarm.setAdapter(alarmAdapter);
         recyclerViewListAlarm.setItemAnimator(null);
@@ -52,12 +47,11 @@ public class UpcomingAlarmFragment extends Fragment implements SettingAlarmFragm
         settingAlarmFragment.setEnterTransition(new Slide(Gravity.END));
         settingAlarmFragment.setExitTransition(new Slide(Gravity.END));
         fragmentManager = getFragmentManager();
-        listener = settingAlarmFragment;
 
         buttonAddAlarm.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
+                settingAlarmFragment.configure(UpcomingAlarmFragment.this, null);
                 fragmentManager.beginTransaction().replace(R.id.full_screen_fragment_container, settingAlarmFragment).commit();
-                listener.onInitialize(UpcomingAlarmFragment.this, null);
             }
         });
         return view;
@@ -66,21 +60,7 @@ public class UpcomingAlarmFragment extends Fragment implements SettingAlarmFragm
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    // Override
-    @Override
-    public void onAddNewAlarm(Alarm alarm) {
+    public void addNewAlarm(Alarm alarm){
         databaseHandler.insertAlarm(alarm);
         alarm.setIdAlarm(databaseHandler.getRecentAddedAlarm().getIdAlarm());
         listAlarm.add(alarm);
@@ -88,9 +68,7 @@ public class UpcomingAlarmFragment extends Fragment implements SettingAlarmFragm
         alarmAdapter.notifyDataSetChanged();
         MainActivity.restartAlarmService(getContext());
     }
-
-    @Override
-    public void onEditAlarm(Alarm alarm) {
+    public void editAlarm(Alarm alarm){
         databaseHandler.updateAlarm(alarm);
         for(int i = 0; i < listAlarm.size(); i++){
             if(listAlarm.get(i).getIdAlarm() == alarm.getIdAlarm()){
@@ -100,6 +78,21 @@ public class UpcomingAlarmFragment extends Fragment implements SettingAlarmFragm
                 break;
             }
         }
+        MainActivity.restartAlarmService(getContext());
+    }
+    public void deleteAlarm(int idAlarm){
+        databaseHandler.deleteAlarm(idAlarm);
+        for(int i = 0; i < listAlarm.size(); i++){
+            if(listAlarm.get(i).getIdAlarm() == idAlarm){
+                listAlarm.remove(i);
+                alarmAdapter.notifyItemRemoved(i);
+                MainActivity.restartAlarmService(getContext());
+                break;
+            }
+        }
+    }
+    public void updateAlarmEnable(Alarm alarm){
+        databaseHandler.updateAlarmEnable(alarm.getIdAlarm(), alarm.isEnable());
         MainActivity.restartAlarmService(getContext());
     }
 }

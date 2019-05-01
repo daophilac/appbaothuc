@@ -2,10 +2,15 @@ package com.example.appbaothuc.alarmsetting;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +27,18 @@ public class TypeFragment extends Fragment {
     private LinearLayout linearLayoutDefault, linearLayoutCamera, linearLayoutShake, linearLayoutMath,
             linearLayoutQRCode;
     private Context context;
+    public static Integer challengeType;
+
+    private FragmentManager fragmentManager;
+    private TypeLinearMathFragment typeLinearMathFragment;
+//
+//    public interface TypeFragmentListener{
+//        void onFinishTypeFragment(Integer inputNumber);
+//    }
+//    TypeFragmentListener listener;
+//    public void setListener(SettingAlarmFragment settingAlarmFragment){
+//        this.listener = settingAlarmFragment;
+//    }
 
     @Nullable
     @Override
@@ -46,9 +63,16 @@ public class TypeFragment extends Fragment {
         linearLayoutMath = view.findViewById(R.id.linearLayoutMath);
         linearLayoutQRCode = view.findViewById(R.id.linearLayoutQRCode);
 
+        challengeType = SettingAlarmFragment.challengeType;
+        fragmentManager = getFragmentManager();
+        typeLinearMathFragment = new TypeLinearMathFragment();
+        typeLinearMathFragment.setEnterTransition(new Slide(Gravity.TOP));
+        typeLinearMathFragment.setExitTransition(new Slide(Gravity.TOP));
+
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SettingAlarmFragment.challengeType = challengeType;
                 getFragmentManager().beginTransaction().remove(TypeFragment.this).commit();
                 //TODO:
             }
@@ -97,10 +121,38 @@ public class TypeFragment extends Fragment {
 
             }
         });
-        linearLayoutCamera.setOnClickListener(new View.OnClickListener() {
+        linearLayoutDefault.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                challengeType = 0;
+                linearLayoutDefault.setBackgroundColor(Color.BLUE);
+                linearLayoutMath.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.colortext2));
+            }
+        });
+        linearLayoutMath.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                linearLayoutMath.setBackgroundColor(Color.BLUE);
+                linearLayoutDefault.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, typeLinearMathFragment).commit();
+                //challengeType = 1;
+            }
+        });
+        linearLayoutShake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                challengeType = 2;
+                linearLayoutShake.setBackgroundColor(Color.BLUE);
+                linearLayoutDefault.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutMath.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
             }
         });
     }
