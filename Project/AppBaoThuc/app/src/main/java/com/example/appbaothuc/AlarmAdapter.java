@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.appbaothuc.alarmsetting.SettingAlarmFragment;
+import com.example.appbaothuc.models.Alarm;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +39,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         this.mapConstraintLayoutAlarm = new SparseIntArray();
         this.mapButtonAlarm = new SparseIntArray();
 
-        this.settingAlarmFragment = SettingAlarmFragment.newInstance();
+        this.settingAlarmFragment = new SettingAlarmFragment();
         this.fragmentManager = ((FragmentActivity)context).getSupportFragmentManager();
     }
 
@@ -90,15 +91,19 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         constraintLayoutParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                settingAlarmFragment.configure(upcomingAlarmFragment, listAlarm.get(mapConstraintLayoutAlarm.get(v.getId())));
-                fragmentManager.beginTransaction().replace(R.id.full_screen_fragment_container, settingAlarmFragment).commit();
+                Alarm checkedAlarm = listAlarm.get(mapConstraintLayoutAlarm.get(v.getId()));
+                checkedAlarm = MainActivity.checkAlarmValidRingtoneUrl(context, checkedAlarm);
+                settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
+                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, settingAlarmFragment).addToBackStack(null).commit();
             }
         });
         buttonAlarmType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                settingAlarmFragment.configure(upcomingAlarmFragment, listAlarm.get(mapButtonAlarm.get(v.getId())));
-                fragmentManager.beginTransaction().replace(R.id.full_screen_fragment_container, settingAlarmFragment).commit();
+                Alarm checkedAlarm = listAlarm.get(mapConstraintLayoutAlarm.get(v.getId()));
+                checkedAlarm = MainActivity.checkAlarmValidRingtoneUrl(context, checkedAlarm);
+                settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
+                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, settingAlarmFragment).addToBackStack(null).commit();
             }
         });
     }

@@ -1,9 +1,14 @@
-package com.example.appbaothuc;
+package com.example.appbaothuc.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.appbaothuc.Music;
+import com.example.appbaothuc.R;
+import com.example.appbaothuc.challenge.ChallengeActivity;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Alarm implements Comparable<Alarm>, Parcelable {
@@ -12,8 +17,7 @@ public class Alarm implements Comparable<Alarm>, Parcelable {
     private int hour;
     private int minute;
     private List<Boolean> listRepeatDay;
-    private String ringtoneUrl;
-    private String ringtoneName;
+    private Music ringtone;
     private String label;
     private int snoozeTime;
     private boolean vibrate;
@@ -24,14 +28,18 @@ public class Alarm implements Comparable<Alarm>, Parcelable {
     private int dayOfWeek;
     private String describeRepeatDay;
 
-    public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Boolean> listRepeatDay, String ringtoneUrl, String ringtoneName, String label, int snoozeTime, boolean vibrate, int volume, int challengeType) {
+    public static Alarm obtain(){
+        List<Boolean> listRepeatDay = Arrays.asList(true, true, true, true, true, true, true);
+        return new Alarm(true, R.integer.default_hour, R.integer.default_minute, listRepeatDay, new Music(Music.defaultRingtoneUrl, Music.defaultRingtoneName), null, 60, true, 750, ChallengeActivity.ChallengeType.SHAKE);
+    }
+
+    public Alarm(int idAlarm, boolean enable, int hour, int minute, List<Boolean> listRepeatDay, Music ringtone, String label, int snoozeTime, boolean vibrate, int volume, int challengeType) {
         this.idAlarm = idAlarm;
         this.enable = enable;
         this.hour = hour;
         this.minute = minute;
         this.listRepeatDay = listRepeatDay;
-        this.ringtoneUrl = ringtoneUrl;
-        this.ringtoneName = ringtoneName;
+        this.ringtone = ringtone;
         this.label = label;
         this.snoozeTime = snoozeTime;
         this.vibrate = vibrate;
@@ -41,13 +49,12 @@ public class Alarm implements Comparable<Alarm>, Parcelable {
         generateDescribeRepeatDay();
     }
 
-    public Alarm(boolean enable, int hour, int minute, List<Boolean> listRepeatDay, String ringtoneUrl, String ringtoneName, String label, int snoozeTime, boolean vibrate, int volume, int challengeType) {
+    public Alarm(boolean enable, int hour, int minute, List<Boolean> listRepeatDay, Music ringtone, String label, int snoozeTime, boolean vibrate, int volume, int challengeType) {
         this.enable = enable;
         this.hour = hour;
         this.minute = minute;
         this.listRepeatDay = listRepeatDay;
-        this.ringtoneUrl = ringtoneUrl;
-        this.ringtoneName = ringtoneName;
+        this.ringtone = ringtone;
         this.label = label;
         this.snoozeTime = snoozeTime;
         this.vibrate = vibrate;
@@ -117,20 +124,12 @@ public class Alarm implements Comparable<Alarm>, Parcelable {
         generateDescribeRepeatDay();
     }
 
-    public String getRingtoneUrl() {
-        return ringtoneUrl;
+    public Music getRingtone() {
+        return ringtone;
     }
 
-    public void setRingtoneUrl(String ringtoneUrl) {
-        this.ringtoneUrl = ringtoneUrl;
-    }
-
-    public String getRingtoneName() {
-        return ringtoneName;
-    }
-
-    public void setRingtoneName(String ringtoneName) {
-        this.ringtoneName = ringtoneName;
+    public void setRingtone(Music ringtone) {
+        this.ringtone = ringtone;
     }
 
     public String getLabel() {
@@ -197,13 +196,16 @@ public class Alarm implements Comparable<Alarm>, Parcelable {
             }
         }
         if(amount == 7){
-            this.describeRepeatDay = "Everyday.";
+            this.describeRepeatDay = "Everyday";
         }
         else if(amount == 5 && !listRepeatDay.get(5) && !listRepeatDay.get(6)){
-            this.describeRepeatDay = "Weekdays.";
+            this.describeRepeatDay = "Weekdays";
         }
         else if(amount == 2 && listRepeatDay.get(5) && listRepeatDay.get(6)){
-            this.describeRepeatDay = "Weekends.";
+            this.describeRepeatDay = "Weekends";
+        }
+        else if(amount == 0){
+            this.describeRepeatDay = "Never";
         }
         else{
             this.describeRepeatDay = "";
@@ -297,8 +299,7 @@ public class Alarm implements Comparable<Alarm>, Parcelable {
         minute = in.readInt();
         listRepeatDay = new ArrayList<>();
         in.readList(listRepeatDay, Alarm.class.getClassLoader());
-        ringtoneUrl = in.readString();
-        ringtoneName = in.readString();
+        ringtone = in.readParcelable(getClass().getClassLoader());
         label = in.readString();
         snoozeTime = in.readInt();
         vibrate = in.readByte() != 0;
@@ -332,8 +333,7 @@ public class Alarm implements Comparable<Alarm>, Parcelable {
         dest.writeInt(hour);
         dest.writeInt(minute);
         dest.writeList(listRepeatDay);
-        dest.writeString(ringtoneUrl);
-        dest.writeString(ringtoneName);
+        dest.writeParcelable(ringtone, 0);
         dest.writeString(label);
         dest.writeInt(snoozeTime);
         dest.writeByte((byte) (vibrate ? 1 : 0));

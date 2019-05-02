@@ -13,6 +13,8 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.appbaothuc.models.Alarm;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +43,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         this.mapCheckBoxMusic = new SparseArray<>();
         this.mediaPlayer = new MediaPlayer();
 
-        this.musicForCancelOperation = new Music(alarm.getRingtoneUrl(), alarm.getRingtoneName());
+        this.musicForCancelOperation = new Music(alarm.getRingtone().getUrl(), alarm.getRingtone().getName());
     }
     public MusicAdapter(Context context, Alarm alarm){
         this.context = context;
@@ -88,8 +90,8 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         TextView textViewMusicUrl = musicViewHolder.textViewMusicUrl;
         ImageButton buttonPlayMusic = musicViewHolder.buttonPlayMusic;
 
-        if(alarm.getRingtoneName() != null){
-            checkBoxCheck.setChecked(alarm.getRingtoneName().equals(music.getName()));
+        if(alarm.getRingtone().getName() != null){
+            checkBoxCheck.setChecked(alarm.getRingtone().getName().equals(music.getName()));
         }
         textViewMusicName.setText(music.getName());
         textViewMusicUrl.setText(music.getUrl());
@@ -110,7 +112,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
                         }
                         checkBoxCurrent.setChecked(true);
                         checkBoxCurrentChecked = checkBoxCurrent;
-                        alarm.setRingtoneName(getCheckedMusic().getName());
+                        alarm.getRingtone().setName(getCheckedMusic().getName());
                     }
                 }
             }

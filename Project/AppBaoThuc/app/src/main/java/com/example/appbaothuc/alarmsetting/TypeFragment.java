@@ -17,38 +17,47 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.example.appbaothuc.R;
+import com.example.appbaothuc.models.Alarm;
+import com.example.appbaothuc.models.MathDetail;
+import com.example.appbaothuc.models.ShakeDetail;
 
-public class TypeFragment extends Fragment {
-    private Button btnCancel, btnOK;
-    private ImageButton imageButtonDefault, imageButtonCamera, imageButtonShake, imageButtonMath,
-            imageButtonQRCode;
-    private LinearLayout linearLayoutDefault, linearLayoutCamera, linearLayoutShake, linearLayoutMath,
-            linearLayoutQRCode;
-    private Context context;
-    private Integer challengeType;
+import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.DEFAULT;
+import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.MATH;
+import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.SHAKE;
+
+public class TypeFragment extends Fragment implements MathConfigurationFragment.MathConfigurationFragmentListener, ShakeConfigurationFragment.ShakeConfigurationFragmentListener {
+    private TypeFragmentListener listener;
+    private int currentChallengeType;
+    private Alarm alarm;
+    private LinearLayout linearLayoutDefault;
+    private LinearLayout linearLayoutCamera;
+    private LinearLayout linearLayoutShake;
+    private LinearLayout linearLayoutMath;
+    private LinearLayout linearLayoutQRCode;
+    private ImageButton imageButtonDefault;
+    private ImageButton imageButtonCamera;
+    private ImageButton imageButtonShake;
+    private ImageButton imageButtonMath;
+    private ImageButton imageButtonQRCode;
+    private Button btnOK;
 
     private FragmentManager fragmentManager;
-    private TypeLinearMathFragment typeLinearMathFragment;
-//
-//    public interface TypeFragmentListener{
-//        void onFinishTypeFragment(Integer inputNumber);
-//    }
-//    TypeFragmentListener listener;
-//    public void setListener(SettingAlarmFragment settingAlarmFragment){
-//        this.listener = settingAlarmFragment;
-//    }
-
+    private MathConfigurationFragment mathConfigurationFragment;
+    private ShakeConfigurationFragment shakeConfigurationFragment;
+    public void configure(SettingAlarmFragment settingAlarmFragment, Alarm alarm, int currentChallengeType){
+        this.listener = settingAlarmFragment;
+        this.currentChallengeType = currentChallengeType;
+        this.alarm = alarm;
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_type, container, false);
         setControl(view);
         return view;
     }
 
     public void setControl(View view){
-        btnCancel = view.findViewById(R.id.btnCancel);
         btnOK = view.findViewById(R.id.btnOK);
         imageButtonDefault = view.findViewById(R.id.imageButtonDefault);
         imageButtonCamera = view.findViewById(R.id.imageButtonCamera);
@@ -61,17 +70,11 @@ public class TypeFragment extends Fragment {
         linearLayoutMath = view.findViewById(R.id.linearLayoutMath);
         linearLayoutQRCode = view.findViewById(R.id.linearLayoutQRCode);
 
-        challengeType = SettingAlarmFragment.challengeType;
+        mathConfigurationFragment = new MathConfigurationFragment();
+        shakeConfigurationFragment = new ShakeConfigurationFragment();
+        fragmentManager = getFragmentManager();
 
         btnOK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SettingAlarmFragment.challengeType = challengeType;
-                getFragmentManager().beginTransaction().remove(TypeFragment.this).commit();
-                //TODO:
-            }
-        });
-        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getFragmentManager().beginTransaction().remove(TypeFragment.this).commit();
@@ -118,36 +121,95 @@ public class TypeFragment extends Fragment {
         linearLayoutDefault.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                challengeType = 0;
-                linearLayoutDefault.setBackgroundColor(Color.BLUE);
-                linearLayoutMath.setBackgroundColor(getResources().getColor(R.color.colortext2));
-                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
-                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
-                linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.colortext2));
+//                challengeType = 0;
+//                linearLayoutDefault.setBackgroundColor(Color.BLUE);
+//                linearLayoutMath.setBackgroundColor(getResources().getColor(R.color.colortext2));
+//                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
+//                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
+//                linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.colortext2));
             }
         });
         linearLayoutMath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                linearLayoutMath.setBackgroundColor(Color.BLUE);
-                linearLayoutDefault.setBackgroundColor(getResources().getColor(R.color.colortext2));
-                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
-                linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.colortext2));
-                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
-                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, typeLinearMathFragment).commit();
+//                linearLayoutMath.setBackgroundColor(Color.BLUE);
+//                linearLayoutDefault.setBackgroundColor(getResources().getColor(R.color.colortext2));
+//                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
+//                linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.colortext2));
+//                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                mathConfigurationFragment.configure(TypeFragment.this, alarm);
+                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, mathConfigurationFragment).commit();
                 //challengeType = 1;
             }
         });
         linearLayoutShake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                challengeType = 2;
-                linearLayoutShake.setBackgroundColor(Color.BLUE);
-                linearLayoutDefault.setBackgroundColor(getResources().getColor(R.color.colortext2));
-                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
-                linearLayoutMath.setBackgroundColor(getResources().getColor(R.color.colortext2));
-                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
+//                challengeType = 2;
+//                linearLayoutShake.setBackgroundColor(Color.BLUE);
+//                linearLayoutDefault.setBackgroundColor(getResources().getColor(R.color.colortext2));
+//                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
+//                linearLayoutMath.setBackgroundColor(getResources().getColor(R.color.colortext2));
+//                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                shakeConfigurationFragment.configure(TypeFragment.this, alarm);
+                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, shakeConfigurationFragment).commit();
             }
         });
+
+        switch (currentChallengeType){
+            case DEFAULT:
+                linearLayoutDefault.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
+                break;
+            case MATH:
+                linearLayoutMath.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
+                break;
+            case SHAKE:
+                linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
+                break;
+        }
+    }
+
+    private void updateChallengeLayoutColor(int newChallenge){
+        switch (currentChallengeType){
+            case DEFAULT:
+                linearLayoutDefault.setBackgroundColor(getResources().getColor(R.color.challenge_layout_deactivate));
+                break;
+            case MATH:
+                linearLayoutMath.setBackgroundColor(getResources().getColor(R.color.challenge_layout_deactivate));
+                break;
+            case SHAKE:
+                linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.challenge_layout_deactivate));
+                break;
+        }
+        switch (newChallenge){
+            case DEFAULT:
+                linearLayoutDefault.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
+                break;
+            case MATH:
+                linearLayoutMath.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
+                break;
+            case SHAKE:
+                linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
+                break;
+        }
+    }
+
+
+
+    @Override
+    public void onMathConfigurationSetup(MathDetail mathDetail) {
+        this.listener.getMathChallenge(mathDetail);
+        updateChallengeLayoutColor(MATH);
+    }
+
+    @Override
+    public void onShakeConfigurationSetup(ShakeDetail shakeDetail) {
+        this.listener.getShakeChallenge(shakeDetail);
+        updateChallengeLayoutColor(SHAKE);
+    }
+
+    public interface TypeFragmentListener{
+        void getMathChallenge(MathDetail mathDetail);
+        void getShakeChallenge(ShakeDetail shakeDetail);
     }
 }
