@@ -160,7 +160,7 @@ public class AppSettingFragment extends Fragment {
     private static void initializeDefaultSetting(){
         muteAlarmIn = 30;
         canMuteAlarmFor = 3;
-        autoDismissAfter = 1;
+        autoDismissAfter = 10;
         graduallyIncreaseVolume = true;
         preventTurnOffPhone = true;
         hourMode = HOUR_MODE_24;
