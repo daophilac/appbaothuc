@@ -1,7 +1,7 @@
 # AppBaoThuc preview 1.0
 ## Change log 1.0
 ### New features:
-  There are no new features in this release. But from alpha phase to preview phase is a big change from the system perspective. We were wrapping up everything to provide the acceptable user experience and a stable application. All that are remaining is providing any new challenges, and new features that might make better user experiences. So, there are still stuff to do.
+  There are no new features in this release. But from alpha phase to preview phase is a big change from the system perspective. We were wrapping up everything to provide the acceptable user experience and a stable application. All that are remains are providing any new challenges, and new features that might make better user experiences. So, there are still stuff to do.
 ### On progess features:
   1. Prevent phone screen to turn off when there is a happening alarm.
   2. Provide a kind of folder picker which allows the user to choose which folders the app should look for music when choosing ringtones.
