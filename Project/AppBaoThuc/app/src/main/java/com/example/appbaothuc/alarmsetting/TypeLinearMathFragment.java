@@ -1,5 +1,6 @@
 package com.example.appbaothuc.alarmsetting;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,14 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.SeekBar;
+import android.widget.NumberPicker;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.example.appbaothuc.MainActivity;
 import com.example.appbaothuc.R;
+import com.example.appbaothuc.challenge.MathChallengeFragment;
+import com.example.appbaothuc.models.Alarm;
+import com.example.appbaothuc.DatabaseHandler;
+import com.example.appbaothuc.models.MathDetail;
 
 public class TypeLinearMathFragment extends Fragment {
-
     private TextView textViewProblems, textViewMath;
 
     private SeekBar seekBarDifficult;
@@ -49,5 +54,4 @@ public class TypeLinearMathFragment extends Fragment {
             }
         });
     }
-
 }

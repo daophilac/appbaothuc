@@ -245,6 +245,7 @@
         <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="wrap_content"
+            android:max="1000"
             android:layout_height="wrap_content"
             android:theme="@style/BlueTheme"
             android:layout_weight="15" />

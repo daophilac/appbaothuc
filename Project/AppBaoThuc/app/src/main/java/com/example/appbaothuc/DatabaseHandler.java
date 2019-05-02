@@ -6,6 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.appbaothuc.models.Alarm;
+import com.example.appbaothuc.models.MathDetail;
+import com.example.appbaothuc.models.ShakeDetail;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -102,6 +106,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 "Volume integer," +
                 "ChallengeType integer)";
         db.execSQL(sql);
+
+        sql = "create table if not exists MathDetail(" +
+                "IdAlarm integer primary key," +
+                "Difficulty integer," +
+                "NumberOfProblem integer," +
+                "constraint FK_MathDetail foreign key (IdAlarm) references Alarm(IdAlarm))";
+        db.execSQL(sql);
+
+        sql = "create table if not exists ShakeDetail(" +
+                "IdAlarm integer primary key," +
+                "Difficulty integer," +
+                "NumberOfProblem integer," +
+                "constraint FK_MathDetail foreign key (IdAlarm) references Alarm(IdAlarm))";
+        db.execSQL(sql);
     }
 
     public void insertAlarm(boolean enable, int hour, int minute, List<Boolean> listRepeatDay, String ringtoneUrl, String ringtoneName,
@@ -139,8 +157,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         int hour = alarm.getHour();
         int minute = alarm.getMinute();
         List<Boolean> listRepeatDay = alarm.getListRepeatDay();
-        String ringtoneUrl = alarm.getRingtoneUrl();
-        String ringtoneName = alarm.getRingtoneName();
+        String ringtoneUrl = alarm.getRingtone().getUrl();
+        String ringtoneName = alarm.getRingtone().getName();
         String label = alarm.getLabel();
         boolean vibrate = alarm.isVibrate();
         int snoozeTime = alarm.getSnoozeTime();
@@ -167,8 +185,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         int hour = updatedAlarm.getHour();
         int minute = updatedAlarm.getMinute();
         List<Boolean> listRepeatDay = updatedAlarm.getListRepeatDay();
-        String ringtoneUrl = updatedAlarm.getRingtoneUrl();
-        String ringtoneName = updatedAlarm.getRingtoneName();
+        String ringtoneUrl = updatedAlarm.getRingtone().getUrl();
+        String ringtoneName = updatedAlarm.getRingtone().getName();
         String label = updatedAlarm.getLabel();
         boolean vibrate = updatedAlarm.isVibrate();
         int snoozeTime = updatedAlarm.getSnoozeTime();
@@ -199,6 +217,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 " Enable = '%b'" +
                 " where IdAlarm = %d";
         sql = String.format(sqlFormat, enable, idAlarm);
+        db.execSQL(sql);
+    }
+    public void updateAlarmSetDefaultRingtone(int idAlarm){
+        sqlFormat = "update Alarm set RingtoneUrl = '%s', RingtoneName = '%s' where IdAlarm = %d";
+        sql = String.format(sqlFormat, Music.defaultRingtoneUrl, Music.defaultRingtoneName, idAlarm);
         db.execSQL(sql);
     }
     public void deleteAlarm(int idAlarm){
@@ -320,7 +343,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (closeCursor) {
             cursor.close();
         }
-        Alarm alarm = new Alarm(idAlarm, enable, hour, minute, listRepeatDay, ringtoneUrl, ringtoneName, label, snoozeTime, vibrate, volume, challengeType);
+        Alarm alarm = new Alarm(idAlarm, enable, hour, minute, listRepeatDay, new Music(ringtoneUrl, ringtoneName), label, snoozeTime, vibrate, volume, challengeType);
         alarm.setDayOfWeek(dayOfWeek);
         return alarm;
     }
@@ -350,7 +373,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (closeCursor) {
             cursor.close();
         }
-        return new Alarm(idAlarm, enable, hour, minute, listRepeatDay, ringtoneUrl, ringtoneName, label, snoozeTime, vibrate, volume, challengeType);
+        return new Alarm(idAlarm, enable, hour, minute, listRepeatDay, new Music(ringtoneUrl, ringtoneName), label, snoozeTime, vibrate, volume, challengeType);
     }
     private List<Alarm> buildListAlarmFromCursor(Cursor cursor, boolean closeCursor){
         List<Alarm> listAlarm = new ArrayList<>();
@@ -374,7 +397,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             int snoozeTime = getValueAtColumn(cursor, "SnoozeTime", Integer.class);
             int volume = getValueAtColumn(cursor, "Volume", Integer.class);
             int challengeType = getValueAtColumn(cursor, "ChallengeType", Integer.class);
-            Alarm alarm = new Alarm(idAlarm, enable, hour, minute, listRepeatDay, ringtoneUrl, ringtoneName, label, snoozeTime, vibrate, volume, challengeType);
+            Alarm alarm = new Alarm(idAlarm, enable, hour, minute, listRepeatDay, new Music(ringtoneUrl, ringtoneName), label, snoozeTime, vibrate, volume, challengeType);
             listAlarm.add(alarm);
         }
         if (closeCursor) {
@@ -382,6 +405,122 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         return listAlarm;
     }
+
+
+
+
+
+
+
+
+
+
+    public void deleteChallengeDetail(int idAlarm, int challengeType){
+        sqlFormat = "delete from '%s' where IdAlarm = %d";
+        String tableName = "";
+        switch(challengeType){
+            case 1:
+                return;
+            case 2:
+                tableName = "MathDetail";
+                break;
+            case 3:
+                tableName = "ShakeDetail";
+                break;
+        }
+        sql = String.format(sqlFormat, tableName, idAlarm);
+        db.execSQL(sql);
+    }
+    public void insertMathDetail(MathDetail mathDetail){
+        sqlFormat = "insert into MathDetail(IdAlarm, Difficulty, NumberOfProblem)" +
+                " values(%d, %d, %d)";
+        sql = String.format(sqlFormat, mathDetail.getIdAlarm(), mathDetail.getDifficulty(), mathDetail.getNumberOfProblem());
+        db.execSQL(sql);
+    }
+    public void insertMathDetail(int idAlarm, int difficulty, int numberOfProblem){
+        sqlFormat = "insert into MathDetail(IdAlarm, Difficulty, NumberOfProblem)" +
+                " values(%d, %d, %d)";
+        sql = String.format(sqlFormat, idAlarm, difficulty, numberOfProblem);
+        db.execSQL(sql);
+    }
+    public void updateMathDetail(MathDetail mathDetail){
+        sqlFormat = "update MathDetail set Difficulty = %d, NumberOfProblem = %d where IdAlarm = %d";
+        sql = String.format(sqlFormat, mathDetail.getDifficulty(), mathDetail.getNumberOfProblem(), mathDetail.getIdAlarm());
+        db.execSQL(sql);
+    }
+    public void deleteMathDetail(int idAlarm){
+        sqlFormat = "delete from MathDetail where IdAlarm = %d";
+        sql = String.format(sqlFormat, idAlarm);
+        db.execSQL(sql);
+    }
+    public MathDetail getAlarmMathDetail(int idAlarm){
+        sqlFormat = "select * from MathDetail where IdAlarm = %d";
+        sql = String.format(sqlFormat, idAlarm);
+        Cursor cursor = db.rawQuery(sql, null);
+        if(!cursor.moveToNext()){
+            cursor.close();
+            return null;
+        }
+        int difficulty = getValueAtColumn(cursor, "Difficulty", Integer.class);
+        int numberOfProblem = getValueAtColumn(cursor, "NumberOfProblem", Integer.class);
+        cursor.close();
+        return new MathDetail(idAlarm, difficulty, numberOfProblem);
+    }
+
+
+
+
+
+
+
+
+
+    public void insertShakeDetail(int idAlarm, int difficulty, int numberOfProblem){
+        sqlFormat = "insert into ShakeDetail(IdAlarm, Difficulty, NumberOfProblem)" +
+                " values(%d, %d, %d)";
+        sql = String.format(sqlFormat, idAlarm, difficulty, numberOfProblem);
+        db.execSQL(sql);
+    }
+    public void insertShakeDetail(ShakeDetail shakeDetail){
+        sqlFormat = "insert into ShakeDetail(IdAlarm, Difficulty, NumberOfProblem)" +
+                " values(%d, %d, %d)";
+        sql = String.format(sqlFormat, shakeDetail.getIdAlarm(), shakeDetail.getDifficulty(), shakeDetail.getNumberOfProblem());
+        db.execSQL(sql);
+    }
+    public void updateShakeDetail(ShakeDetail shakeDetail){
+        sqlFormat = "update ShakeDetail set Difficulty = %d, NumberOfProblem = %d where IdAlarm = %d";
+        sql = String.format(sqlFormat, shakeDetail.getDifficulty(), shakeDetail.getNumberOfProblem(), shakeDetail.getIdAlarm());
+        db.execSQL(sql);
+    }
+    public void deleteShakeDetail(int idAlarm){
+        sqlFormat = "delete from ShakeDetail where IdAlarm = %d";
+        sql = String.format(sqlFormat, idAlarm);
+        db.execSQL(sql);
+    }
+    public ShakeDetail getAlarmShakeDetail(int idAlarm){
+        sqlFormat = "select * from ShakeDetail where IdAlarm = %d";
+        sql = String.format(sqlFormat, idAlarm);
+        Cursor cursor = db.rawQuery(sql, null);
+        if(!cursor.moveToNext()){
+            cursor.close();
+            return null;
+        }
+        int difficulty = getValueAtColumn(cursor, "Difficulty", Integer.class);
+        int numberOfProblem = getValueAtColumn(cursor, "NumberOfProblem", Integer.class);
+        cursor.close();
+        return new ShakeDetail(idAlarm, difficulty, numberOfProblem);
+    }
+
+
+
+
+
+
+
+
+
+
+
     private <T> T getValueAtColumn(Cursor cursor, String columnName, Class<T> columnDataType){
         int columnIndex = cursor.getColumnIndex(columnName);
         if(columnIndex == -1){

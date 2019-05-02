@@ -1,14 +1,16 @@
 package com.example.appbaothuc;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Slide;
 import android.view.Gravity;
@@ -16,66 +18,72 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.appbaothuc.appsetting.AppSettingFragment;
+import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.services.NotificationService;
 import com.peanut.androidlib.permissionmanager.PermissionInquirer;
 
+import java.io.File;
+
 
 public class MainActivity extends AppCompatActivity {
-    private DatabaseHandler databaseHandler;
     private ImageButton buttonAlarm;
     private ImageButton buttonSetting;
     private UpcomingAlarmFragment upcomingAlarmFragment;
-    private SettingFragment settingFragment;
+    private AppSettingFragment appSettingFragment;
     private FragmentManager fragmentManager;
-    private MediaPlayer musicPlayer;
-    private boolean settingFragmentIsAdded;
+    private FragmentTransaction fragmentTransaction;
+    public boolean appSettingFragmentIsAdded;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Resources resources = getResources();
+        int resId = R.raw.in_the_busting_square;
+        Music.defaultRingtoneUrl = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(resId) + '/' + resources.getResourceTypeName(resId) + '/' + resources.getResourceEntryName(resId);
         PermissionInquirer permissionInquirer = new PermissionInquirer(this);
         permissionInquirer.askPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 1);
-        databaseHandler = new DatabaseHandler(this);
+        AppSettingFragment.loadAppSetting(this);
+
         buttonAlarm = findViewById(R.id.button_alarm);
         buttonSetting = findViewById(R.id.button_setting);
         buttonAlarm.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                loadUpcomingAlarmFragment(v);
+                if(appSettingFragmentIsAdded){
+                    fragmentManager.popBackStack();
+                }
             }
         });
         buttonSetting.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                loadSettingFragment(v);
+                if(!appSettingFragmentIsAdded){
+                    appSettingFragmentIsAdded = true;
+                    fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.add(R.id.main_fragment_container, appSettingFragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
             }
         });
-        settingFragment = SettingFragment.newInstance(); // TODO: should use the default constructor instead.
-        settingFragment.setEnterTransition(new Slide(Gravity.END));
-        settingFragment.setExitTransition(new Slide(Gravity.END));
+        appSettingFragment = new AppSettingFragment();
+        appSettingFragment.setEnterTransition(new Slide(Gravity.END));
+        appSettingFragment.setExitTransition(new Slide(Gravity.END));
         upcomingAlarmFragment = new UpcomingAlarmFragment();
         fragmentManager = getSupportFragmentManager();
-        settingFragmentIsAdded = false;
-        musicPlayer = new MediaPlayer();
         fragmentManager.beginTransaction().add(R.id.main_fragment_container, upcomingAlarmFragment).commit();
         MainActivity.restartAlarmService(this);
-    }
-    public void loadUpcomingAlarmFragment(View view){
-        fragmentManager.beginTransaction().remove(settingFragment).commit();
-        settingFragmentIsAdded = false;
-    }
-    public void loadSettingFragment(View view){
-        if(!settingFragmentIsAdded){
-            fragmentManager.beginTransaction().add(R.id.main_fragment_container, settingFragment).commit();
-            settingFragmentIsAdded = true;
-        }
     }
     public void test1(View view){
         NotificationService.DEBUG_MODE = true;
         MainActivity.restartAlarmService(this);
-    }
-    public void test2(View view){
-
     }
     public static void restartAlarmService(Context context){
         Intent notificationIntent = new Intent(context, NotificationService.class);
@@ -86,6 +94,17 @@ public class MainActivity extends AppCompatActivity {
         else{
             context.startService(notificationIntent);
         }
+    }
+
+    public static Alarm checkAlarmValidRingtoneUrl(Context context, Alarm alarm){
+        DatabaseHandler databaseHandler = new DatabaseHandler(context);
+        File file = new File(alarm.getRingtone().getUrl());
+        if (!file.exists()){
+            alarm.setRingtone(new Music(Music.defaultRingtoneUrl, Music.defaultRingtoneName));
+            databaseHandler.updateAlarmSetDefaultRingtone(alarm.getIdAlarm());
+        }
+        databaseHandler.close();
+        return alarm;
     }
 
     @Override
