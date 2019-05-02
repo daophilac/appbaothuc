@@ -174,7 +174,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                 } else if (settingAlarmMode == SettingAlarmMode.ADD_NEW) {
                     addAlarm();
                 }
-                getFragmentManager().beginTransaction().remove(SettingAlarmFragment.this).commit();
+                fragmentManager.popBackStack();
             }
         });
         btnDelete.setOnClickListener(new View.OnClickListener(){
@@ -182,14 +182,14 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             public void onClick(View v) {
                 if(settingAlarmMode == SettingAlarmMode.EDIT){
                     upcomingAlarmFragment.deleteAlarm(alarm.getIdAlarm());
-                    getFragmentManager().beginTransaction().remove(SettingAlarmFragment.this).commit();
+                    fragmentManager.popBackStack();
                 }
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getFragmentManager().beginTransaction().remove(SettingAlarmFragment.this).commit();
+                fragmentManager.popBackStack();
             }
         });
         linearLayoutType.setOnClickListener(new View.OnClickListener() {

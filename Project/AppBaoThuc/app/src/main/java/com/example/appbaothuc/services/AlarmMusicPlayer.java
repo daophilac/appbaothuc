@@ -196,6 +196,9 @@ public class AlarmMusicPlayer {
                 }
                 for (float i = 1; i <= 1000; i++) {
                     if (isDismissed) {
+                        if(alarm.isVibrate()){
+                            vibrator.cancel();
+                        }
                         return;
                     }
                     if (snoozeAgain) {
