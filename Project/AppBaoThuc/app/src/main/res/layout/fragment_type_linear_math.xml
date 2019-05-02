@@ -30,16 +30,14 @@
             android:text="3 Problems"
             android:textColor="@color/colortext" />
 
-        <EditText
-            android:id="@+id/editTextProblems"
+        <NumberPicker
+            android:id="@+id/numberPicker1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:ems="10"
-            android:gravity="center"
-            android:inputType="number"
-            android:text="3"
-            android:textColor="@color/colortext" />
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="64dp" />
+
 
     </LinearLayout>
 
