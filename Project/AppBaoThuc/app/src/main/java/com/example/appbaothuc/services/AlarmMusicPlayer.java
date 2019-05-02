@@ -191,6 +191,7 @@ public class AlarmMusicPlayer {
                 }
                 if (!graduallyIncreaseVolume){
                     mediaPlayer.setVolume(alarmVolumeInPercent, alarmVolumeInPercent);
+                    muteTime++;
                     return;
                 }
                 for (float i = 1; i <= 1000; i++) {
