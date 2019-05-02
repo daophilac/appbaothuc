@@ -63,7 +63,7 @@ public class ChallengeDialogFragment extends DialogFragment implements Challenge
         this.challengeDialogListener = (ChallengeDialogListener) context;
         this.databaseHandler = new DatabaseHandler(context);
         this.fragmentManager = getChildFragmentManager();
-        this.giveUpDialogFragment = new GiveUpDialogFragment();
+        this.giveUpDialogFragment = GiveUpDialogFragment.newInstance();
     }
 
     private void setAlarm(Alarm alarm) {
