@@ -22,12 +22,16 @@ public class GiveUpDialogFragment extends DialogFragment {
     private Button buttonGiveUp;
 
     private int countDownFrom;
+    public static GiveUpDialogFragment newInstance(){
+        GiveUpDialogFragment giveUpDialogFragment = new GiveUpDialogFragment();
+        giveUpDialogFragment.countDownFrom = 500;
+        return giveUpDialogFragment;
+    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         this.listener = (OnGiveUpListener) getParentFragment();
-        this.countDownFrom = 500;
     }
 
     @Nullable
