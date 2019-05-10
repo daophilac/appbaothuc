@@ -13,19 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="2dp"
         android:layout_marginRight="10dp"
         android:background="@color/backgroundlayout"
         android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textViewTimeLeft"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:text="Báo thức đặt cho 22 giờ và 36 phút tính từ bây giờ."
-            android:textColor="@color/colortext2"
-            android:textSize="16dp" />
 
         <View
             android:layout_width="match_parent"
@@ -37,12 +28,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:timePickerMode="spinner"
-            app:buttonTint="@color/colortext" ></TimePicker>
+            app:buttonTint="@color/colortext"></TimePicker>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
             <TextView
@@ -97,7 +88,7 @@
         android:layout_marginRight="10dp"
         android:background="@color/backgroundlayout"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -165,7 +156,7 @@
         android:layout_marginRight="10dp"
         android:background="@color/backgroundlayout"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/textView45"
@@ -196,7 +187,7 @@
         android:layout_marginRight="10dp"
         android:background="@color/backgroundlayout"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/textView44"
@@ -233,7 +224,7 @@
         android:background="@color/backgroundlayout"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="5dp">
 
         <ImageView
             android:id="@+id/imageView2"
@@ -247,8 +238,8 @@
             android:id="@+id/seekBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:theme="@style/BlueTheme"
-            android:layout_weight="15" />
+            android:layout_weight="15"
+            android:theme="@style/BlueTheme" />
 
         <Button
             android:id="@+id/btnPlayMusic"
@@ -284,7 +275,7 @@
         android:layout_marginRight="10dp"
         android:background="@color/backgroundlayout"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/textView4"
@@ -323,7 +314,7 @@
         android:layout_marginRight="10dp"
         android:background="@color/backgroundlayout"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/textView43"
