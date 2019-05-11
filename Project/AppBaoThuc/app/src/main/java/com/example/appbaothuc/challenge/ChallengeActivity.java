@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.appbaothuc.MainActivity;
+import com.example.appbaothuc.R;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.interfaces.ChallengeActivityListener;
 import com.example.appbaothuc.interfaces.ChallengeDialogListener;
@@ -29,6 +30,7 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_challenge);
         this.activityFromDeath = new ActivityFromDeath(this);
         this.activityFromDeath.start();
     }
@@ -85,9 +87,6 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
         else{
             byteAlarm = getIntent().getExtras().getByteArray("alarm");
             alarm = Alarm.toParcelable(byteAlarm, Alarm.CREATOR);
-            // TODO: Debug purpose
-            alarm.setLabel("Do exercise");
-            // TODO
             FragmentManager fragmentManager = getSupportFragmentManager();
             ChallengeDialogFragment challengeDialogFragment = ChallengeDialogFragment.newInstance(alarm,"");
             challengeDialogFragment.show(fragmentManager, this.getLocalClassName());

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.example.appbaothuc.DatabaseHandler;
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.challenge.MathChallengeFragment;
+import com.example.appbaothuc.challenge.MathChallengeFragment2;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.models.MathDetail;
 
@@ -110,7 +111,7 @@ public class MathConfigurationFragment extends Fragment {
             public void onClick(View v) {
                 radioButtonClick(v);
                 mathDetail.setDifficulty(EASY);
-                textViewCalculationExample.setText(MathChallengeFragment.getCalculationExample(EASY));
+                textViewCalculationExample.setText(MathChallengeFragment2.getCalculationExample(EASY));
             }
         });
         this.radioButtonModerate.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +119,7 @@ public class MathConfigurationFragment extends Fragment {
             public void onClick(View v) {
                 radioButtonClick(v);
                 mathDetail.setDifficulty(MODERATE);
-                textViewCalculationExample.setText(MathChallengeFragment.getCalculationExample(MODERATE));
+                textViewCalculationExample.setText(MathChallengeFragment2.getCalculationExample(MODERATE));
             }
         });
         this.radioButtonHard.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +127,7 @@ public class MathConfigurationFragment extends Fragment {
             public void onClick(View v) {
                 radioButtonClick(v);
                 mathDetail.setDifficulty(HARD);
-                textViewCalculationExample.setText(MathChallengeFragment.getCalculationExample(HARD));
+                textViewCalculationExample.setText(MathChallengeFragment2.getCalculationExample(HARD));
             }
         });
         this.radioButtonInsane.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +135,7 @@ public class MathConfigurationFragment extends Fragment {
             public void onClick(View v) {
                 radioButtonClick(v);
                 mathDetail.setDifficulty(INSANE);
-                textViewCalculationExample.setText(MathChallengeFragment.getCalculationExample(INSANE));
+                textViewCalculationExample.setText(MathChallengeFragment2.getCalculationExample(INSANE));
             }
         });
         this.radioButtonNightmare.setOnClickListener(new View.OnClickListener() {
@@ -142,7 +143,7 @@ public class MathConfigurationFragment extends Fragment {
             public void onClick(View v) {
                 radioButtonClick(v);
                 mathDetail.setDifficulty(NIGHTMARE);
-                textViewCalculationExample.setText(MathChallengeFragment.getCalculationExample(NIGHTMARE));
+                textViewCalculationExample.setText(MathChallengeFragment2.getCalculationExample(NIGHTMARE));
             }
         });
         this.radioButtonInfernal.setOnClickListener(new View.OnClickListener() {
@@ -150,7 +151,7 @@ public class MathConfigurationFragment extends Fragment {
             public void onClick(View v) {
                 radioButtonClick(v);
                 mathDetail.setDifficulty(INFERNAL);
-                textViewCalculationExample.setText(MathChallengeFragment.getCalculationExample(INFERNAL));
+                textViewCalculationExample.setText(MathChallengeFragment2.getCalculationExample(INFERNAL));
             }
         });
         this.buttonCancel.setOnClickListener(new View.OnClickListener() {

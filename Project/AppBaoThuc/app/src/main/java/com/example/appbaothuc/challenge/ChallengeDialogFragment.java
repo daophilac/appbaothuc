@@ -1,5 +1,6 @@
 package com.example.appbaothuc.challenge;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -43,7 +45,8 @@ public class ChallengeDialogFragment extends DialogFragment implements Challenge
     private Button buttonGiveUp;
 
     private FragmentManager fragmentManager;
-    private MathChallengeFragment mathChallengeFragment;
+//    private MathChallengeFragment mathChallengeFragment;
+    private MathChallengeFragment2 mathChallengeFragment2;
     private ShakeChallengeFragment shakeChallengeFragment;
     private GiveUpDialogFragment giveUpDialogFragment;
     private ChallengeDialogListener challengeDialogListener;
@@ -55,6 +58,14 @@ public class ChallengeDialogFragment extends DialogFragment implements Challenge
         challengeDialogFragment.setAlarm(alarm);
         challengeDialogFragment.setCancelable(false);
         return challengeDialogFragment;
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
     }
 
     @Override
@@ -82,7 +93,9 @@ public class ChallengeDialogFragment extends DialogFragment implements Challenge
         buttonGiveUp = view.findViewById(R.id.button_give_up);
         buttonMute = view.findViewById(R.id.button_mute);
 
-        textViewLabel.setText(alarm.getLabel());
+        if(!alarm.getLabel().equals("null")){
+            textViewLabel.setText(alarm.getLabel());
+        }
         textViewHour.setText(String.valueOf(alarm.getHour()));
         textViewRingtoneName.setText("Music: " + alarm.getRingtone().getName());
         if (alarm.getMinute() < 10) {
@@ -123,11 +136,11 @@ public class ChallengeDialogFragment extends DialogFragment implements Challenge
 
         switch (alarm.getChallengeType()) {
             case MATH:
-                mathChallengeFragment = new MathChallengeFragment();
-                mathChallengeFragment.setMathDetail(databaseHandler.getAlarmMathDetail(alarm.getIdAlarm()));
-                challengeDialogListener.onChallengeActivated(mathChallengeFragment);
-                mathChallengeFragment.setArguments(bundleChallenge);
-                fragmentManager.beginTransaction().replace(R.id.challenge_fragment_container, mathChallengeFragment).commit();
+                mathChallengeFragment2 = new MathChallengeFragment2();
+                mathChallengeFragment2.setMathDetail(databaseHandler.getAlarmMathDetail(alarm.getIdAlarm()));
+                challengeDialogListener.onChallengeActivated(mathChallengeFragment2);
+                mathChallengeFragment2.setArguments(bundleChallenge);
+                fragmentManager.beginTransaction().replace(R.id.challenge_fragment_container, mathChallengeFragment2).commit();
                 break;
             case SHAKE:
                 shakeChallengeFragment = new ShakeChallengeFragment();

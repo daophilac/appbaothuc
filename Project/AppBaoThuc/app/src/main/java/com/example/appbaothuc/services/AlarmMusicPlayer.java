@@ -133,6 +133,10 @@ public class AlarmMusicPlayer {
         }
     }
     public void muteALittle(){
+        if(canMuteAlarmFor == 0){
+            Toast.makeText(context, "Based on your setting, you can't mute the alarm.", Toast.LENGTH_LONG).show();
+            return;
+        }
         if(muteTime >= canMuteAlarmFor){
             Toast.makeText(context, "You can't mute the alarm for more than " + canMuteAlarmFor + " times", Toast.LENGTH_LONG).show();
             return;
