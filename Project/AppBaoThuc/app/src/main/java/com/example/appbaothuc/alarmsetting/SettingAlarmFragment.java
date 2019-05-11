@@ -23,6 +23,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.example.appbaothuc.MainActivity;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.Music;
 import com.example.appbaothuc.R;
@@ -75,7 +76,6 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     private MusicPickerFragment musicPickerFragment;
 
     private MediaPlayer mediaPlayer;
-    private MediaPlayer mediaPlayer1;
 
     public void configure(UpcomingAlarmFragment upcomingAlarmFragment, Alarm alarm){
         this.upcomingAlarmFragment = upcomingAlarmFragment;
@@ -229,22 +229,44 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                 showRepeatDialog();
             }
         });
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                alarm.setVolume(progress);
+                if(mediaPlayer.isPlaying()){
+                    mediaPlayer.setVolume(progress/1000f, progress/1000f);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         btnPlayMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mediaPlayer1 == null)
-                    mediaPlayer1 = MediaPlayer.create(context, Uri.fromFile(new File(alarm.getRingtone().getUrl())));
-                if(!mediaPlayer1.isPlaying()){
-                    btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_pause));
-                    mediaPlayer1.setLooping(true);
-                    mediaPlayer1.start();
+                alarm = MainActivity.checkAlarmValidRingtoneUrl(context, alarm);
+                textViewRingtone.setText(alarm.getRingtone().getName());
+                if(!mediaPlayer.isPlaying()){
+                    mediaPlayer = MediaPlayer.create(context, Uri.parse(alarm.getRingtone().getUrl()));
+                    btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_pause_black_24dp));
+                    mediaPlayer.setLooping(true);
+                    mediaPlayer.setVolume((float)seekBar.getProgress()/1000, (float)seekBar.getProgress()/1000);
+                    mediaPlayer.start();
                 }
                 else{
-                    btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_play));
-                        mediaPlayer1.stop();
+                    btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_play_arrow_24dp));
+                    mediaPlayer.stop();
                 }
             }
         });
+
 
         switch(alarm.getChallengeType()){
             case DEFAULT:
@@ -261,6 +283,16 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                 break;
         }
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mediaPlayer.isPlaying()){
+            btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_play_arrow_24dp));
+            mediaPlayer.stop();
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
