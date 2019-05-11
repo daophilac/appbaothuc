@@ -3,8 +3,9 @@
 ### New features:
   1. Prevent phone's screen from turning off while an alarm is happening.
 ### On progress features:
-  1. Provide a kind of folder picker which allows the user to choose which folders the app should look for music when choosing ringtones.
-  2. Provide actual using of speaker when headsets are plugged. The current behavior is using a trick to make phone routes its ringtone to outer speaker, so the experience is pretty weird.
+  1. Prevent user from shutting down his/her phone while an alarm is happening.
+  2. Provide a kind of folder picker which allows the user to choose which folders the app should look for music when choosing ringtones.
+  3. Provide actual using of speaker when headsets are plugged. The current behavior is using a trick to make phone routes its ringtone to outer speaker, so the experience is pretty weird.
 
 ## Change log 1.0
 ### New features:
