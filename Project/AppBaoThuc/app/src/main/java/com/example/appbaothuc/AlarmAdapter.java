@@ -21,6 +21,10 @@ import com.example.appbaothuc.models.Alarm;
 import java.util.Collections;
 import java.util.List;
 
+import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.DEFAULT;
+import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.MATH;
+import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.SHAKE;
+
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
     private Context context;
     private UpcomingAlarmFragment upcomingAlarmFragment;
@@ -92,7 +96,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             @Override
             public void onClick(View v) {
                 Alarm checkedAlarm = listAlarm.get(mapConstraintLayoutAlarm.get(v.getId()));
-                checkedAlarm = MainActivity.checkAlarmValidRingtoneUrl(context, checkedAlarm);
+                MainActivity.validateAlarmRingtoneUrl(context, checkedAlarm);
                 settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
                 fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, settingAlarmFragment).addToBackStack(null).commit();
             }
@@ -101,11 +105,22 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             @Override
             public void onClick(View v) {
                 Alarm checkedAlarm = listAlarm.get(mapConstraintLayoutAlarm.get(v.getId()));
-                checkedAlarm = MainActivity.checkAlarmValidRingtoneUrl(context, checkedAlarm);
+                MainActivity.validateAlarmRingtoneUrl(context, checkedAlarm);
                 settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
                 fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, settingAlarmFragment).addToBackStack(null).commit();
             }
         });
+        switch(alarm.getChallengeType()){
+            case DEFAULT:
+                buttonAlarmType.setImageDrawable(context.getDrawable(R.drawable.ic_alarm));
+                break;
+            case MATH:
+                buttonAlarmType.setImageDrawable(context.getDrawable(R.drawable.ic_math_36));
+                break;
+            case SHAKE:
+                buttonAlarmType.setImageDrawable(context.getDrawable(R.drawable.icons8_shake_phone_60));
+                break;
+        }
     }
 
     class AlarmViewHolder extends RecyclerView.ViewHolder {

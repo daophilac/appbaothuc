@@ -15,4 +15,22 @@
     <style name="BlueTheme" parent="Theme.AppCompat.Light">
         <item name="android:colorControlActivated">#008FFF</item>
     </style>
+
+    <style name="NumberStyle">
+        <item name="android:layout_margin">1dp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">#000000</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+    <style name="btnOK">
+        <item name="android:layout_margin">1dp</item>
+        <item name="android:background">#5CC4F3</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#EE2C1E</item>
+    </style>
+    <style name="TextView">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:gravity">center|center_vertical</item>
+    </style>
 </resources>

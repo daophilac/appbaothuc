@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -23,6 +22,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.example.appbaothuc.MainActivity;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.Music;
 import com.example.appbaothuc.R;
@@ -30,7 +30,6 @@ import com.example.appbaothuc.UpcomingAlarmFragment;
 import com.example.appbaothuc.models.MathDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -75,7 +74,6 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     private MusicPickerFragment musicPickerFragment;
 
     private MediaPlayer mediaPlayer;
-    private MediaPlayer mediaPlayer1;
 
     public void configure(UpcomingAlarmFragment upcomingAlarmFragment, Alarm alarm){
         this.upcomingAlarmFragment = upcomingAlarmFragment;
@@ -229,22 +227,45 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                 showRepeatDialog();
             }
         });
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                alarm.setVolume(progress);
+                if(mediaPlayer.isPlaying()){
+                    mediaPlayer.setVolume(progress/1000f, progress/1000f);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         btnPlayMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mediaPlayer1 == null)
-                    mediaPlayer1 = MediaPlayer.create(context, Uri.fromFile(new File(alarm.getRingtone().getUrl())));
-                if(!mediaPlayer1.isPlaying()){
-                    btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_pause));
-                    mediaPlayer1.setLooping(true);
-                    mediaPlayer1.start();
+                if(!MainActivity.validateAlarmRingtoneUrl(context, alarm)){
+                    textViewRingtone.setText(alarm.getRingtone().getName());
+                }
+                if(!mediaPlayer.isPlaying()){
+                    mediaPlayer = MediaPlayer.create(context, Uri.parse(alarm.getRingtone().getUrl()));
+                    btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_pause_black_24dp));
+                    mediaPlayer.setLooping(true);
+                    mediaPlayer.setVolume(seekBar.getProgress()/1000f, seekBar.getProgress()/1000f);
+                    mediaPlayer.start();
                 }
                 else{
-                    btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_play));
-                        mediaPlayer1.stop();
+                    btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_play_arrow_24dp));
+                    mediaPlayer.stop();
                 }
             }
         });
+
 
         switch(alarm.getChallengeType()){
             case DEFAULT:
@@ -261,6 +282,16 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                 break;
         }
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mediaPlayer.isPlaying()){
+            btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_play_arrow_24dp));
+            mediaPlayer.stop();
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -277,7 +308,9 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         textViewRepeat.setText(alarm.getDescribeRepeatDay());
         seekBar.setProgress(alarm.getVolume());
         aSwitch.setChecked(alarm.isVibrate());
-        textViewLabel.setText(alarm.getLabel());
+        if(!alarm.getLabel().equals("null")){
+            textViewLabel.setText(alarm.getLabel());
+        }
 
         String alarmTextAgain;
         if(alarm.getSnoozeTime() == 0) alarmTextAgain = "Tắt.";

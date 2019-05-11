@@ -54,7 +54,8 @@ public class NotificationService extends Service {
             alarmManager.cancel(pendingIntent);
         }
         else{
-            Alarm alarm = MainActivity.checkAlarmValidRingtoneUrl(this, databaseHandler.getTheNearestAlarm());
+            Alarm alarm = databaseHandler.getTheNearestAlarm();
+            MainActivity.validateAlarmRingtoneUrl(this, alarm);
             Calendar timeNow = Calendar.getInstance();
             Calendar timeFuture = Calendar.getInstance();
             Calendar timeDelta = Calendar.getInstance();

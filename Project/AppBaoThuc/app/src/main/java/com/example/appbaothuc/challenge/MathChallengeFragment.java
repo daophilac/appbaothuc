@@ -47,7 +47,6 @@ public class MathChallengeFragment extends Fragment implements ChallengeActivity
     public void setMathDetail(MathDetail mathDetail) {
         this.mathDetail = mathDetail;
         this.mathDifficulty = mathDetail.getDifficulty();
-
     }
 
     @Override

@@ -127,32 +127,6 @@ public class MainActivity extends AppCompatActivity {
                 editText_Result.setText(sUserResult);
             }
         });
-
-
-//                buttonConfirm.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                int iUserResult=Integer.parseInt(editText_Result.getText().toString());
-//                if(iUserResult==Integer.parseInt(sSysResult)){
-//
-//
-//                        buttonConfirm.setEnabled(false);
-//                        textView_Question.setText("Done!");
-//                        textView_Question.setTextColor(Color.GREEN);
-//                        editText_Result.setText("");
-//
-//
-//                }
-//                else{
-//
-//                    textView_Question.setText("!");
-//                    textView_Question.setTextColor(Color.RED);
-//                    editText_Result.setText("");
-//                }
-//                }
-//        });
-        //generateCalculation();
-
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -200,10 +174,6 @@ public class MainActivity extends AppCompatActivity {
 
             String sCaculation= String.valueOf(a) + " x " +String.valueOf(b)+" + "+String.valueOf(c);
             int iResult=a*b+c;
-
-            //sSysResult=(String.valueOf(iResult));
-
-            //textView_Question.setText(sCaculation);
             listCaculate.add(sCaculation);
             listResult.add(iResult);
         }
