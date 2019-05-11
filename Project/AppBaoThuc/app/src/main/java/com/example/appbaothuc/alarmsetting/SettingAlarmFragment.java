@@ -2,6 +2,7 @@ package com.example.appbaothuc.alarmsetting;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -28,6 +30,7 @@ import com.example.appbaothuc.UpcomingAlarmFragment;
 import com.example.appbaothuc.models.MathDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -72,6 +75,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     private MusicPickerFragment musicPickerFragment;
 
     private MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer1;
 
     public void configure(UpcomingAlarmFragment upcomingAlarmFragment, Alarm alarm){
         this.upcomingAlarmFragment = upcomingAlarmFragment;
@@ -126,7 +130,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         linearLayoutAgain = view.findViewById(R.id.linearLayoutAgain);
         linearLayoutLabel = view.findViewById(R.id.linearLayoutLabel);
 
-        textViewTimeLeft = view.findViewById(R.id.textViewTimeLeft);
+        //textViewTimeLeft = view.findViewById(R.id.textViewTimeLeft);
         textViewPlus10M = view.findViewById(R.id.textViewPlus10M);
         textViewMinus10M = view.findViewById(R.id.textViewMinus10M);
         textViewPlus1H = view.findViewById(R.id.textViewPlus1H);
@@ -228,7 +232,17 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         btnPlayMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ///playMusic();
+                if(mediaPlayer1 == null)
+                    mediaPlayer1 = MediaPlayer.create(context, Uri.fromFile(new File(alarm.getRingtone().getUrl())));
+                if(!mediaPlayer1.isPlaying()){
+                    btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_pause));
+                    mediaPlayer1.setLooping(true);
+                    mediaPlayer1.start();
+                }
+                else{
+                    btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_play));
+                        mediaPlayer1.stop();
+                }
             }
         });
 
