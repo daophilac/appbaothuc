@@ -27,18 +27,11 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
     private Alarm alarm;
     private ChallengeActivityListener challengeActivityListener;
     private ActivityFromDeath activityFromDeath;
-    private static PowerManager powerManager;
-    private static PowerManager.WakeLock wakeLock;
     private static Thread threadTimeout;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challenge);
-        if(powerManager == null){
-            powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getPackageName()+":wakelock");
-            wakeLock.acquire(autoDismissAfter * 60000);
-        }
         this.activityFromDeath = new ActivityFromDeath(this);
         this.activityFromDeath.start();
     }
@@ -125,9 +118,6 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
     @Override
     public void onFinishChallenge() {
         this.activityFromDeath.stop();
-        powerManager = null;
-        wakeLock.release();
-        wakeLock = null;
         threadTimeout = null;
 
         finish();
