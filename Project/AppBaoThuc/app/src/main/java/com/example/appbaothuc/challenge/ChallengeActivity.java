@@ -1,11 +1,14 @@
 package com.example.appbaothuc.challenge;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 
 import com.example.appbaothuc.MainActivity;
 import com.example.appbaothuc.R;
@@ -26,17 +29,25 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
     private Alarm alarm;
     private ChallengeActivityListener challengeActivityListener;
     private ActivityFromDeath activityFromDeath;
+    private static PowerManager powerManager;
+    private static PowerManager.WakeLock wakeLock;
     private static Thread threadTimeout;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challenge);
+        if(powerManager == null){
+            powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getPackageName()+":wakelock");
+            wakeLock.acquire(autoDismissAfter * 60000);
+        }
         this.activityFromDeath = new ActivityFromDeath(this);
         this.activityFromDeath.start();
     }
     @Override
     protected void onResume() {
         super.onResume();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         this.activityFromDeath.sendOnResumeSignal();
         if(threadTimeout == null){
             threadTimeout = new Thread(new Runnable() {
@@ -115,7 +126,11 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
     @Override
     public void onFinishChallenge() {
         this.activityFromDeath.stop();
+        powerManager = null;
+        wakeLock.release();
+        wakeLock = null;
         threadTimeout = null;
+
         finish();
         Intent intent = new Intent(this, MusicPlayerService.class);
         intent.putExtra("command", STOP);
