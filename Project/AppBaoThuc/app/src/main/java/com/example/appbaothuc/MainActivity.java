@@ -96,15 +96,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static Alarm checkAlarmValidRingtoneUrl(Context context, Alarm alarm){
+    public static boolean validateAlarmRingtoneUrl(Context context, Alarm alarm){
         DatabaseHandler databaseHandler = new DatabaseHandler(context);
         File file = new File(alarm.getRingtone().getUrl());
         if (!file.exists()){
             alarm.setRingtone(new Music(Music.defaultRingtoneUrl, Music.defaultRingtoneName));
             databaseHandler.updateAlarmSetDefaultRingtone(alarm.getIdAlarm());
+            return false;
         }
         databaseHandler.close();
-        return alarm;
+        return true;
     }
 
     @Override

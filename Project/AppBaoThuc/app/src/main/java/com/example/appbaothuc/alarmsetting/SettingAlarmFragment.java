@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -31,7 +30,6 @@ import com.example.appbaothuc.UpcomingAlarmFragment;
 import com.example.appbaothuc.models.MathDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -251,13 +249,14 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         btnPlayMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                alarm = MainActivity.checkAlarmValidRingtoneUrl(context, alarm);
-                textViewRingtone.setText(alarm.getRingtone().getName());
+                if(!MainActivity.validateAlarmRingtoneUrl(context, alarm)){
+                    textViewRingtone.setText(alarm.getRingtone().getName());
+                }
                 if(!mediaPlayer.isPlaying()){
                     mediaPlayer = MediaPlayer.create(context, Uri.parse(alarm.getRingtone().getUrl()));
                     btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_pause_black_24dp));
                     mediaPlayer.setLooping(true);
-                    mediaPlayer.setVolume((float)seekBar.getProgress()/1000, (float)seekBar.getProgress()/1000);
+                    mediaPlayer.setVolume(seekBar.getProgress()/1000f, seekBar.getProgress()/1000f);
                     mediaPlayer.start();
                 }
                 else{
