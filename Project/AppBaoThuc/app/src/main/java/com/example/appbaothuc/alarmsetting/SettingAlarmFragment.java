@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.appbaothuc.MainActivity;
+import com.example.appbaothuc.appsetting.AppSettingFragment;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.Music;
 import com.example.appbaothuc.R;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.example.appbaothuc.appsetting.AppSettingFragment.HOUR_MODE_24;
 import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.DEFAULT;
 import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.MATH;
 import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.SHAKE;
@@ -143,7 +145,12 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         seekBar = view.findViewById(R.id.seekBar);
         aSwitch = view.findViewById(R.id.aSwitch);
         timePicker = view.findViewById(R.id.timePicker);
-        timePicker.setIs24HourView(true);
+        if(AppSettingFragment.hourMode == HOUR_MODE_24){
+            timePicker.setIs24HourView(true);
+        }
+        else{
+            timePicker.setIs24HourView(false);
+        }
 
 
         btnOk.setOnClickListener(new View.OnClickListener() {
