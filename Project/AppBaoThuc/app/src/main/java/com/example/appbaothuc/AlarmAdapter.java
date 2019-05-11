@@ -30,10 +30,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     private Context context;
     private UpcomingAlarmFragment upcomingAlarmFragment;
     private List<Alarm> listAlarm;
-
-    //private SparseIntArray mapConstraintLayoutAlarm;
-    //private SparseIntArray mapButtonAlarm;
-
     private SettingAlarmFragment settingAlarmFragment;
     private FragmentManager fragmentManager;
     private HashMap<ConstraintLayout, Alarm> mapViewAlarm;
@@ -41,10 +37,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         this.context = context;
         this.upcomingAlarmFragment = upcomingAlarmFragment;
         this.listAlarm = listAlarm;
-
-//        this.mapConstraintLayoutAlarm = new SparseIntArray();
-//        this.mapButtonAlarm = new SparseIntArray();
-
         this.settingAlarmFragment = new SettingAlarmFragment();
         this.fragmentManager = ((FragmentActivity)context).getSupportFragmentManager();
         this.mapViewAlarm = new HashMap<>();
@@ -65,8 +57,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
     @Override
     public void onBindViewHolder(@NonNull final AlarmViewHolder alarmViewHolder, int i) {
-//        mapConstraintLayoutAlarm.put(alarmViewHolder.constraintLayoutParent.getId(), i);
-//        mapButtonAlarm.put(alarmViewHolder.buttonAlarmType.getId(), i);
         final Alarm alarm = listAlarm.get(i);
         final ConstraintLayout constraintLayoutParent = alarmViewHolder.constraintLayoutParent;
         final CheckBox checkBoxEnable = alarmViewHolder.checkBoxEnable;

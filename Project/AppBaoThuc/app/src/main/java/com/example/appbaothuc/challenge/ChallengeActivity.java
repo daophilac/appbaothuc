@@ -8,14 +8,12 @@ import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.WindowManager;
 
 import com.example.appbaothuc.MainActivity;
 import com.example.appbaothuc.R;
-import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.interfaces.ChallengeActivityListener;
 import com.example.appbaothuc.interfaces.ChallengeDialogListener;
-import com.example.appbaothuc.services.AlarmMusicPlayer;
+import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.services.MusicPlayerService;
 import com.peanut.androidlib.activitymanager.ActivityFromDeath;
 
@@ -47,7 +45,6 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
     @Override
     protected void onResume() {
         super.onResume();
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         this.activityFromDeath.sendOnResumeSignal();
         if(threadTimeout == null){
             threadTimeout = new Thread(new Runnable() {
@@ -66,6 +63,7 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
             threadTimeout.start();
         }
     }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -119,6 +117,7 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
             }
         }
     }
+
     @Override
     public void onChallengeActivated(ChallengeActivityListener challengeActivityListener) {
         this.challengeActivityListener = challengeActivityListener;
