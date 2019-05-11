@@ -308,7 +308,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         textViewRepeat.setText(alarm.getDescribeRepeatDay());
         seekBar.setProgress(alarm.getVolume());
         aSwitch.setChecked(alarm.isVibrate());
-        if(!alarm.getLabel().equals("null")){
+        if(alarm.getLabel() != null && !alarm.getLabel().equals("null")){
             textViewLabel.setText(alarm.getLabel());
         }
 
