@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.quanlydonhang.DatabaseHandler;
@@ -32,7 +33,8 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
 
     private ImageButton imageButtonCloseDDH;
     private Button btnEdit, btnInsert, btnClearText, btnFindBySoDDH, btnReLoadDDH;
-    private EditText editTextSoDDH, editTextNgayDH, editTextSoNgay, editTextTinhTrang;
+    private EditText editTextSoDDH, editTextSoNgay, editTextTinhTrang;
+    private TextView textViewNgayDH;
     private ListView listViewDDH;
     private ArrayList<DonDH> data;
     private DonDHAdapter adapter;
@@ -54,7 +56,7 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
     void setControl(){
         editTextSoDDH = findViewById(R.id.editTextSoDDH);
         //editTextMaKH = findViewById(R.id.editTextMaKH);
-        editTextNgayDH = findViewById(R.id.editTextNgayDH);
+        textViewNgayDH = findViewById(R.id.textViewNgayDH);
         editTextSoNgay = findViewById(R.id.editTextSoNgay);
         editTextTinhTrang = findViewById(R.id.editTextTinhTrang);
         btnEdit = findViewById(R.id.btnEdit);
@@ -82,7 +84,7 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
 
         };
 
-        editTextNgayDH.setOnClickListener(new View.OnClickListener() {
+        textViewNgayDH.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(DonDHActivity.this, date, myCalendar
@@ -108,7 +110,7 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
 
     private void updateLabel() {
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        editTextNgayDH.setText(sdf.format(myCalendar.getTime()));
+        textViewNgayDH.setText(sdf.format(myCalendar.getTime()));
     }
     @Override
     public void onFinishDDHHDialog(int input){
@@ -123,7 +125,7 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
             editTextSoDDH.setEnabled(false);
             int spinnerPosition = arr.indexOf(donDH.getMaKH());
             spinMaKH.setSelection(spinnerPosition);
-            editTextNgayDH.setText(donDH.getStringNgayDH());
+            textViewNgayDH.setText(donDH.getStringNgayDH());
             editTextSoNgay.setText(donDH.getSoNgay()+"");
             editTextTinhTrang.setText(donDH.getTinhTrang());
             btnInsert.setVisibility(View.GONE);
@@ -145,7 +147,7 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
                     editTextSoDDH.setText("");
                 }
                 //editTextMaKH.setText("");
-                editTextNgayDH.setText("");
+                textViewNgayDH.setText("");
                 editTextSoNgay.setText("");
                 editTextTinhTrang.setText("");
             }
@@ -236,10 +238,10 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
             spinMaKH.requestFocus();
             return false;
         }
-        if(TextUtils.isEmpty(editTextNgayDH.getText().toString())){
+        if(TextUtils.isEmpty(textViewNgayDH.getText().toString())){
             Toast.makeText(DonDHActivity.this, "Chưa chọn Ngày Đặt Hàng!",
                     Toast.LENGTH_SHORT).show();
-            editTextNgayDH.requestFocus();
+            textViewNgayDH.requestFocus();
             return false;
         }
         if(TextUtils.isEmpty(editTextSoNgay.getText().toString())){
@@ -257,7 +259,7 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
         if(!Calendar.getInstance().getTime().after(myCalendar.getTime())){
             Toast.makeText(DonDHActivity.this, "Ngày đặt hàng không được lớn hơn ngày hiện tại!",
                     Toast.LENGTH_SHORT).show();
-            editTextNgayDH.requestFocus();
+            textViewNgayDH.requestFocus();
             return false;
         }
         return true;
@@ -269,7 +271,7 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
         donDH.setSoDH(Integer.parseInt(editTextSoDDH.getText().toString()));
         donDH.setMaKH(spinMaKH.getSelectedItem().toString());
 
-        donDH.setNgayDH(editTextNgayDH.getText().toString());
+        donDH.setNgayDH(textViewNgayDH.getText().toString());
         donDH.setSoNgay(Integer.parseInt(editTextSoNgay.getText().toString()));
         donDH.setTinhTrang(editTextTinhTrang.getText().toString());
         db.saveDonDHs(donDH);
@@ -281,7 +283,7 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
         donDH.setSoDH(Integer.parseInt(editTextSoDDH.getText().toString()));
         donDH.setMaKH(spinMaKH.getSelectedItem().toString());
 
-        donDH.setNgayDH(editTextNgayDH.getText().toString());
+        donDH.setNgayDH(textViewNgayDH.getText().toString());
         donDH.setSoNgay(Integer.parseInt(editTextSoNgay.getText().toString()));
         donDH.setTinhTrang(editTextTinhTrang.getText().toString());
         db.updateDonDH(donDH);
