@@ -211,6 +211,10 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         linearLayoutRingTone.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                if(mediaPlayer.isPlaying()){
+                    mediaPlayer.stop();
+                    btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_play_arrow_24dp));
+                }
                 fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, musicPickerFragment).addToBackStack(null).commit();
             }
         });
