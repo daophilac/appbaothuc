@@ -157,14 +157,14 @@ public class MathConfigurationFragment extends Fragment {
         this.buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction().remove(MathConfigurationFragment.this).commit();
+                getFragmentManager().popBackStack();
             }
         });
         this.buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onMathConfigurationSetup(mathDetail);
-                getFragmentManager().beginTransaction().remove(MathConfigurationFragment.this).commit();
+                getFragmentManager().popBackStack();
             }
         });
         return view;

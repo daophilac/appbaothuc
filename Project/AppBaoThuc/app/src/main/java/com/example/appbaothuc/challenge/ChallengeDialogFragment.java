@@ -122,12 +122,14 @@ public class ChallengeDialogFragment extends DialogFragment implements GiveUpDia
         if(alarm.getChallengeType() == DEFAULT){
             buttonGiveUp.setVisibility(View.INVISIBLE);
         }
-        buttonGiveUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                giveUpDialogFragment.show(fragmentManager, null);
-            }
-        });
+        else{
+            buttonGiveUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    giveUpDialogFragment.show(fragmentManager, null);
+                }
+            });
+        }
         getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
@@ -155,6 +157,7 @@ public class ChallengeDialogFragment extends DialogFragment implements GiveUpDia
                 break;
             default:
                 defaultChallengeFragment = new DefaultChallengeFragment();
+                challengeDialogListener.onChallengeActivated(defaultChallengeFragment);
                 fragmentManager.beginTransaction().replace(R.id.challenge_fragment_container, defaultChallengeFragment).commit();
                 break;
         }

@@ -143,7 +143,7 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
 //                linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.colortext2));
 //                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
                 mathConfigurationFragment.configure(TypeFragment.this, alarm);
-                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, mathConfigurationFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, mathConfigurationFragment).addToBackStack(null).commit();
                 //challengeType = 1;
             }
         });
@@ -157,7 +157,7 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
 //                linearLayoutMath.setBackgroundColor(getResources().getColor(R.color.colortext2));
 //                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
                 shakeConfigurationFragment.configure(TypeFragment.this, alarm);
-                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, shakeConfigurationFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, shakeConfigurationFragment).addToBackStack(null).commit();
             }
         });
 
@@ -197,6 +197,7 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
                 linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
                 break;
         }
+        currentChallengeType = newChallenge;
     }
 
 
