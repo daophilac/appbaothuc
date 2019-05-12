@@ -26,6 +26,7 @@ import com.example.appbaothuc.listeners.ChallengeDialogListener;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.services.MusicPlayerService;
 
+import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.DEFAULT;
 import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.MATH;
 import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.SHAKE;
 import static com.example.appbaothuc.services.MusicPlayerService.AlarmMusicPlayerCommand.MUTE_A_LITTLE;
@@ -118,6 +119,9 @@ public class ChallengeDialogFragment extends DialogFragment implements GiveUpDia
                 }
             }
         });
+        if(alarm.getChallengeType() == DEFAULT){
+            buttonGiveUp.setVisibility(View.INVISIBLE);
+        }
         buttonGiveUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
