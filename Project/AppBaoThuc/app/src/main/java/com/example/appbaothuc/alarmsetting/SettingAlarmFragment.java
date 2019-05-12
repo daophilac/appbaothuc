@@ -257,6 +257,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
             }
         });
+
         btnPlayMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -267,7 +268,8 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                     mediaPlayer = MediaPlayer.create(context, Uri.parse(alarm.getRingtone().getUrl()));
                     btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_pause_black_24dp));
                     mediaPlayer.setLooping(true);
-                    mediaPlayer.setVolume(seekBar.getProgress()/1000f, seekBar.getProgress()/1000f);
+                    mediaPlayer.setVolume(seekBar.getProgress()/1000f,
+                            seekBar.getProgress()/1000f);
                     mediaPlayer.start();
                 }
                 else{
@@ -495,9 +497,6 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         }
     }
 
-
-
-
     private void addAlarm(){
         switch(currentChallengeType){
             case DEFAULT:
@@ -525,7 +524,6 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                 break;
         }
     }
-
 
     public void setAlarmRingtone(Music music) {
         this.alarm.setRingtone(music);
