@@ -70,6 +70,7 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
         HashMap<String, Bundle> result = new HashMap<>();
         result.put("bundleActivity", bundleActivity);
         result.put("bundleChallenge", bundleChallenge);
+        String a = "/sdcard";
         return result;
     }
     @Override
