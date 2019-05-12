@@ -132,8 +132,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             textViewMinute = itemView.findViewById(R.id.text_view_minute);
             textViewDescribeRepeatDay = itemView.findViewById(R.id.text_view_describe_repeat_day);
             buttonAlarmType = itemView.findViewById(R.id.button_alarm_type);
-            //constraintLayoutParent.setId(View.generateViewId());
-            //buttonAlarmType.setId(View.generateViewId());
         }
     }
 }

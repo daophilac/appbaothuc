@@ -1,18 +1,17 @@
 package com.example.appbaothuc.challenge;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.appbaothuc.MainActivity;
 import com.example.appbaothuc.R;
-import com.example.appbaothuc.interfaces.ChallengeActivityListener;
-import com.example.appbaothuc.interfaces.ChallengeDialogListener;
+import com.example.appbaothuc.listeners.ChallengeActivityListener;
+import com.example.appbaothuc.listeners.ChallengeDialogListener;
+import com.example.appbaothuc.listeners.OnSaveChallengeStateListener;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.services.MusicPlayerService;
 import com.peanut.androidlib.activitymanager.ActivityFromDeath;
@@ -25,7 +24,7 @@ import static com.example.appbaothuc.services.MusicPlayerService.AlarmMusicPlaye
 
 public class ChallengeActivity extends AppCompatActivity implements ChallengeActivityListener, ChallengeDialogListener, ActivityFromDeath.ActivityFromDeathListener {
     private Alarm alarm;
-    private ChallengeActivityListener challengeActivityListener;
+    private OnSaveChallengeStateListener onSaveChallengeStateListener;
     private ActivityFromDeath activityFromDeath;
     private static Thread threadTimeout;
     @Override
@@ -67,7 +66,7 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
         Bundle bundleActivity = new Bundle();
         byte[] byteAlarm = Alarm.toByteArray(alarm);
         bundleActivity.putByteArray("byteAlarm", byteAlarm);
-        Bundle bundleChallenge = challengeActivityListener.onGetSavedState();
+        Bundle bundleChallenge = onSaveChallengeStateListener.onSaveChallengeState();
         HashMap<String, Bundle> result = new HashMap<>();
         result.put("bundleActivity", bundleActivity);
         result.put("bundleChallenge", bundleChallenge);
@@ -112,10 +111,6 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
     }
 
     @Override
-    public void onChallengeActivated(ChallengeActivityListener challengeActivityListener) {
-        this.challengeActivityListener = challengeActivityListener;
-    }
-    @Override
     public void onFinishChallenge() {
         this.activityFromDeath.stop();
         threadTimeout = null;
@@ -132,14 +127,11 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
         }
         MainActivity.restartAlarmService(this);
     }
+
     @Override
-    public Bundle onGetSavedState() {
-        return null;
+    public void onChallengeActivated(OnSaveChallengeStateListener onSaveChallengeStateListener) {
+        this.onSaveChallengeStateListener = onSaveChallengeStateListener;
     }
-
-
-
-
 
     public static final class ChallengeType{
         public static final int DEFAULT = 1;

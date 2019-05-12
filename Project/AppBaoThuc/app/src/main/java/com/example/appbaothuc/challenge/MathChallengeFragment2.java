@@ -1,7 +1,6 @@
 package com.example.appbaothuc.challenge;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,11 +14,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.appbaothuc.R;
-import com.example.appbaothuc.interfaces.ChallengeActivityListener;
+import com.example.appbaothuc.listeners.ChallengeActivityListener;
+import com.example.appbaothuc.listeners.OnSaveChallengeStateListener;
 import com.example.appbaothuc.models.MathDetail;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import static com.example.appbaothuc.models.MathDetail.MathDifficulty.EASY;
@@ -29,7 +28,7 @@ import static com.example.appbaothuc.models.MathDetail.MathDifficulty.INSANE;
 import static com.example.appbaothuc.models.MathDetail.MathDifficulty.MODERATE;
 import static com.example.appbaothuc.models.MathDetail.MathDifficulty.NIGHTMARE;
 
-public class MathChallengeFragment2 extends Fragment implements ChallengeActivityListener {
+public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeStateListener {
     private MathDetail mathDetail;
     private int mathDifficulty;
     private int iNumCaculate;
@@ -45,8 +44,7 @@ public class MathChallengeFragment2 extends Fragment implements ChallengeActivit
     private ImageButton buttonDelete;
     private String sUserResult="";
 
-    private ChallengeActivityListener hostDialogListener;
-    private ChallengeActivityListener mathDialogListener;
+    private ChallengeActivityListener challengeActivityListener;
     public void setMathDetail(MathDetail mathDetail) {
         this.mathDetail = mathDetail;
         this.mathDifficulty = mathDetail.getDifficulty();
@@ -55,8 +53,7 @@ public class MathChallengeFragment2 extends Fragment implements ChallengeActivit
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.hostDialogListener = (ChallengeActivityListener) context;
-        this.mathDialogListener = (ChallengeActivityListener) getParentFragment();
+        this.challengeActivityListener = (ChallengeActivityListener) context;
     }
 
     @Nullable
@@ -160,8 +157,8 @@ public class MathChallengeFragment2 extends Fragment implements ChallengeActivit
                 if(iUserResult==listResult.get(iNumberOfDoneCalculation)){
                     iNumberOfDoneCalculation++;
                     if(iNumberOfDoneCalculation==iNumCaculate){
-                        hostDialogListener.onFinishChallenge();
-                        mathDialogListener.onFinishChallenge();
+                        challengeActivityListener.onFinishChallenge();
+//                        mathDialogListener.onFinishChallenge();
 //                        buttonConfirm.setEnabled(false);
 //                        textView_Question.setText("Done!");
 //                        textView_Question.setTextColor(Color.GREEN);
@@ -271,8 +268,9 @@ public class MathChallengeFragment2 extends Fragment implements ChallengeActivit
         int c = random.nextInt(maxRange);
         return "(" + a + " x " + b + ") + " + c;
     }
+
     @Override
-    public Bundle onGetSavedState() {
+    public Bundle onSaveChallengeState() {
         Bundle mathSavedState = new Bundle();
         mathSavedState.putInt("iNumCaculate", iNumCaculate);
         mathSavedState.putInt("iNumberOfDoneCalculation", iNumberOfDoneCalculation);
@@ -280,9 +278,5 @@ public class MathChallengeFragment2 extends Fragment implements ChallengeActivit
         mathSavedState.putIntegerArrayList("listResult", listResult);
         mathSavedState.putString("editText_ResultString", editText_Result.getText().toString());
         return mathSavedState;
-    }
-    @Override
-    public void onFinishChallenge() {
-
     }
 }
