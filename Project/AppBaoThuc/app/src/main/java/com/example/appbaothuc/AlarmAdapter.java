@@ -97,7 +97,9 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
                 Alarm checkedAlarm = mapViewAlarm.get(constraintLayoutParent);
                 MainActivity.validateAlarmRingtoneUrl(context, checkedAlarm);
                 settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
-                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, settingAlarmFragment).addToBackStack(null).commit();
+                fragmentManager.beginTransaction()
+                        .add(R.id.full_screen_fragment_container, settingAlarmFragment)
+                        .addToBackStack(null).commit();
             }
         });
         buttonAlarmType.setOnClickListener(new View.OnClickListener() {

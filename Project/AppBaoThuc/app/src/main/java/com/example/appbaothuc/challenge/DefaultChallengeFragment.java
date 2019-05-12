@@ -14,7 +14,7 @@ import com.example.appbaothuc.R;
 import com.example.appbaothuc.listeners.ChallengeActivityListener;
 import com.example.appbaothuc.listeners.OnSaveChallengeStateListener;
 
-public class DefaultChallengeFragment extends Fragment{
+public class DefaultChallengeFragment extends Fragment implements OnSaveChallengeStateListener{
     private Button buttonDismiss;
     private ChallengeActivityListener challengeActivityListener;
     @Override
@@ -35,5 +35,10 @@ public class DefaultChallengeFragment extends Fragment{
             }
         });
         return view;
+    }
+
+    @Override
+    public Bundle onSaveChallengeState() {
+        return null;
     }
 }
