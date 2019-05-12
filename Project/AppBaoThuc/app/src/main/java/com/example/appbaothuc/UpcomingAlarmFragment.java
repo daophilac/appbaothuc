@@ -65,8 +65,6 @@ public class UpcomingAlarmFragment extends Fragment {
         return view;
     }
 
-
-
     public void addAlarm(Alarm alarm){
         alarm.setChallengeType(DEFAULT);
         this.databaseHandler.insertAlarm(alarm);
