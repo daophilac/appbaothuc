@@ -1,4 +1,12 @@
-# AppBaoThuc preview 1.0
+# AppBaoThuc preview 1.1
+## Change log 1.1
+### New features:
+  1. Prevent phone's screen from turning off while an alarm is happening.
+### On progress features:
+  1. Prevent user from shutting down his/her phone while an alarm is happening.
+  2. Provide a kind of folder picker which allows the user to choose which folders the app should look for music when choosing ringtones.
+  3. Provide actual using of speaker when headsets are plugged. The current behavior is using a trick to make phone routes its ringtone to outer speaker, so the experience is pretty weird.
+
 ## Change log 1.0
 ### New features:
   There are no new features in this release. But from alpha phase to preview phase is a big change from the system perspective. We were wrapping up everything to provide the acceptable user experience and a stable application. All that are remains are providing any new challenges, and new features that might make better user experiences. So, there are still stuff to do.
