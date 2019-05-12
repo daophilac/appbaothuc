@@ -33,4 +33,7 @@
         <item name="android:textSize">30sp</item>
         <item name="android:gravity">center|center_vertical</item>
     </style>
+    <style name="ToggleSwitchTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">#46bdbf</item>
+    </style>
 </resources>

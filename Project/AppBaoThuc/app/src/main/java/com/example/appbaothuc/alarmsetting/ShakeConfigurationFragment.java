@@ -165,14 +165,14 @@ public class ShakeConfigurationFragment extends Fragment {
         this.buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction().remove(ShakeConfigurationFragment.this).commit();
+                getFragmentManager().popBackStack();
             }
         });
         this.buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onShakeConfigurationSetup(shakeDetail);
-                getFragmentManager().beginTransaction().remove(ShakeConfigurationFragment.this).commit();
+                getFragmentManager().popBackStack();
             }
         });
         return view;
