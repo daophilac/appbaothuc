@@ -67,7 +67,15 @@ public class UpcomingAlarmFragment extends Fragment {
 
 
 
-
+    public void addAlarm(Alarm alarm){
+        alarm.setChallengeType(DEFAULT);
+        this.databaseHandler.insertAlarm(alarm);
+        alarm.setIdAlarm(databaseHandler.getRecentAddedAlarm().getIdAlarm());
+        listAlarm.add(alarm);
+        Collections.sort(listAlarm);
+        alarmAdapter.notifyDataSetChanged();
+        MainActivity.restartAlarmService(getContext());
+    }
     public void addAlarm(Alarm alarm, MathDetail mathDetail){
         alarm.setChallengeType(MATH);
         this.databaseHandler.insertAlarm(alarm);
@@ -88,6 +96,22 @@ public class UpcomingAlarmFragment extends Fragment {
         listAlarm.add(alarm);
         Collections.sort(listAlarm);
         alarmAdapter.notifyDataSetChanged();
+        MainActivity.restartAlarmService(getContext());
+    }
+    public void editAlarm(Alarm alarm){
+        if(alarm.getChallengeType() != DEFAULT){
+            this.databaseHandler.deleteChallengeDetail(alarm.getIdAlarm(), alarm.getChallengeType());
+        }
+        alarm.setChallengeType(DEFAULT);
+        this.databaseHandler.updateAlarm(alarm);
+        for(int i = 0; i < listAlarm.size(); i++){
+            if(listAlarm.get(i).getIdAlarm() == alarm.getIdAlarm()){
+                listAlarm.set(i, alarm);
+                Collections.sort(listAlarm);
+                alarmAdapter.notifyDataSetChanged();
+                break;
+            }
+        }
         MainActivity.restartAlarmService(getContext());
     }
     public void editAlarm(Alarm alarm, MathDetail mathDetail){

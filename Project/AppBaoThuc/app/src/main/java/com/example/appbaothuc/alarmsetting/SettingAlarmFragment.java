@@ -497,6 +497,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     private void addAlarm(){
         switch(currentChallengeType){
             case DEFAULT:
+                upcomingAlarmFragment.addAlarm(alarm);
                 break;
             case MATH:
                 upcomingAlarmFragment.addAlarm(alarm, mathDetail);
@@ -510,6 +511,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     private void editAlarm(){
         switch(currentChallengeType){
             case DEFAULT:
+                upcomingAlarmFragment.editAlarm(alarm);
                 break;
             case MATH:
                 upcomingAlarmFragment.editAlarm(alarm, mathDetail);
@@ -528,6 +530,13 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
     public Alarm getAlarm() {
         return alarm;
+    }
+
+    @Override
+    public void getDefaultChallenge() {
+        this.currentChallengeType = DEFAULT;
+        this.imageViewType.setImageDrawable(context.getDrawable(R.drawable.ic_alarm));
+        this.textViewType.setText("Default");
     }
 
     @Override

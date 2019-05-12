@@ -15,15 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.inputmethod.BaseInputConnection;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.appbaothuc.DatabaseHandler;
 import com.example.appbaothuc.R;
-import com.example.appbaothuc.interfaces.ChallengeActivityListener;
-import com.example.appbaothuc.interfaces.ChallengeDialogListener;
+import com.example.appbaothuc.listeners.ChallengeActivityListener;
+import com.example.appbaothuc.listeners.ChallengeDialogListener;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.services.MusicPlayerService;
 
@@ -33,7 +32,7 @@ import static com.example.appbaothuc.services.MusicPlayerService.AlarmMusicPlaye
 
 
 // TODO: WARNING: This class has some high logical handles
-public class ChallengeDialogFragment extends DialogFragment implements ChallengeActivityListener, GiveUpDialogFragment.OnGiveUpListener {
+public class ChallengeDialogFragment extends DialogFragment implements GiveUpDialogFragment.OnGiveUpListener {
     private boolean debugMode = true; // TODO: remove this when release
     private DatabaseHandler databaseHandler;
     private Alarm alarm;
@@ -47,6 +46,7 @@ public class ChallengeDialogFragment extends DialogFragment implements Challenge
 
     private FragmentManager fragmentManager;
 //    private MathChallengeFragment mathChallengeFragment;
+    private DefaultChallengeFragment defaultChallengeFragment;
     private MathChallengeFragment2 mathChallengeFragment2;
     private ShakeChallengeFragment shakeChallengeFragment;
     private GiveUpDialogFragment giveUpDialogFragment;
@@ -150,6 +150,8 @@ public class ChallengeDialogFragment extends DialogFragment implements Challenge
                 fragmentManager.beginTransaction().replace(R.id.challenge_fragment_container, shakeChallengeFragment).commit();
                 break;
             default:
+                defaultChallengeFragment = new DefaultChallengeFragment();
+                fragmentManager.beginTransaction().replace(R.id.challenge_fragment_container, defaultChallengeFragment).commit();
                 break;
         }
         return view;
@@ -159,12 +161,5 @@ public class ChallengeDialogFragment extends DialogFragment implements Challenge
     public void onGaveUp() {
         ChallengeActivityListener challengeActivityListener = (ChallengeActivityListener) getActivity();
         challengeActivityListener.onFinishChallenge();
-    }
-
-    @Override
-    public void onFinishChallenge() { }
-    @Override
-    public Bundle onGetSavedState() {
-        return null;
     }
 }

@@ -14,7 +14,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.appbaothuc.R;
-import com.example.appbaothuc.interfaces.ChallengeActivityListener;
+import com.example.appbaothuc.listeners.ChallengeActivityListener;
+import com.example.appbaothuc.listeners.OnSaveChallengeStateListener;
 import com.example.appbaothuc.models.MathDetail;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import static com.example.appbaothuc.models.MathDetail.MathDifficulty.INSANE;
 import static com.example.appbaothuc.models.MathDetail.MathDifficulty.MODERATE;
 import static com.example.appbaothuc.models.MathDetail.MathDifficulty.NIGHTMARE;
 
-public class MathChallengeFragment extends Fragment implements ChallengeActivityListener{
+public class MathChallengeFragment extends Fragment implements OnSaveChallengeStateListener {
     private MathDetail mathDetail;
     private int mathDifficulty;
     private int numberOfProblem;
@@ -41,8 +42,7 @@ public class MathChallengeFragment extends Fragment implements ChallengeActivity
     private EditText editTextResult;
     private ImageButton buttonConfirm;
 
-    private ChallengeActivityListener hostDialogListener;
-    private ChallengeActivityListener mathDialogListener;
+    private ChallengeActivityListener challengeActivityListener;
 
     public void setMathDetail(MathDetail mathDetail) {
         this.mathDetail = mathDetail;
@@ -52,8 +52,7 @@ public class MathChallengeFragment extends Fragment implements ChallengeActivity
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.hostDialogListener = (ChallengeActivityListener) context;
-        this.mathDialogListener = (ChallengeActivityListener) getParentFragment();
+        this.challengeActivityListener = (ChallengeActivityListener) context;
     }
 
     @Nullable
@@ -78,8 +77,7 @@ public class MathChallengeFragment extends Fragment implements ChallengeActivity
                     numberOfDoneProblem++;
                     if(numberOfDoneProblem == numberOfProblem){
                         buttonConfirm.setEnabled(false);
-                        hostDialogListener.onFinishChallenge();
-                        mathDialogListener.onFinishChallenge();
+                        challengeActivityListener.onFinishChallenge();
                         textViewQuestion.setTextColor(Color.GREEN);
                         textViewQuestion.setText("DONE");
                         editTextResult.setText("");
@@ -177,7 +175,7 @@ public class MathChallengeFragment extends Fragment implements ChallengeActivity
     }
 
     @Override
-    public Bundle onGetSavedState() {
+    public Bundle onSaveChallengeState() {
         Bundle mathSavedState = new Bundle();
         mathSavedState.putInt("numberOfProblem", numberOfProblem);
         mathSavedState.putInt("numberOfDoneProblem", numberOfDoneProblem);
@@ -185,9 +183,5 @@ public class MathChallengeFragment extends Fragment implements ChallengeActivity
         mathSavedState.putIntegerArrayList("listResult", listResult);
         mathSavedState.putString("editTextResultString", editTextResult.getText().toString());
         return mathSavedState;
-    }
-    @Override
-    public void onFinishChallenge() {
-
     }
 }

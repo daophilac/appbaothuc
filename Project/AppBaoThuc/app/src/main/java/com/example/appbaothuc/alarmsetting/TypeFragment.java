@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.example.appbaothuc.R;
+import com.example.appbaothuc.challenge.ChallengeActivity;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.models.MathDetail;
 import com.example.appbaothuc.models.ShakeDetail;
@@ -129,6 +130,8 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
 //                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
 //                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
 //                linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.colortext2));
+                listener.getDefaultChallenge();
+                updateChallengeLayoutColor(DEFAULT);
             }
         });
         linearLayoutMath.setOnClickListener(new View.OnClickListener() {
@@ -211,6 +214,7 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
     }
 
     public interface TypeFragmentListener{
+        void getDefaultChallenge();
         void getMathChallenge(MathDetail mathDetail);
         void getShakeChallenge(ShakeDetail shakeDetail);
     }
