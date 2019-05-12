@@ -8,14 +8,15 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
-import com.example.appbaothuc.Alarm;
+import com.example.appbaothuc.MainActivity;
+import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.DatabaseHandler;
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.challenge.ChallengeActivity;
@@ -35,6 +36,14 @@ public class NotificationService extends Service {
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_HEADSET_PLUG);
+        registerReceiver(new ActionReceiver(), intentFilter);
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         databaseHandler = new DatabaseHandler(this);
         if(!databaseHandler.checkIfThereIsAnyAlarm()){
@@ -46,6 +55,7 @@ public class NotificationService extends Service {
         }
         else{
             Alarm alarm = databaseHandler.getTheNearestAlarm();
+            MainActivity.validateAlarmRingtoneUrl(this, alarm);
             Calendar timeNow = Calendar.getInstance();
             Calendar timeFuture = Calendar.getInstance();
             Calendar timeDelta = Calendar.getInstance();

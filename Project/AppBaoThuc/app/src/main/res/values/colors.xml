@@ -10,4 +10,7 @@
     <color name="colorBlue">#0208C7</color>
     <color name="xam">#7F7F7F</color>
     <color name="xamDen">#313030</color>
+    <color name="challenge_layout_activate">#0208C7</color>
+    <color name="challenge_layout_deactivate">#A4A2A2</color>
+
 </resources>

@@ -16,30 +16,30 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.appbaothuc.alarmsetting.SettingAlarmFragment;
+import com.example.appbaothuc.models.Alarm;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+
+import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.DEFAULT;
+import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.MATH;
+import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.SHAKE;
 
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
     private Context context;
     private UpcomingAlarmFragment upcomingAlarmFragment;
     private List<Alarm> listAlarm;
-
-    private SparseIntArray mapConstraintLayoutAlarm;
-    private SparseIntArray mapButtonAlarm;
-
     private SettingAlarmFragment settingAlarmFragment;
     private FragmentManager fragmentManager;
+    private HashMap<ConstraintLayout, Alarm> mapViewAlarm;
     public AlarmAdapter(Context context, UpcomingAlarmFragment upcomingAlarmFragment, List<Alarm> listAlarm) {
         this.context = context;
         this.upcomingAlarmFragment = upcomingAlarmFragment;
         this.listAlarm = listAlarm;
-
-        this.mapConstraintLayoutAlarm = new SparseIntArray();
-        this.mapButtonAlarm = new SparseIntArray();
-
-        this.settingAlarmFragment = SettingAlarmFragment.newInstance();
+        this.settingAlarmFragment = new SettingAlarmFragment();
         this.fragmentManager = ((FragmentActivity)context).getSupportFragmentManager();
+        this.mapViewAlarm = new HashMap<>();
     }
 
     @Override
@@ -57,15 +57,14 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
     @Override
     public void onBindViewHolder(@NonNull final AlarmViewHolder alarmViewHolder, int i) {
-        mapConstraintLayoutAlarm.put(alarmViewHolder.constraintLayoutParent.getId(), i);
-        mapButtonAlarm.put(alarmViewHolder.buttonAlarmType.getId(), i);
         final Alarm alarm = listAlarm.get(i);
-        ConstraintLayout constraintLayoutParent = alarmViewHolder.constraintLayoutParent;
+        final ConstraintLayout constraintLayoutParent = alarmViewHolder.constraintLayoutParent;
         final CheckBox checkBoxEnable = alarmViewHolder.checkBoxEnable;
         TextView textViewHour = alarmViewHolder.textViewHour;
         TextView textViewMinute = alarmViewHolder.textViewMinute;
         TextView textViewDescribeRepeatDay = alarmViewHolder.textViewDescribeRepeatDay;
         ImageView buttonAlarmType = alarmViewHolder.buttonAlarmType;
+        mapViewAlarm.put(constraintLayoutParent, alarm);
 
         checkBoxEnable.setChecked(alarm.isEnable());
         textViewHour.setText(String.valueOf(alarm.getHour()));
@@ -90,17 +89,32 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         constraintLayoutParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                settingAlarmFragment.configure(upcomingAlarmFragment, listAlarm.get(mapConstraintLayoutAlarm.get(v.getId())));
-                fragmentManager.beginTransaction().replace(R.id.full_screen_fragment_container, settingAlarmFragment).commit();
+                Alarm checkedAlarm = mapViewAlarm.get(constraintLayoutParent);
+                MainActivity.validateAlarmRingtoneUrl(context, checkedAlarm);
+                settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
+                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, settingAlarmFragment).addToBackStack(null).commit();
             }
         });
         buttonAlarmType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                settingAlarmFragment.configure(upcomingAlarmFragment, listAlarm.get(mapButtonAlarm.get(v.getId())));
-                fragmentManager.beginTransaction().replace(R.id.full_screen_fragment_container, settingAlarmFragment).commit();
+                Alarm checkedAlarm = mapViewAlarm.get(constraintLayoutParent);
+                MainActivity.validateAlarmRingtoneUrl(context, checkedAlarm);
+                settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
+                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, settingAlarmFragment).addToBackStack(null).commit();
             }
         });
+        switch(alarm.getChallengeType()){
+            case DEFAULT:
+                buttonAlarmType.setImageDrawable(context.getDrawable(R.drawable.ic_alarm));
+                break;
+            case MATH:
+                buttonAlarmType.setImageDrawable(context.getDrawable(R.drawable.ic_math_36));
+                break;
+            case SHAKE:
+                buttonAlarmType.setImageDrawable(context.getDrawable(R.drawable.icons8_shake_phone_60));
+                break;
+        }
     }
 
     class AlarmViewHolder extends RecyclerView.ViewHolder {
@@ -118,8 +132,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             textViewMinute = itemView.findViewById(R.id.text_view_minute);
             textViewDescribeRepeatDay = itemView.findViewById(R.id.text_view_describe_repeat_day);
             buttonAlarmType = itemView.findViewById(R.id.button_alarm_type);
-            constraintLayoutParent.setId(View.generateViewId());
-            buttonAlarmType.setId(View.generateViewId());
         }
     }
 }
