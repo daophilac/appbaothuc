@@ -205,13 +205,17 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             @Override
             public void onClick(View view) {
                 typeFragment.configure(SettingAlarmFragment.this, alarm, currentChallengeType);
-                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, typeFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, typeFragment).addToBackStack(null).commit();
             }
         });
         linearLayoutRingTone.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, musicPickerFragment).commit();
+                if(mediaPlayer.isPlaying()){
+                    mediaPlayer.stop();
+                    btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_play_arrow_24dp));
+                }
+                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, musicPickerFragment).addToBackStack(null).commit();
             }
         });
         linearLayoutLabel.setOnClickListener(new View.OnClickListener() {

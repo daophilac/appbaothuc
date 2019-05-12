@@ -1,6 +1,7 @@
 package com.example.appbaothuc.appsetting;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -56,7 +57,6 @@ public class AppSettingFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        initializeSetting(context);
         this.context = context;
         this.muteAlarmInDialogFragment = new MuteAlarmInDialogFragment();
         this.canMuteAlarmForDialogFragment = new CanMuteAlarmForDialogFragment();
@@ -199,8 +199,6 @@ public class AppSettingFragment extends Fragment {
         preventTurnOffPhone = true;
         hourMode = HOUR_MODE_24;
     }
-
-
     public static void loadAppSetting(Context context){
         InternalFileReader internalFileReader = new InternalFileReader(context, fileName);
         if(!internalFileReader.exists(fileName)){
@@ -215,7 +213,7 @@ public class AppSettingFragment extends Fragment {
             hourMode = Integer.parseInt(internalFileReader.readLine());
         }
         listRingtoneDirectory = new ArrayList<>();
-        listRingtoneDirectory.add("/sdcard/music");
-        listRingtoneDirectory.add("/sdcard/download");
+        listRingtoneDirectory.add(Environment.getExternalStorageDirectory().getAbsolutePath());
+//        listRingtoneDirectory.add("/sdcard/download");
     }
 }
