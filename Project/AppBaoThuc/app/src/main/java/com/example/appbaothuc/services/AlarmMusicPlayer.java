@@ -92,6 +92,7 @@ public class AlarmMusicPlayer {
             this.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int) (this.alarmVolumeInPercent * this.maxAudioVolume) , 0);
         }
     }
+
     public void start() {
         initialize();
         this.isRunning = true;

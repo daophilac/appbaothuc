@@ -104,9 +104,9 @@ public class AppSettingFragment extends Fragment {
         textViewMuteAlarmFor = view.findViewById(R.id.text_view_mute_alarm_for);
         textViewCanMuteAlarmFor = view.findViewById(R.id.text_view_can_mute_alarm_for);
         textViewAutoDismissAfter = view.findViewById(R.id.text_view_auto_dismiss_after);
-        btnMute = view.findViewById(R.id.btnMute);
-        btnCanMute = view.findViewById(R.id.btnCanMute);
-        btnDismiss = view.findViewById(R.id.btnDismiss);
+//        btnMute = view.findViewById(R.id.btnMute);
+//        btnCanMute = view.findViewById(R.id.btnCanMute);
+//        btnDismiss = view.findViewById(R.id.btnDismiss);
 
         this.checkBoxGraduallyIncreaseVolume = view.findViewById(R.id.check_box_gradually_increase_volume);
         this.checkBoxPreventTurnOffPhone = view.findViewById(R.id.check_box_prevent_turn_off_phone);
