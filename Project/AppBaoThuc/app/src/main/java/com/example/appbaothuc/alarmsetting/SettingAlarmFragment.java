@@ -535,7 +535,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     @Override
     public void getDefaultChallenge() {
         this.currentChallengeType = DEFAULT;
-        this.imageViewType.setImageDrawable(context.getDrawable(R.drawable.ic_alarm));
+        this.imageViewType.setImageDrawable(context.getDrawable(R.drawable.ic_alarm_60dp));
         this.textViewType.setText("Default");
     }
 

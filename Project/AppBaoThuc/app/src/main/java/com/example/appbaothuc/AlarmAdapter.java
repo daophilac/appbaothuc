@@ -106,7 +106,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         });
         switch(alarm.getChallengeType()){
             case DEFAULT:
-                buttonAlarmType.setImageDrawable(context.getDrawable(R.drawable.ic_alarm));
+                buttonAlarmType.setImageDrawable(context.getDrawable(R.drawable.ic_alarm_60dp));
                 break;
             case MATH:
                 buttonAlarmType.setImageDrawable(context.getDrawable(R.drawable.ic_math_36));
