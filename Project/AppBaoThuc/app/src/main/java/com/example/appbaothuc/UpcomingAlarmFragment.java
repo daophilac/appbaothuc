@@ -59,7 +59,10 @@ public class UpcomingAlarmFragment extends Fragment {
         buttonAddAlarm.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 settingAlarmFragment.configure(UpcomingAlarmFragment.this, null);
-                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, settingAlarmFragment).addToBackStack(null).commit();
+                fragmentManager.beginTransaction()
+                        .add(R.id.full_screen_fragment_container, settingAlarmFragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
         return view;
