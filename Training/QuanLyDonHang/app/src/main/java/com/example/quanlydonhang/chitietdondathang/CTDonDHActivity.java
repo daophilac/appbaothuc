@@ -18,10 +18,12 @@ import android.widget.Toast;
 import com.example.quanlydonhang.DatabaseHandler;
 import com.example.quanlydonhang.R;
 import com.example.quanlydonhang.dondathang.DonDHActivity;
+import com.example.quanlydonhang.dondathang.DonDHDialogFragment;
 
 import java.util.ArrayList;
 
-public class CTDonDHActivity extends AppCompatActivity implements CTDonDHDialogfragment.CTDonDHDialogListener, AdapterView.OnItemLongClickListener {
+public class CTDonDHActivity extends AppCompatActivity implements CTDonDHDialogfragment.CTDonDHDialogListener,
+        AdapterView.OnItemLongClickListener{
 
     private ImageButton imageButtonCloseCTDonDH;
     private Button btnInsertCT, buttonClearTextCT, btnEditCT;
@@ -84,6 +86,7 @@ public class CTDonDHActivity extends AppCompatActivity implements CTDonDHDialogf
         }
         else if(input == 1){
             checkEditInsert = 1;
+            listViewCTDonDH.setEnabled(false);
             int spinnerPosition = arrDonDH.indexOf(ctDonDH.getSODDH().toString());
             spinnerSoDDHCT.setSelection(spinnerPosition);
             spinnerSoDDHCT.setEnabled(false);
@@ -198,7 +201,6 @@ public class CTDonDHActivity extends AppCompatActivity implements CTDonDHDialogf
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
         ctDonDH = data.get(i);
-        listViewCTDonDH.setEnabled(false);
         showCTDonDHDialog();
         return true;
     }
@@ -206,5 +208,10 @@ public class CTDonDHActivity extends AppCompatActivity implements CTDonDHDialogf
         CTDonDHDialogfragment ctDonDHDialogfragment = new CTDonDHDialogfragment();
         ctDonDHDialogfragment.show(getSupportFragmentManager(), "fragment_ct_ddh");
     }
-
+    public void loadDBDDH(){
+        DatabaseHandler db = new DatabaseHandler(this);
+        data.clear();
+        data = db.getCTDDHTheoSoDDH(DonDHActivity.donDH.getSoDH());
+        adapter.notifyDataSetChanged();
+    }
 }

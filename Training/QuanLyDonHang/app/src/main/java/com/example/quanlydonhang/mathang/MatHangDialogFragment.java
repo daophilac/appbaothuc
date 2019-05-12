@@ -16,7 +16,7 @@ import com.example.quanlydonhang.DatabaseHandler;
 import com.example.quanlydonhang.R;
 
 public class MatHangDialogFragment extends DialogFragment {
-    private Button buttonViewCTDDHMH, buttonUpdateMatHang, buttonDeleteMatHang;
+    private Button buttonUpdateMatHang, buttonDeleteMatHang, btnGetTop3;
     private TextView textViewMaMHDialog, textViewTenMHDialog;
 
     public MatHangDialogFragment(){
@@ -30,17 +30,25 @@ public class MatHangDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialogfragment_mat_hang, container);
-        buttonViewCTDDHMH = view.findViewById(R.id.buttonViewCTDDHMH);
         buttonUpdateMatHang = view.findViewById(R.id.buttonUpdateMatHang);
         buttonDeleteMatHang = view.findViewById(R.id.buttonDeleteMatHang);
+        btnGetTop3 = view.findViewById(R.id.btnGetTop3);
         textViewMaMHDialog = view.findViewById(R.id.textViewMaMHDialog);
         textViewTenMHDialog = view.findViewById(R.id.textViewTenMHDialog);
-
 
         textViewMaMHDialog.setText("Mã Mặt Hàng: " + MatHangActivity.matHang.getMAHG());
         textViewTenMHDialog.setText("Tên Mặt Hàng: " + MatHangActivity.matHang.getTENHG());
 
-        listener.onFinishMatHangDialog(0);
+        //listener.onFinishMatHangDialog(0);
+
+        btnGetTop3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onFinishMatHangDialog(2);
+                getDialog().dismiss();
+            }
+        });
+
 
         buttonUpdateMatHang.setOnClickListener(new View.OnClickListener() {
             @Override

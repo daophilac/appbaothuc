@@ -1,10 +1,13 @@
 package com.example.quanlydonhang.dondathang;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,7 +31,7 @@ import java.util.Locale;
 public class DonDHActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener, DonDHDialogFragment.DDHDialogListener {
 
     private ImageButton imageButtonCloseDDH;
-    private Button btnEdit, btnInsert, btnClearText;
+    private Button btnEdit, btnInsert, btnClearText, btnFindBySoDDH, btnReLoadDDH;
     private EditText editTextSoDDH, editTextNgayDH, editTextSoNgay, editTextTinhTrang;
     private ListView listViewDDH;
     private ArrayList<DonDH> data;
@@ -58,6 +61,8 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
         btnInsert = findViewById(R.id.btnInsert);
         btnClearText = findViewById(R.id.buttonClearText);
         imageButtonCloseDDH = findViewById(R.id.imageButtonCloseDDH);
+        btnFindBySoDDH = findViewById(R.id.btnFindBySoDDH);
+        btnReLoadDDH = findViewById(R.id.btnReLoadDDH);
 
         listViewDDH = findViewById(R.id.listViewDDH);
         data = new ArrayList<>();
@@ -123,7 +128,9 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
             editTextTinhTrang.setText(donDH.getTinhTrang());
             btnInsert.setVisibility(View.GONE);
             btnEdit.setVisibility(View.VISIBLE);
-            loadOneDDH();
+            btnFindBySoDDH.setVisibility(View.GONE);
+            btnReLoadDDH.setVisibility(View.GONE);
+            //loadOneDDH();
         }
     }
 
@@ -151,6 +158,8 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
                 updateDB();
                 btnEdit.setVisibility(View.GONE);
                 btnInsert.setVisibility(View.VISIBLE);
+                btnFindBySoDDH.setVisibility(View.VISIBLE);
+                btnReLoadDDH.setVisibility(View.VISIBLE);
                 listViewDDH.setEnabled(true);
                 editTextSoDDH.setEnabled(true);
                 loadDB();
@@ -177,6 +186,41 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
                     editTextSoDDH.requestFocus();
                 }
                 db.close();
+            }
+        });
+        btnReLoadDDH.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadDB();
+            }
+        });
+        btnFindBySoDDH.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText txtUrl = new EditText(DonDHActivity.this);
+                txtUrl.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                new AlertDialog.Builder(DonDHActivity.this)
+                        .setTitle("Nhập Số Đơn Hàng:")
+                        .setView(txtUrl)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                int url = Integer.parseInt(txtUrl.getText().toString());
+                                DatabaseHandler db = new DatabaseHandler(DonDHActivity.this);
+                                if(data!=null) {
+                                    data.clear();
+                                }
+                                db.findBySoDDH(data, url);
+                                if (data.size() == 0) {
+                                    Toast.makeText(getApplication(), "Không tìm thấy đơn đặt hàng nào", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                adapter.notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                            }
+                        }).show();
             }
         });
     }

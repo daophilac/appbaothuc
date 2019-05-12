@@ -3,6 +3,7 @@ package com.example.quanlydonhang.dondathang;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,9 +19,10 @@ import android.widget.Toast;
 
 import com.example.quanlydonhang.DatabaseHandler;
 import com.example.quanlydonhang.R;
+import com.example.quanlydonhang.chitietdondathang.CTDonDHActivity;
 
 public class DonDHDialogFragment extends DialogFragment {
-    private Button buttonViewCTDDH, buttonUpdateDDH, buttonDeleteDDH;
+    private Button buttonUpdateDDH, buttonDeleteDDH;
     private TextView textViewSoDDHDialog, textViewMaKHDialog;
 
     private TextView textViewSoDDHEdit;
@@ -36,7 +38,6 @@ public class DonDHDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialogfragment_don_dh, container);
-        buttonViewCTDDH = view.findViewById(R.id.buttonViewCTDDH);
         buttonUpdateDDH = view.findViewById(R.id.buttonUpdateDDH);
         buttonDeleteDDH = view.findViewById(R.id.buttonDeleteDDH);
         textViewSoDDHDialog = view.findViewById(R.id.textViewSoDDHDialog);
@@ -45,20 +46,13 @@ public class DonDHDialogFragment extends DialogFragment {
         textViewSoDDHDialog.setText("Số Đơn Đặt Hàng: " + DonDHActivity.donDH.getSoDH());
         textViewMaKHDialog.setText("Mã Khách Hàng: " + DonDHActivity.donDH.getMaKH());
 
-        listener.onFinishDDHHDialog(0);
+        //listener.onFinishDDHHDialog(0);
 
         buttonUpdateDDH.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onFinishDDHHDialog(1);
                 getDialog().dismiss();
-            }
-        });
-
-        buttonViewCTDDH.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
 

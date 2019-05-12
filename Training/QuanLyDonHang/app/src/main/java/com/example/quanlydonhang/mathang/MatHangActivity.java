@@ -1,5 +1,7 @@
 package com.example.quanlydonhang.mathang;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -20,7 +23,7 @@ import java.util.ArrayList;
 
 public class MatHangActivity extends AppCompatActivity implements MatHangDialogFragment.MatHangDialogListener, AdapterView.OnItemLongClickListener {
     private ImageButton imageButtonCloseMH;
-    private Button btnInsertMH, buttonClearTextMH, btnEditMH;
+    private Button btnInsertMH, buttonClearTextMH, btnEditMH, btnFindByMaHG, btnReLoadMH;
     private EditText editTextMaMatHang, editTextTenMH, editTextDacDiem, editTextDVT, editTextDonGia;
     private ListView listViewMatHang;
     private ArrayList<MatHang> data;
@@ -33,6 +36,7 @@ public class MatHangActivity extends AppCompatActivity implements MatHangDialogF
         setContentView(R.layout.activity_mat_hang);
         setControl();
         setEvent();
+
     }
     void setControl(){
         editTextMaMatHang = findViewById(R.id.editTextMaMatHang);
@@ -44,18 +48,14 @@ public class MatHangActivity extends AppCompatActivity implements MatHangDialogF
         buttonClearTextMH = findViewById(R.id.buttonClearTextMH);
         btnEditMH = findViewById(R.id.btnEditMH);
         imageButtonCloseMH = findViewById(R.id.imageButtonCloseMH);
+        btnFindByMaHG = findViewById(R.id.btnFindByMaHG);
+        btnReLoadMH = findViewById(R.id.btnReLoadMH);
 
         listViewMatHang = findViewById(R.id.listViewMatHang);
         data = new ArrayList<>();
         adapter = new MatHangAdapter(this, data);
         loadDB();
 
-        imageButtonCloseMH.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     @Override
@@ -66,6 +66,7 @@ public class MatHangActivity extends AppCompatActivity implements MatHangDialogF
         }
         else if(input == 1){
             checkEditInsert = 1;
+            listViewMatHang.setEnabled(false);
             editTextMaMatHang.setText(matHang.getMAHG());
             editTextMaMatHang.setEnabled(false);
             editTextTenMH.setText(matHang.getTENHG());
@@ -74,6 +75,12 @@ public class MatHangActivity extends AppCompatActivity implements MatHangDialogF
             editTextDonGia.setText(matHang.getDONGIA()+"");
             btnInsertMH.setVisibility(View.GONE);
             btnEditMH.setVisibility(View.VISIBLE);
+            btnFindByMaHG.setVisibility(View.GONE);
+            btnReLoadMH.setVisibility(View.GONE);
+        }
+        else if(input == 2){
+            getTop3();
+            listViewMatHang.setEnabled(true);
         }
     }
 
@@ -101,6 +108,8 @@ public class MatHangActivity extends AppCompatActivity implements MatHangDialogF
                 updateDB();
                 btnEditMH.setVisibility(View.GONE);
                 btnInsertMH.setVisibility(View.VISIBLE);
+                btnFindByMaHG.setVisibility(View.VISIBLE);
+                btnReLoadMH.setVisibility(View.VISIBLE);
                 listViewMatHang.setEnabled(true);
                 editTextMaMatHang.setEnabled(true);
                 loadDB();
@@ -124,6 +133,47 @@ public class MatHangActivity extends AppCompatActivity implements MatHangDialogF
                     editTextMaMatHang.requestFocus();
                 }
                 databaseHandler.close();
+            }
+        });
+
+        imageButtonCloseMH.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        btnReLoadMH.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadDB();
+            }
+        });
+        btnFindByMaHG.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText txtUrl = new EditText(MatHangActivity.this);
+                new AlertDialog.Builder(MatHangActivity.this)
+                        .setTitle("Nhập Mã Mặt Hàng:")
+                        .setView(txtUrl)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                String url = txtUrl.getText().toString();
+                                DatabaseHandler db = new DatabaseHandler(MatHangActivity.this);
+                                if(data!=null) {
+                                    data.clear();
+                                }
+                                db.findByMaHG(data, url);
+                                if (data.size() == 0) {
+                                    Toast.makeText(getApplication(), "Không tìm thấy mặt hàng nào", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                adapter.notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                            }
+                        }).show();
             }
         });
     }
@@ -181,10 +231,15 @@ public class MatHangActivity extends AppCompatActivity implements MatHangDialogF
         db.getMatHangs(data);
         adapter.notifyDataSetChanged();
     }
+    public void getTop3(){
+        DatabaseHandler db = new DatabaseHandler(this);
+        data.clear();
+        db.getMatHangBanNhieuNhat(data);
+        adapter.notifyDataSetChanged();
+    }
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
         matHang = data.get(i);
-        listViewMatHang.setEnabled(false);
         showDDHDialog();
         return true;
     }

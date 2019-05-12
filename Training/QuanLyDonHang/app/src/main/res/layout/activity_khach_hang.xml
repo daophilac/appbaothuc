@@ -19,6 +19,14 @@
             android:gravity="center"
             android:orientation="horizontal">
 
+            <ImageButton
+                android:id="@+id/imageButtonCloseKH"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:background="@color/colorPrimaryDark"
+                app:srcCompat="@drawable/ic_chevron_left_black_24dp" />
+
             <TextView
                 android:id="@+id/textViewKH"
                 android:layout_width="wrap_content"
@@ -26,18 +34,12 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="Khách Hàng"
                 android:textColor="@android:color/background_light"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/imageButtonCloseKH"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:background="@color/colorPrimaryDark"
-                app:srcCompat="@drawable/ic_close_black_24dp" />
         </LinearLayout>
 
         <TableLayout
@@ -63,6 +65,9 @@
                     android:ems="10"
                     android:enabled="true"
                     android:inputType="textPersonName"
+                    android:textColorHighlight="#7cff88"
+                    android:maxLines="1"
+                    android:lines="1"
                     android:visibility="visible" />
             </TableRow>
 
@@ -113,6 +118,20 @@
                 android:layout_weight="1"
                 android:text="Edit"
                 android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btnFindKH"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="SEARCH" />
+
+            <Button
+                android:id="@+id/btnLoadKH"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="ReLoad" />
         </LinearLayout>
 
         <TextView

@@ -11,12 +11,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 
-import com.example.appbaothuc.Alarm;
+import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.R;
 
 import java.util.ArrayList;
 
 public class RepeatDialogFragment extends DialogFragment{
+    private Alarm alarm;
     private Button btnOK, btnCancel, btnDays, btnWeekend;
     private CheckBox checkBoxT2, checkBoxT3, checkBoxT4, checkBoxT5, checkBoxT6,
             checkBoxT7, checkBoxCN;
@@ -31,6 +32,7 @@ public class RepeatDialogFragment extends DialogFragment{
 
     private RepeatDialogListener listener;
     public void setListener(SettingAlarmFragment settingAlarmFragment){
+        this.alarm = settingAlarmFragment.getAlarm();
         this.listener = settingAlarmFragment;
     }
 
@@ -52,7 +54,6 @@ public class RepeatDialogFragment extends DialogFragment{
         for(int i = 0; i < 7; i++){
             listDays.add(i, false);
         }
-        Alarm alarm = SettingAlarmFragment.alarm; // Get alarm from database and set checked
         if(alarm.getListRepeatDay().get(0)) {
             listDays.set(0, true);
             checkBoxT2.setChecked(true);

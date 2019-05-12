@@ -11,12 +11,23 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.appbaothuc.R;
+import com.example.appbaothuc.models.Alarm;
+
+import java.util.ArrayList;
+import java.util.Set;
 
 public class LableDialogFragment extends DialogFragment {
+    private SettingAlarmFragment settingAlarmFragment;
+    private Alarm alarm;
     private Button btnOk;
     private Button btnCancel;
     private EditText mEditText;
 
+
+    public void configure(SettingAlarmFragment settingAlarmFragment, Alarm alarm){
+        this.settingAlarmFragment = settingAlarmFragment;
+        this.alarm = alarm;
+    }
 
     public interface LabelDialogListener {
         void onFinishEditDialog(String inputText);
@@ -35,7 +46,7 @@ public class LableDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit_name, container);
         mEditText = view.findViewById(R.id.txt_your_name);
-        mEditText.setText(SettingAlarmFragment.alarm.getLabel());
+        mEditText.setText(alarm.getLabel());
 
         btnOk = view.findViewById(R.id.btnOk);
         btnCancel = view.findViewById(R.id.btnCancel);

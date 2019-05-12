@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,32 +128,6 @@ public class MainActivity extends AppCompatActivity {
                 editText_Result.setText(sUserResult);
             }
         });
-
-
-//                buttonConfirm.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                int iUserResult=Integer.parseInt(editText_Result.getText().toString());
-//                if(iUserResult==Integer.parseInt(sSysResult)){
-//
-//
-//                        buttonConfirm.setEnabled(false);
-//                        textView_Question.setText("Done!");
-//                        textView_Question.setTextColor(Color.GREEN);
-//                        editText_Result.setText("");
-//
-//
-//                }
-//                else{
-//
-//                    textView_Question.setText("!");
-//                    textView_Question.setTextColor(Color.RED);
-//                    editText_Result.setText("");
-//                }
-//                }
-//        });
-        //generateCalculation();
-
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -200,13 +175,19 @@ public class MainActivity extends AppCompatActivity {
 
             String sCaculation= String.valueOf(a) + " x " +String.valueOf(b)+" + "+String.valueOf(c);
             int iResult=a*b+c;
-
-            //sSysResult=(String.valueOf(iResult));
-
-            //textView_Question.setText(sCaculation);
             listCaculate.add(sCaculation);
             listResult.add(iResult);
         }
         getNextCaculate();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+        return super.onKeyLongPress(keyCode, event);
     }
 }

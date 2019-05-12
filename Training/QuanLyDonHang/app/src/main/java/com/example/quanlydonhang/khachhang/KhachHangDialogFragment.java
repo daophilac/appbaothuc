@@ -39,7 +39,7 @@ public class KhachHangDialogFragment extends DialogFragment {
         textViewMaHKDialog.setText("Mã Khách Hàng: " + KhachHangActivity.khachHang.getMaKH());
         textViewTenKHDialog.setText("Tên Khách Hàng: " + KhachHangActivity.khachHang.getTenKH());
 
-        listener.onFinishKHDialog(0);
+        //listener.onFinishKHDialog(0);
 
         buttonUpdateKH.setOnClickListener(new View.OnClickListener() {
             @Override
