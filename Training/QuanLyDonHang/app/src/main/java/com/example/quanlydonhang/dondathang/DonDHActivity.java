@@ -75,7 +75,6 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                // TODO Auto-generated method stub
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -99,6 +98,7 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
                 finish();
             }
         });
+
         databaseHandler.getMaKH(arr);
         spinMaKH = findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arr);
@@ -114,11 +114,11 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
     }
     @Override
     public void onFinishDDHHDialog(int input){
-        if(input == 0){
+        if(input == 0){ // Dialog đóng
             loadDB();
             listViewDDH.setEnabled(true);
         }
-        else if(input == 1){
+        else if(input == 1){ // Dialog đóng nhưng chọn chế độ sửa
             listViewDDH.setEnabled(false);
             checkEditInsert = 1;
             editTextSoDDH.setText(donDH.getSoDH()+"");
@@ -199,19 +199,19 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
         btnFindBySoDDH.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final EditText txtUrl = new EditText(DonDHActivity.this);
-                txtUrl.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                final EditText txtSoDDH = new EditText(DonDHActivity.this);
+                txtSoDDH.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 new AlertDialog.Builder(DonDHActivity.this)
                         .setTitle("Nhập Số Đơn Hàng:")
-                        .setView(txtUrl)
+                        .setView(txtSoDDH)
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                int url = Integer.parseInt(txtUrl.getText().toString());
+                                int soDDH = Integer.parseInt(txtSoDDH.getText().toString());
                                 DatabaseHandler db = new DatabaseHandler(DonDHActivity.this);
                                 if(data!=null) {
                                     data.clear();
                                 }
-                                db.findBySoDDH(data, url);
+                                db.findBySoDDH(data, soDDH);
                                 if (data.size() == 0) {
                                     Toast.makeText(getApplication(), "Không tìm thấy đơn đặt hàng nào", Toast.LENGTH_SHORT).show();
                                     return;
