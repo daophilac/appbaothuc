@@ -30,7 +30,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/editText_Result"
+                android:id="@+id/textView_Result"
                 style="@style/TextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
