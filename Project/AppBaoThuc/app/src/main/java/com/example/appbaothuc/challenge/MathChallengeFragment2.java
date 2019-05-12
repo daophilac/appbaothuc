@@ -39,7 +39,7 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
     private ArrayList arr;
 
     private TextView textView_Question;
-    private EditText editText_Result;
+    private TextView textView_Result;
     private Button buttonConfirm;
     private ImageButton buttonDelete;
     private String sUserResult="";
@@ -62,8 +62,8 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
         Bundle bundleChallenge = getArguments();
         View view = inflater.inflate(R.layout.fragment_math_challenge2, container, false);
         textView_Question=view.findViewById(R.id.textView_Question);
-        editText_Result=view.findViewById(R.id.editText_Result);
-        editText_Result.setSelection(editText_Result.getText().length());
+        textView_Result =view.findViewById(R.id.editText_Result);
+        textView_Result.setText(textView_Result.getText());
         buttonConfirm=view.findViewById(R.id.btnConfirm);
         buttonDelete=view.findViewById(R.id.btnDelete);
         listCaculate=new ArrayList<>();
@@ -75,7 +75,7 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
             @Override
             public void onClick(View view) {
                 sUserResult+=btnSo0.getText();
-                editText_Result.setText(sUserResult);
+                textView_Result.setText(sUserResult);
             }
         });
         final Button btnSo1=view.findViewById(R.id.so1);
@@ -83,7 +83,7 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
             @Override
             public void onClick(View view) {
                 sUserResult+=btnSo1.getText();
-                editText_Result.setText(sUserResult);
+                textView_Result.setText(sUserResult);
             }
         });
         final Button btnSo2=view.findViewById(R.id.so2);
@@ -91,7 +91,7 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
             @Override
             public void onClick(View view) {
                 sUserResult+=btnSo2.getText();
-                editText_Result.setText(sUserResult);
+                textView_Result.setText(sUserResult);
             }
         });
         final Button btnSo3=view.findViewById(R.id.so3);
@@ -99,7 +99,7 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
             @Override
             public void onClick(View view) {
                 sUserResult+=btnSo3.getText();
-                editText_Result.setText(sUserResult);
+                textView_Result.setText(sUserResult);
             }
         });
         final Button btnSo4=view.findViewById(R.id.so4);
@@ -107,7 +107,7 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
             @Override
             public void onClick(View view) {
                 sUserResult+=btnSo4.getText();
-                editText_Result.setText(sUserResult);
+                textView_Result.setText(sUserResult);
             }
         });
         final Button btnSo5=view.findViewById(R.id.so5);
@@ -115,7 +115,7 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
             @Override
             public void onClick(View view) {
                 sUserResult+=btnSo5.getText();
-                editText_Result.setText(sUserResult);
+                textView_Result.setText(sUserResult);
             }
         });
         final Button btnSo6=view.findViewById(R.id.so6);
@@ -123,7 +123,7 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
             @Override
             public void onClick(View view) {
                 sUserResult+=btnSo6.getText();
-                editText_Result.setText(sUserResult);
+                textView_Result.setText(sUserResult);
             }
         });
         final Button btnSo7=view.findViewById(R.id.so7);
@@ -131,7 +131,7 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
             @Override
             public void onClick(View view) {
                 sUserResult+=btnSo7.getText();
-                editText_Result.setText(sUserResult);
+                textView_Result.setText(sUserResult);
             }
         });
         final Button btnSo8=view.findViewById(R.id.so8);
@@ -139,7 +139,7 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
             @Override
             public void onClick(View view) {
                 sUserResult+=btnSo8.getText();
-                editText_Result.setText(sUserResult);
+                textView_Result.setText(sUserResult);
             }
         });
         final Button btnSo9=view.findViewById(R.id.so9);
@@ -147,13 +147,13 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
             @Override
             public void onClick(View view) {
                 sUserResult+=btnSo9.getText();
-                editText_Result.setText(sUserResult);
+                textView_Result.setText(sUserResult);
             }
         });
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int iUserResult=Integer.parseInt(editText_Result.getText().toString());
+                int iUserResult=Integer.parseInt(textView_Result.getText().toString());
                 if(iUserResult==listResult.get(iNumberOfDoneCalculation)){
                     iNumberOfDoneCalculation++;
                     if(iNumberOfDoneCalculation==iNumCaculate){
@@ -162,7 +162,7 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
 //                        buttonConfirm.setEnabled(false);
 //                        textView_Question.setText("Done!");
 //                        textView_Question.setTextColor(Color.GREEN);
-//                        editText_Result.setText("");
+//                        textView_Result.setText("");
                     }
                     else{
                         getNextCaculate();
@@ -176,7 +176,7 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
                 String sSysResult=sUserResult;
                 sUserResult=sSysResult.substring(0,sUserResult.length()-1);
 
-                editText_Result.setText(sUserResult);
+                textView_Result.setText(sUserResult);
             }
         });
 
@@ -188,7 +188,7 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
             this.iNumberOfDoneCalculation = bundleChallenge.getInt("iNumberOfDoneCalculation");
             this.listCaculate = bundleChallenge.getStringArrayList("listCaculate");
             this.listResult = bundleChallenge.getIntegerArrayList("listResult");
-            this.editText_Result.setText(bundleChallenge.getString("editText_ResultString"));
+            this.textView_Result.setText(bundleChallenge.getString("editText_ResultString"));
             this.textView_Question.setText(listCaculate.get(iNumberOfDoneCalculation));
         }
         else{
@@ -201,7 +201,7 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
     private void getNextCaculate(){
         sUserResult="";
         textView_Question.setText(listCaculate.get(iNumberOfDoneCalculation));
-        editText_Result.setText("");
+        textView_Result.setText("");
 
     }
     private void generateCalculation(){
@@ -276,7 +276,7 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
         mathSavedState.putInt("iNumberOfDoneCalculation", iNumberOfDoneCalculation);
         mathSavedState.putStringArrayList("listCaculate", listCaculate);
         mathSavedState.putIntegerArrayList("listResult", listResult);
-        mathSavedState.putString("editText_ResultString", editText_Result.getText().toString());
+        mathSavedState.putString("editText_ResultString", textView_Result.getText().toString());
         return mathSavedState;
     }
 }
