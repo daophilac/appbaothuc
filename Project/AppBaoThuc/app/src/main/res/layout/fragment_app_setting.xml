@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:text="text_view_mute_alarm_for"
+            android:text="Báo thức im lặng trong: "
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
-            android:text="text_view_can_mute_alarm_for"
+            android:text="Có thể im lặng báo thức: "
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_view_mute_alarm_for" />
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
-            android:text="text_view_auto_dismiss_after"
+            android:text="Tự động hủy báo thức sau: "
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_view_can_mute_alarm_for" />
@@ -124,7 +124,7 @@
             android:id="@+id/btnMute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="3dp"
             android:text="Button"
             app:layout_constraintStart_toEndOf="@+id/text_view_mute_alarm_for"
             tools:layout_editor_absoluteY="0dp" />
@@ -133,7 +133,7 @@
             android:id="@+id/btnCanMute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="3dp"
             android:text="Button"
             app:layout_constraintStart_toEndOf="@+id/text_view_can_mute_alarm_for"
             app:layout_constraintTop_toBottomOf="@+id/btnMute" />
@@ -142,7 +142,7 @@
             android:id="@+id/btnDismiss"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="3dp"
             android:text="Button"
             app:layout_constraintStart_toEndOf="@+id/text_view_auto_dismiss_after"
             app:layout_constraintTop_toBottomOf="@+id/btnCanMute" />
