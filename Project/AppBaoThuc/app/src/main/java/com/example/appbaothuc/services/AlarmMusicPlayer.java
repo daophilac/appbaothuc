@@ -82,6 +82,7 @@ public class AlarmMusicPlayer {
 
 
         this.mediaPlayer = MediaPlayer.create(this.context, this.uri);
+        this.mediaPlayer.setLooping(true);
         if(headsetState == 1){
             this.audioManager.setMode(AudioManager.STREAM_MUSIC);
             this.audioManager.setSpeakerphoneOn(true);
