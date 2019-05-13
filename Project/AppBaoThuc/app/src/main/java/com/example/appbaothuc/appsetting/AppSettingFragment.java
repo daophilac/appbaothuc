@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppSettingFragment extends Fragment {
+    public static List<OnHourModeChangedListener> listOnHourModeChangedListener;
     public static final int HOUR_MODE_24 = 1;
     public static final int HOUR_MODE_12 = 2;
     private static final String fileName = "setting.txt";
@@ -51,6 +52,7 @@ public class AppSettingFragment extends Fragment {
     private AutoDismissAfterDialogFragment autoDismissAfterDialogFragment;
     private InternalFileReader internalFileReader;
     private InternalFileWriter internalFileWriter;
+
 
     @Override
     public void onAttach(Context context) {
@@ -130,7 +132,10 @@ public class AppSettingFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    hourMode = HOUR_MODE_24;
+                    if(hourMode == HOUR_MODE_12){
+
+                        hourMode = HOUR_MODE_24;
+                    }
                 }
             }
         });
@@ -139,6 +144,9 @@ public class AppSettingFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     hourMode = HOUR_MODE_12;
+                    for(OnHourModeChangedListener l : listOnHourModeChangedListener){
+                        l.onHourModeChanged();
+                    }
                 }
             }
         });
@@ -167,6 +175,7 @@ public class AppSettingFragment extends Fragment {
         return view;
     }
     private static void initializeDefaultSetting(){ // khởi tạo giá trị mặc định
+        listOnHourModeChangedListener = new ArrayList<>();
         muteAlarmIn = 30;
         canMuteAlarmFor = 3;
         autoDismissAfter = 10;
@@ -190,5 +199,11 @@ public class AppSettingFragment extends Fragment {
         listRingtoneDirectory = new ArrayList<>();
         listRingtoneDirectory.add(Environment.getExternalStorageDirectory().getAbsolutePath());
 //        listRingtoneDirectory.add("/sdcard/download");
+    }
+    public static void registerOnHourModeChangedListener(OnHourModeChangedListener onHourModeChangedListener){
+        listOnHourModeChangedListener.add(onHourModeChangedListener);
+    }
+    public interface OnHourModeChangedListener{
+        void onHourModeChanged();
     }
 }
