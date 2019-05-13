@@ -14,6 +14,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,7 +44,8 @@ import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.S
 
 
 public class SettingAlarmFragment extends Fragment implements LableDialogFragment.LabelDialogListener,
-        AgainDialogFragment.AgainDialogListener, RepeatDialogFragment.RepeatDialogListener, View.OnClickListener, TypeFragment.TypeFragmentListener {
+        AgainDialogFragment.AgainDialogListener, RepeatDialogFragment.RepeatDialogListener,
+        View.OnClickListener, TypeFragment.TypeFragmentListener, Animation.AnimationListener {
     private Context context;
     private UpcomingAlarmFragment upcomingAlarmFragment;
     private SettingAlarmMode settingAlarmMode;
@@ -50,7 +53,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     private int currentChallengeType;
     private MathDetail mathDetail;
     private ShakeDetail shakeDetail;
-
+    private Animation animFadein;
 
     private TimePicker timePicker; // Chọn giờ
     private Button btnPlayMusic, btnCancel, btnDelete, btnOk; //Phát nhạc đang chọn, Hủy thao tác, Xóa báo thức, Hoàn tất
@@ -99,6 +102,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting_alarm, container, false);
         setControl(view);
+
         return view;
     }
 
@@ -152,6 +156,9 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             timePicker.setIs24HourView(false);
         }
 
+        animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.blink);
+        animFadein.setAnimationListener(this);
+        timePicker.startAnimation(animFadein);
 
         btnOk.setOnClickListener(new View.OnClickListener() {
             //@RequiresApi(api = Build.VERSION_CODES.M)
@@ -555,6 +562,22 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         this.shakeDetail = shakeDetail;
         this.imageViewType.setImageDrawable(context.getDrawable(R.drawable.icons8_shake_phone_60));
         this.textViewType.setText("Shake");
+    }
+
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
     }
 
 

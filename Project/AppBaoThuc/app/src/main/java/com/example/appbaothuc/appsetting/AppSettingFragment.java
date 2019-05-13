@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppSettingFragment extends Fragment {
+    private static List<OnHourModeChangedListener> listOnHourModeChangedListener;
     public static final int HOUR_MODE_24 = 1;
     public static final int HOUR_MODE_12 = 2;
     private static final String fileName = "setting.txt";
@@ -51,6 +52,7 @@ public class AppSettingFragment extends Fragment {
     private AutoDismissAfterDialogFragment autoDismissAfterDialogFragment;
     private InternalFileReader internalFileReader;
     private InternalFileWriter internalFileWriter;
+
 
     @Override
     public void onAttach(Context context) {
@@ -131,6 +133,9 @@ public class AppSettingFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     hourMode = HOUR_MODE_24;
+                    for(OnHourModeChangedListener l : listOnHourModeChangedListener){
+                        l.onHourModeChanged();
+                    }
                 }
             }
         });
@@ -139,6 +144,9 @@ public class AppSettingFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     hourMode = HOUR_MODE_12;
+                    for(OnHourModeChangedListener l : listOnHourModeChangedListener){
+                        l.onHourModeChanged();
+                    }
                 }
             }
         });
@@ -175,6 +183,7 @@ public class AppSettingFragment extends Fragment {
         hourMode = HOUR_MODE_24;
     }
     public static void loadAppSetting(Context context){
+        listOnHourModeChangedListener = new ArrayList<>();
         InternalFileReader internalFileReader = new InternalFileReader(context, fileName);
         if(!internalFileReader.exists(fileName)){
             initializeDefaultSetting();
@@ -190,5 +199,11 @@ public class AppSettingFragment extends Fragment {
         listRingtoneDirectory = new ArrayList<>();
         listRingtoneDirectory.add(Environment.getExternalStorageDirectory().getAbsolutePath());
 //        listRingtoneDirectory.add("/sdcard/download");
+    }
+    public static void registerOnHourModeChangedListener(OnHourModeChangedListener onHourModeChangedListener){
+        listOnHourModeChangedListener.add(onHourModeChangedListener);
+    }
+    public interface OnHourModeChangedListener{
+        void onHourModeChanged();
     }
 }

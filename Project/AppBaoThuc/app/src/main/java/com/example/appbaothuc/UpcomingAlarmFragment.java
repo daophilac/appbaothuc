@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.appbaothuc.alarmsetting.SettingAlarmFragment;
+import com.example.appbaothuc.appsetting.AppSettingFragment;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.models.MathDetail;
 import com.example.appbaothuc.models.ShakeDetail;
@@ -27,7 +28,7 @@ import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.M
 import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.SHAKE;
 
 
-public class UpcomingAlarmFragment extends Fragment {
+public class UpcomingAlarmFragment extends Fragment implements AppSettingFragment.OnHourModeChangedListener {
     private DatabaseHandler databaseHandler;
     private RecyclerView recyclerViewListAlarm;
     private ImageButton buttonAddAlarm;
@@ -177,5 +178,10 @@ public class UpcomingAlarmFragment extends Fragment {
     public void updateAlarmEnable(Alarm alarm){
         databaseHandler.updateAlarmEnable(alarm.getIdAlarm(), alarm.isEnable());
         MainActivity.restartAlarmService(getContext());
+    }
+
+    @Override
+    public void onHourModeChanged() {
+        alarmAdapter.notifyDataSetChanged();
     }
 }

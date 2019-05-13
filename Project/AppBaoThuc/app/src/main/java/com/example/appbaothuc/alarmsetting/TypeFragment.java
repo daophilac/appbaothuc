@@ -80,7 +80,7 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getFragmentManager().beginTransaction().remove(TypeFragment.this).commit();
+                getFragmentManager().popBackStack();
             }
         });
         imageButtonDefault.setOnClickListener(new View.OnClickListener() {
