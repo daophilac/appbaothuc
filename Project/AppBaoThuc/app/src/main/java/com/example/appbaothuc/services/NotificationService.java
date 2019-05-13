@@ -97,22 +97,27 @@ public class NotificationService extends Service {
                 NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 assert manager != null;
                 manager.createNotificationChannel(notificationChannel);
+                Intent intentMainActivity = new Intent(this, MainActivity.class);
+                PendingIntent pendingIntentMainActivity = PendingIntent.getActivity(this, REQUEST_CODE, intentMainActivity, PendingIntent.FLAG_UPDATE_CURRENT);
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
                 Notification notification = notificationBuilder.setOngoing(true)
                         .setSmallIcon(R.drawable.ic_add) // TODO
                         .setContentTitle("[Next Alarm] " + nextAlarmText) // TODO
                         .setPriority(NotificationManager.IMPORTANCE_MIN)
                         .setCategory(Notification.CATEGORY_SERVICE)
+                        .setContentIntent(pendingIntentMainActivity)
                         .build();
                 startForeground(NOTIFICATION_ID, notification);
             }
             else {
+                Intent intentMainActivity = new Intent(this, MainActivity.class);
+                PendingIntent pendingIntentMainActivity = PendingIntent.getActivity(this, REQUEST_CODE, intentMainActivity, PendingIntent.FLAG_UPDATE_CURRENT);
                 Notification notification = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                         .setOngoing(true)
                         .setSmallIcon(R.drawable.ic_add)
                         .setContentTitle(getString(R.string.app_name))
                         .setContentText("[Next Alarm] " + nextAlarmText)
-                        .setContentIntent(pendingIntent)
+                        .setContentIntent(pendingIntentMainActivity)
                         .build();
                 startForeground(NOTIFICATION_ID, notification);
             }
