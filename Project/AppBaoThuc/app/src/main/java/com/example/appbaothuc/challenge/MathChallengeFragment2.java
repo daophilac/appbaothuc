@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -62,7 +61,7 @@ public class MathChallengeFragment2 extends Fragment implements OnSaveChallengeS
         Bundle bundleChallenge = getArguments();
         View view = inflater.inflate(R.layout.fragment_math_challenge2, container, false);
         textView_Question=view.findViewById(R.id.textView_Question);
-        textView_Result =view.findViewById(R.id.editText_Result);
+        textView_Result =view.findViewById(R.id.textView_Result);
         textView_Result.setText(textView_Result.getText());
         buttonConfirm=view.findViewById(R.id.btnConfirm);
         buttonDelete=view.findViewById(R.id.btnDelete);
