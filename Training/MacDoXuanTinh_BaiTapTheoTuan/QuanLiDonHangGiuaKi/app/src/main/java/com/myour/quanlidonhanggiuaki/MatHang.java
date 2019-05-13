@@ -17,6 +17,9 @@ public class MatHang {
         this.donGia = donGia;
     }
 
+    public MatHang() {
+    }
+
     public String getMaHG() {
         return maHG;
     }

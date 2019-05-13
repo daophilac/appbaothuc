@@ -1,6 +1,8 @@
 package com.myour.quanlidonhanggiuaki;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,6 +35,9 @@ public class MatHangActivity extends AppCompatActivity {
     //dialogSuaMatHang
     private EditText edtMaSua, edtTenSua, edtDVTSua, edtDonGiaSua, edtDacDiemSua;
     private Button btnXacNhanSua, btnHuySua;
+
+    private MatHang matHang=new MatHang();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +62,7 @@ public class MatHangActivity extends AppCompatActivity {
 
         setControlDialogMatHang(dialog);
 
-        MatHang matHang=matHangArrayList.get(position);
+        matHang=matHangArrayList.get(position);
         tvMatHang.setText("Mặt hàng:\n"+matHang.getMaHG()+" - "+matHang.getTenHG());
 
         setEventDialogMatHang(dialog, position);
@@ -69,6 +74,28 @@ public class MatHangActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showDiaLogSuaMatHang(position);
+            }
+        });
+        btnXoa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialog=new AlertDialog.Builder(MatHangActivity.this);
+                alertDialog.setTitle("Xác nhận!");
+                alertDialog.setIcon(R.mipmap.ic_launcher);
+                alertDialog.setMessage("Mặt hàng "+matHang.getTenHG()+" sẽ bị xóa, bạn có chắc?");
+                alertDialog.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finishAffinity();
+                    }
+                });
+                alertDialog.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                alertDialog.show();
             }
         });
     }
@@ -224,12 +251,4 @@ public class MatHangActivity extends AppCompatActivity {
         btnXacNhanThem =dialog.findViewById(R.id.buttonXacNhan);
         btnHuyThem =dialog.findViewById(R.id.buttonHuy);
     }
-
-//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-//        getMenuInflater().inflate(R.menu.context_menu_mat_hang,menu);
-//        int i=matHangAdapter.vitri;
-//        MatHang matHang=matHangArrayList.get(i);
-//        menu.setHeaderTitle(matHang.getMaHG()+" - "+matHang.getTenHG());
-//        super.onCreateContextMenu(menu, v, menuInfo);
-//    }
 }

@@ -53,21 +53,21 @@ public class MatHangAdapter extends BaseAdapter {
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(R.layout.list_mat_hang, viewGroup, false);
 
-            holder.maHG = row.findViewById(R.id.textViewMaMHAdapter);
-            holder.tenHG = row.findViewById(R.id.textViewTenMHAdapter);
-            holder.dacDiem = row.findViewById(R.id.textViewDacDiemAdapter);
-            holder.dVT = row.findViewById(R.id.textViewDVTAdapter);
-            holder.donGia = row.findViewById(R.id.textViewDonGiaAdapter);
+            holder.maHG = row.findViewById(R.id.textviewMaHG);
+            holder.tenHG = row.findViewById(R.id.textviewTenHG);
+            holder.dacDiem = row.findViewById(R.id.textviewDacDiem);
+            holder.dVT = row.findViewById(R.id.textviewDonViTinh);
+            holder.donGia = row.findViewById(R.id.textviewDonGia);
 
             row.setTag(holder);
         }
         MatHang matHang = data.get(i);
 
         holder.maHG.setText(matHang.getMAHG());
-        holder.tenHG.setText(matHang.getTENHG());
-        holder.dacDiem.setText(matHang.getDACDIEM());
-        holder.dVT.setText(matHang.getDVT());
-        holder.donGia.setText(matHang.getDONGIA()+"");
+        holder.tenHG.setText("Tên: "+matHang.getTENHG());
+        holder.dacDiem.setText("Đơn giá: "+matHang.getDACDIEM());
+        holder.dVT.setText("- Đơn vị tính: "+matHang.getDVT());
+        holder.donGia.setText("Đặc điểm: "+matHang.getDONGIA());
 
         return row;
     }
