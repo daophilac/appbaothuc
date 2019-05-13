@@ -39,7 +39,7 @@ public class MuteAlarmInDialogFragment extends DialogFragment {
             public void onClick(View v) {
                 int value = numberPickerMuteAlarmFor.getValue();
                 AppSettingFragment.muteAlarmIn = value;
-                AppSettingFragment.textViewMuteAlarmFor.setText("Báo thức im lặng trong: " + value + " giây");
+                AppSettingFragment.btnMute.setText(value + " giây");
                 getDialog().dismiss();
             }
         });

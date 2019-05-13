@@ -78,6 +78,10 @@ public class KhachHangActivity extends AppCompatActivity implements KhachHangDia
             btnFindKH.setVisibility(View.GONE);
             btnLoadKH.setVisibility(View.GONE);
         }
+        else if(input == 2){
+            getTop3();
+            listViewKH.setEnabled(true);
+        }
     }
 
     void setEvent(){
@@ -119,7 +123,6 @@ public class KhachHangActivity extends AppCompatActivity implements KhachHangDia
             @Override
             public void onClick(View view) {
                 if(!checkInput()) return;
-                DatabaseHandler databaseHandler = new DatabaseHandler(KhachHangActivity.this);
                 SQLiteDatabase db = databaseHandler.getWritableDatabase();
                 String sql = "select * from KHACHHANG where MAKH ='" + editTextMaKH.getText().toString().trim() +"'";
                 Cursor curosr = db.rawQuery(sql, null);
@@ -186,26 +189,28 @@ public class KhachHangActivity extends AppCompatActivity implements KhachHangDia
         return true;
     }
     public void saveDB(){
-        DatabaseHandler db = new DatabaseHandler(this);
         KhachHang khachHangSave = new KhachHang();
 
         khachHangSave.setMaKH(editTextMaKH.getText().toString());
         khachHangSave.setTenKH(editTextTenKH.getText().toString());
-        db.saveKhachHangs(khachHangSave);
+        databaseHandler.saveKhachHangs(khachHangSave);
     }
     public void updateDB(){
-        DatabaseHandler db = new DatabaseHandler(this);
         KhachHang khachHangup = new KhachHang();
 
         khachHangup.setMaKH(editTextMaKH.getText().toString());
         khachHangup.setTenKH(editTextTenKH.getText().toString());
 
-        db.updateKhachHang(khachHangup);
+        databaseHandler.updateKhachHang(khachHangup);
     }
     public void loadDB(){
-        DatabaseHandler db = new DatabaseHandler(this);
         data.clear();
-        db.getKhachHangs(data);
+        databaseHandler.getKhachHangs(data);
+        adapter.notifyDataSetChanged();
+    }
+    public void getTop3(){
+        data.clear();
+        databaseHandler.getKhachHangMuaNhieuNhat(data);
         adapter.notifyDataSetChanged();
     }
     @Override
