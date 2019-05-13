@@ -87,8 +87,8 @@ public class ChallengeDialogFragment extends DialogFragment implements GiveUpDia
         View view = inflater.inflate(R.layout.fragment_challenge_dialog, container, false);
         textViewLabel = view.findViewById(R.id.text_view_label);
         textViewRingtoneName = view.findViewById(R.id.text_view_ringtone_name);
-        textViewHour = view.findViewById(R.id.text_view_hour);
-        textViewMinute = view.findViewById(R.id.text_view_minute);
+        textViewHour = view.findViewById(R.id.textviewHour);
+        textViewMinute = view.findViewById(R.id.textviewMinute);
         buttonGiveUp = view.findViewById(R.id.button_give_up);
         buttonMute = view.findViewById(R.id.button_mute);
 
