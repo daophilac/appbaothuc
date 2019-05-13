@@ -22,12 +22,6 @@ import com.example.appbaothuc.models.Alarm;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
-import static com.example.appbaothuc.appsetting.AppSettingFragment.HOUR_MODE_24;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.DEFAULT;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.MATH;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.SHAKE;
-
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
     private Context context;
     private UpcomingAlarmFragment upcomingAlarmFragment;

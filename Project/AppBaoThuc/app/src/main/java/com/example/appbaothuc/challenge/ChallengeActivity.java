@@ -132,10 +132,27 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
     public void onChallengeActivated(OnSaveChallengeStateListener onSaveChallengeStateListener) {
         this.onSaveChallengeStateListener = onSaveChallengeStateListener;
     }
+    public enum ChallengeType{
+        DEFAULT(1), MATH(2), SHAKE(3), WALK(4);
+        private final int value;
+        ChallengeType(int value){
+            this.value = value;
+        }
 
-    public static final class ChallengeType{
-        public static final int DEFAULT = 1;
-        public static final int MATH = 2;
-        public static final int SHAKE = 3;
+        public int getValue() {
+            return value;
+        }
+        public static ChallengeType newInstance(int value){
+            switch (value){
+                case 2:
+                    return ChallengeType.MATH;
+                case 3:
+                    return ChallengeType.SHAKE;
+                case 4:
+                    return ChallengeType.WALK;
+                default:
+                    return ChallengeType.DEFAULT;
+            }
+        }
     }
 }

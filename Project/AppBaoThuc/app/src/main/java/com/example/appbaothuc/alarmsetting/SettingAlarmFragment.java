@@ -25,11 +25,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.appbaothuc.MainActivity;
-import com.example.appbaothuc.appsetting.AppSettingFragment;
-import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.Music;
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.UpcomingAlarmFragment;
+import com.example.appbaothuc.appsetting.AppSettingFragment;
+import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.models.MathDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 
@@ -38,9 +38,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.example.appbaothuc.appsetting.AppSettingFragment.HOUR_MODE_24;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.DEFAULT;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.MATH;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.SHAKE;
+import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType;
 
 
 public class SettingAlarmFragment extends Fragment implements LableDialogFragment.LabelDialogListener,
@@ -50,7 +48,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     private UpcomingAlarmFragment upcomingAlarmFragment;
     private SettingAlarmMode settingAlarmMode;
     private Alarm alarm;
-    private int currentChallengeType;
+    private ChallengeType currentChallengeType;
     private MathDetail mathDetail;
     private ShakeDetail shakeDetail;
     private Animation animFadein;
@@ -543,14 +541,14 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
     @Override
     public void getDefaultChallenge() {
-        this.currentChallengeType = DEFAULT;
+        this.currentChallengeType = ChallengeType.DEFAULT;
         this.imageViewType.setImageDrawable(context.getDrawable(R.drawable.ic_alarm_60dp));
         this.textViewType.setText("Default");
     }
 
     @Override
     public void getMathChallenge(MathDetail mathDetail) {
-        this.currentChallengeType = MATH;
+        this.currentChallengeType = ChallengeType.MATH;
         this.mathDetail = mathDetail;
         this.imageViewType.setImageDrawable(context.getDrawable(R.drawable.ic_math_36));
         this.textViewType.setText("Math");
@@ -558,7 +556,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
     @Override
     public void getShakeChallenge(ShakeDetail shakeDetail) {
-        this.currentChallengeType = SHAKE;
+        this.currentChallengeType = ChallengeType.SHAKE;
         this.shakeDetail = shakeDetail;
         this.imageViewType.setImageDrawable(context.getDrawable(R.drawable.icons8_shake_phone_60));
         this.textViewType.setText("Shake");

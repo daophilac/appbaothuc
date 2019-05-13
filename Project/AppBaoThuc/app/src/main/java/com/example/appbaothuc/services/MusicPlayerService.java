@@ -6,11 +6,6 @@ import android.os.IBinder;
 
 import com.example.appbaothuc.models.Alarm;
 
-import static com.example.appbaothuc.services.MusicPlayerService.AlarmMusicPlayerCommand.START;
-import static com.example.appbaothuc.services.MusicPlayerService.AlarmMusicPlayerCommand.STOP;
-import static com.example.appbaothuc.services.MusicPlayerService.AlarmMusicPlayerCommand.MUTE_A_LITTLE;
-import static com.example.appbaothuc.services.MusicPlayerService.AlarmMusicPlayerCommand.CHANGE_HEADSET_STATE;
-
 public class MusicPlayerService extends Service {
     private Alarm alarm;
     private AlarmMusicPlayer alarmMusicPlayer;
@@ -29,7 +24,7 @@ public class MusicPlayerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int command = intent.getIntExtra("command", 0);
+        AlarmMusicPlayerCommand command = (AlarmMusicPlayerCommand)intent.getSerializableExtra("command");
         switch(command){
             case START:
                 if(!playing){
@@ -66,10 +61,7 @@ public class MusicPlayerService extends Service {
     }
 
 
-    public static final class AlarmMusicPlayerCommand{
-        public static final int START = 1;
-        public static final int STOP = 2;
-        public static final int MUTE_A_LITTLE = 3;
-        public static final int CHANGE_HEADSET_STATE = 4;
+    public enum AlarmMusicPlayerCommand{
+        START, STOP, MUTE_A_LITTLE, CHANGE_HEADSET_STATE
     }
 }
