@@ -173,7 +173,6 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void onClick(View view) {
                 if(!checkInput()) return;
-                DatabaseHandler databaseHandler = new DatabaseHandler(DonDHActivity.this);
                 SQLiteDatabase db = databaseHandler.getWritableDatabase();
                 String sql = "select * from DONDH where SODDH = " + Integer.parseInt(editTextSoDDH.getText().toString());
                 Cursor curosr = db.rawQuery(sql, null);
@@ -207,11 +206,10 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 int soDDH = Integer.parseInt(txtSoDDH.getText().toString());
-                                DatabaseHandler db = new DatabaseHandler(DonDHActivity.this);
                                 if(data!=null) {
                                     data.clear();
                                 }
-                                db.findBySoDDH(data, soDDH);
+                                databaseHandler.findBySoDDH(data, soDDH);
                                 if (data.size() == 0) {
                                     Toast.makeText(getApplication(), "Không tìm thấy đơn đặt hàng nào", Toast.LENGTH_SHORT).show();
                                     return;
@@ -265,7 +263,6 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
         return true;
     }
     public void saveDB(){
-        DatabaseHandler db = new DatabaseHandler(this);
         DonDH donDH = new DonDH();
 
         donDH.setSoDH(Integer.parseInt(editTextSoDDH.getText().toString()));
@@ -274,10 +271,9 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
         donDH.setNgayDH(textViewNgayDH.getText().toString());
         donDH.setSoNgay(Integer.parseInt(editTextSoNgay.getText().toString()));
         donDH.setTinhTrang(editTextTinhTrang.getText().toString());
-        db.saveDonDHs(donDH);
+        databaseHandler.saveDonDHs(donDH);
     }
     public void updateDB(){
-        DatabaseHandler db = new DatabaseHandler(this);
         DonDH donDH = new DonDH();
 
         donDH.setSoDH(Integer.parseInt(editTextSoDDH.getText().toString()));
@@ -286,16 +282,14 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
         donDH.setNgayDH(textViewNgayDH.getText().toString());
         donDH.setSoNgay(Integer.parseInt(editTextSoNgay.getText().toString()));
         donDH.setTinhTrang(editTextTinhTrang.getText().toString());
-        db.updateDonDH(donDH);
+        databaseHandler.updateDonDH(donDH);
     }
     public void loadDB(){
-        DatabaseHandler db = new DatabaseHandler(this);
         data.clear();
-        db.getDonDHS(data);
+        databaseHandler.getDonDHS(data);
         adapter.notifyDataSetChanged();
     }
     public void loadOneDDH(){
-        DatabaseHandler db = new DatabaseHandler(this);
         data.clear();
         data.add(donDH);
         adapter.notifyDataSetChanged();
