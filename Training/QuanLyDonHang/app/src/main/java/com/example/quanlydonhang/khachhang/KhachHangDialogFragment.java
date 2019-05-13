@@ -16,7 +16,7 @@ import com.example.quanlydonhang.DatabaseHandler;
 import com.example.quanlydonhang.R;
 
 public class KhachHangDialogFragment extends DialogFragment {
-    private Button buttonUpdateKH, buttonDeleteKH;
+    private Button buttonUpdateKH, buttonDeleteKH, buttonKHMuaNhieuNhat;
     private TextView textViewMaHKDialog, textViewTenKHDialog;
 
     public KhachHangDialogFragment(){
@@ -32,6 +32,7 @@ public class KhachHangDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.dialogfragment_khach_hang, container);
         buttonUpdateKH = view.findViewById(R.id.buttonUpdateKH);
         buttonDeleteKH = view.findViewById(R.id.buttonDeleteKH);
+        buttonKHMuaNhieuNhat = view.findViewById(R.id.buttonKHMuaNhieuNhat);
         textViewMaHKDialog = view.findViewById(R.id.textViewMaHKDialog);
         textViewTenKHDialog = view.findViewById(R.id.textViewTenKHDialog);
 
@@ -77,7 +78,13 @@ public class KhachHangDialogFragment extends DialogFragment {
 
             }
         });
-
+        buttonKHMuaNhieuNhat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onFinishKHDialog(2);
+                getDialog().dismiss();
+            }
+        });
         return view;
     }
 
