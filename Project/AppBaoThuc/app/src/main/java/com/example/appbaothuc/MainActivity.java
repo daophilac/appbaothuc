@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().add(R.id.main_fragment_container, upcomingAlarmFragment).commit();
         MainActivity.restartAlarmService(this);
+        AppSettingFragment.registerOnHourModeChangedListener(upcomingAlarmFragment);
     }
     public void test1(View view){
         NotificationService.DEBUG_MODE = true;
