@@ -6,14 +6,16 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
+    android:weightSum="6.5"
     tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/textView12"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="10dp"
         android:background="@color/colorTitleQLDH"
         android:gravity="center"
         android:text="QUẢN LÝ ĐƠN HÀNG"
@@ -22,13 +24,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="3"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/buttonKhachHang"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:drawableTop="@drawable/customer"
@@ -36,8 +39,8 @@
 
         <Button
             android:id="@+id/buttonMatHang"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:drawableTop="@drawable/goods"
@@ -47,13 +50,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="3"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/buttonDDH"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:drawableTop="@drawable/dondathang"
@@ -61,8 +65,8 @@
 
         <Button
             android:id="@+id/buttonCTDDH"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:drawableTop="@drawable/ct_dondh"

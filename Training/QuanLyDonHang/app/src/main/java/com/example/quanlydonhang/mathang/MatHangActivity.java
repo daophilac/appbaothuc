@@ -2,8 +2,6 @@ package com.example.quanlydonhang.mathang;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,8 +10,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.example.quanlydonhang.DatabaseHandler;
@@ -23,39 +21,44 @@ import java.util.ArrayList;
 
 public class MatHangActivity extends AppCompatActivity implements MatHangDialogFragment.MatHangDialogListener, AdapterView.OnItemLongClickListener {
     private ImageButton imageButtonCloseMH;
-    private Button btnInsertMH, buttonClearTextMH, btnEditMH, btnFindByMaHG, btnReLoadMH;
+    private TableLayout tbLMatHang;
+    private Button btnHide, btnInsertMH, btnClearText, btnEditMH, btnFindByMaHG, btnReLoadMH;
     private EditText editTextMaMatHang, editTextTenMH, editTextDacDiem, editTextDVT, editTextDonGia;
     private ListView listViewMatHang;
     private ArrayList<MatHang> data;
     private MatHangAdapter adapter;
     public static MatHang matHang;
     private int checkEditInsert = 0;
+    private boolean hide=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mat_hang);
-        setControl();
-        setEvent();
 
-    }
-    void setControl(){
-        editTextMaMatHang = findViewById(R.id.editTextMaMatHang);
-        editTextTenMH = findViewById(R.id.editTextTenMH);
-        editTextDacDiem = findViewById(R.id.editTextDacDiem);
-        editTextDVT = findViewById(R.id.editTextDVT);
-        editTextDonGia = findViewById(R.id.editTextDonGia);
-        btnInsertMH = findViewById(R.id.btnInsertMH);
-        buttonClearTextMH = findViewById(R.id.buttonClearTextMH);
-        btnEditMH = findViewById(R.id.btnEditMH);
-        imageButtonCloseMH = findViewById(R.id.imageButtonCloseMH);
-        btnFindByMaHG = findViewById(R.id.btnFindByMaHG);
-        btnReLoadMH = findViewById(R.id.btnReLoadMH);
+        setControl();
 
         listViewMatHang = findViewById(R.id.listViewMatHang);
         data = new ArrayList<>();
         adapter = new MatHangAdapter(this, data);
         loadDB();
 
+        setEvent();
+
+    }
+    void setControl() {
+        editTextMaMatHang = findViewById(R.id.editTextMaMatHang);
+        editTextTenMH = findViewById(R.id.editTextTenMH);
+        editTextDacDiem = findViewById(R.id.editTextDacDiem);
+        editTextDVT = findViewById(R.id.editTextDVT);
+        editTextDonGia = findViewById(R.id.editTextDonGia);
+        btnInsertMH = findViewById(R.id.btnInsertMH);
+        btnClearText = findViewById(R.id.buttonClearTextMH);
+        btnEditMH = findViewById(R.id.btnEditMH);
+        imageButtonCloseMH = findViewById(R.id.imageButtonCloseMH);
+        btnFindByMaHG = findViewById(R.id.btnFindByMaHG);
+        btnReLoadMH = findViewById(R.id.btnReLoadMH);
+        btnHide = findViewById(R.id.buttonHide);
+        tbLMatHang = findViewById(R.id.tableLayoutMatHang);
     }
 
     @Override
@@ -88,7 +91,7 @@ public class MatHangActivity extends AppCompatActivity implements MatHangDialogF
         listViewMatHang.setAdapter(adapter);
         listViewMatHang.setOnItemLongClickListener(this);
 
-        buttonClearTextMH.setOnClickListener(new View.OnClickListener() {
+        btnClearText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(checkEditInsert == 0){
@@ -176,6 +179,25 @@ public class MatHangActivity extends AppCompatActivity implements MatHangDialogF
                         }).show();
             }
         });
+        btnHide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(hide==true){
+                    tbLMatHang.setVisibility(View.GONE);
+                    btnInsertMH.setVisibility(View.INVISIBLE);
+                    btnClearText.setVisibility(View.INVISIBLE);
+                    btnHide.setText("Hiện");
+                    hide=false;
+                }
+                else{
+                    tbLMatHang.setVisibility(View.VISIBLE);
+                    btnInsertMH.setVisibility(View.VISIBLE);
+                    btnClearText.setVisibility(View.VISIBLE);
+                    btnHide.setText("Ẩn");
+                    hide=true;
+                }
+            }
+        });
     }
     public Boolean checkInput(){
         if(TextUtils.isEmpty(editTextMaMatHang.getText().toString())){
@@ -243,7 +265,7 @@ public class MatHangActivity extends AppCompatActivity implements MatHangDialogF
         showDDHDialog();
         return true;
     }
-    private void showDDHDialog() { // show fragment để Sửa tên báo thức
+    private void showDDHDialog() {
         MatHangDialogFragment matHangDialogFragment = new MatHangDialogFragment();
         matHangDialogFragment.show(getSupportFragmentManager(), "fragment_mh");
     }

@@ -14,28 +14,38 @@
 
         <ImageButton
             android:id="@+id/imageButtonCloseMH"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:layout_marginRight="5dp"
             android:background="@color/colorPrimaryDark"
             app:srcCompat="@drawable/ic_chevron_left_black_24dp" />
 
         <TextView
             android:id="@+id/textViewMH"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:layout_weight="1"
+            android:layout_weight="8"
             android:gravity="center"
             android:text="Mặt Hàng"
             android:textColor="@android:color/background_light"
             android:textSize="18sp"
             android:textStyle="bold" />
+        <Button
+            android:id="@+id/buttonHide"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:background="@color/colorPrimaryDark"
+            android:text="Ẩn"
+            android:textColor="#FFFFFF"/>
 
     </LinearLayout>
 
     <TableLayout
+        android:id="@+id/tableLayoutMatHang"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -125,8 +135,9 @@
                 android:inputType="textPersonName" />
         </TableRow>
         <TableRow
+            android:id="@+id/layoutMathang"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp">
 
             <TextView
                 android:id="@+id/textViewDVTMH"
