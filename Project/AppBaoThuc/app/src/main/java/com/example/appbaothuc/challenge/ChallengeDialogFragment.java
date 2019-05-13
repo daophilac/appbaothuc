@@ -26,13 +26,10 @@ import com.example.appbaothuc.listeners.ChallengeDialogListener;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.services.MusicPlayerService;
 
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.DEFAULT;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.MATH;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.SHAKE;
-import static com.example.appbaothuc.services.MusicPlayerService.AlarmMusicPlayerCommand.MUTE_A_LITTLE;
+import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType;
+import static com.example.appbaothuc.services.MusicPlayerService.AlarmMusicPlayerCommand;
 
 
-// TODO: WARNING: This class has some high logical handles
 public class ChallengeDialogFragment extends DialogFragment implements GiveUpDialogFragment.OnGiveUpListener {
     private boolean debugMode = true; // TODO: remove this when release
     private DatabaseHandler databaseHandler;
@@ -48,7 +45,7 @@ public class ChallengeDialogFragment extends DialogFragment implements GiveUpDia
     private FragmentManager fragmentManager;
 //    private MathChallengeFragment mathChallengeFragment;
     private DefaultChallengeFragment defaultChallengeFragment;
-    private MathChallengeFragment2 mathChallengeFragment2;
+    private MathChallengeFragment mathChallengeFragment;
     private ShakeChallengeFragment shakeChallengeFragment;
     private GiveUpDialogFragment giveUpDialogFragment;
     private ChallengeDialogListener challengeDialogListener;
@@ -109,7 +106,7 @@ public class ChallengeDialogFragment extends DialogFragment implements GiveUpDia
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), MusicPlayerService.class);
-                intent.putExtra("command", MUTE_A_LITTLE);
+                intent.putExtra("command", AlarmMusicPlayerCommand.MUTE_A_LITTLE);
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
                     getContext().startForegroundService(intent);
                     getContext().startService(intent);
@@ -119,7 +116,7 @@ public class ChallengeDialogFragment extends DialogFragment implements GiveUpDia
                 }
             }
         });
-        if(alarm.getChallengeType() == DEFAULT){
+        if(alarm.getChallengeType() == ChallengeType.DEFAULT){
             buttonGiveUp.setVisibility(View.INVISIBLE);
         }
         else{
@@ -141,12 +138,17 @@ public class ChallengeDialogFragment extends DialogFragment implements GiveUpDia
         });
 
         switch (alarm.getChallengeType()) {
+            case DEFAULT:
+                defaultChallengeFragment = new DefaultChallengeFragment();
+                challengeDialogListener.onChallengeActivated(defaultChallengeFragment);
+                fragmentManager.beginTransaction().replace(R.id.challenge_fragment_container, defaultChallengeFragment).commit();
+                break;
             case MATH:
-                mathChallengeFragment2 = new MathChallengeFragment2();
-                mathChallengeFragment2.setMathDetail(databaseHandler.getAlarmMathDetail(alarm.getIdAlarm()));
-                challengeDialogListener.onChallengeActivated(mathChallengeFragment2);
-                mathChallengeFragment2.setArguments(bundleChallenge);
-                fragmentManager.beginTransaction().replace(R.id.challenge_fragment_container, mathChallengeFragment2).commit();
+                mathChallengeFragment = new MathChallengeFragment();
+                mathChallengeFragment.setMathDetail(databaseHandler.getAlarmMathDetail(alarm.getIdAlarm()));
+                challengeDialogListener.onChallengeActivated(mathChallengeFragment);
+                mathChallengeFragment.setArguments(bundleChallenge);
+                fragmentManager.beginTransaction().replace(R.id.challenge_fragment_container, mathChallengeFragment).commit();
                 break;
             case SHAKE:
                 shakeChallengeFragment = new ShakeChallengeFragment();
@@ -155,11 +157,8 @@ public class ChallengeDialogFragment extends DialogFragment implements GiveUpDia
                 shakeChallengeFragment.setArguments(bundleChallenge);
                 fragmentManager.beginTransaction().replace(R.id.challenge_fragment_container, shakeChallengeFragment).commit();
                 break;
-            default:
-                defaultChallengeFragment = new DefaultChallengeFragment();
-                challengeDialogListener.onChallengeActivated(defaultChallengeFragment);
-                fragmentManager.beginTransaction().replace(R.id.challenge_fragment_container, defaultChallengeFragment).commit();
-                break;
+            case WALK:
+                throw new RuntimeException("must implement");
         }
         return view;
     }
