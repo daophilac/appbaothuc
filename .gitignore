@@ -6,6 +6,7 @@
 **/*iml
 **/output.json
 
+
 **/build/generated
 **/build/intermediates
 **/build/tmp
@@ -13,15 +14,3 @@
 **/outputs/logs
 Project/AppBaoThucDinhCao/gradle/wrapper/gradle-wrapper.properties
 Project/AppBaoThucDinhCao/build.gradle
-Project/AppBaoThuc/local.properties
-Project/AppBaoThuc/AppBaoThuc.iml
-Project/AppBaoThuc/local.properties
-Project/AppBaoThuc/app/app.iml
-Training/QuanLyDonHang/app/app.iml
-Training/QuanLyDonHang/app/app.iml
-Project/AppBaoThuc/local.properties
-Project/AppBaoThuc/local.properties
-Project/AppBaoThuc/local.properties
-Project/AppBaoThuc/app/build/outputs/apk/debug/app-debug.apk
-Project/AppBaoThuc/local.properties
-Project/AppBaoThuc/app/app.iml
