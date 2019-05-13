@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.appbaothuc.challenge.ChallengeActivity;
+import com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.models.MathDetail;
 import com.example.appbaothuc.models.ShakeDetail;
@@ -163,7 +165,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         boolean vibrate = alarm.isVibrate();
         int snoozeTime = alarm.getSnoozeTime();
         int volume = alarm.getVolume();
-        int challengeType = alarm.getChallengeType();
+        ChallengeType challengeType = alarm.getChallengeType();
 
         sqlFormat = "insert into Alarm (" +
                 " Enable, Hour, Minute," +
@@ -176,7 +178,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         sql = String.format(sqlFormat,
                 enable, hour, minute,
                 listRepeatDay.get(0), listRepeatDay.get(1), listRepeatDay.get(2), listRepeatDay.get(3), listRepeatDay.get(4), listRepeatDay.get(5), listRepeatDay.get(6),
-                ringtoneUrl, ringtoneName, label, vibrate, snoozeTime, volume, challengeType);
+                ringtoneUrl, ringtoneName, label, vibrate, snoozeTime, volume, challengeType.getValue());
         db.execSQL(sql);
     }
     public void updateAlarm(Alarm updatedAlarm){
@@ -191,7 +193,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         boolean vibrate = updatedAlarm.isVibrate();
         int snoozeTime = updatedAlarm.getSnoozeTime();
         int volume = updatedAlarm.getVolume();
-        int challengeType = updatedAlarm.getChallengeType();
+        ChallengeType challengeType = updatedAlarm.getChallengeType();
         sqlFormat = "update Alarm set" +
                 " Enable = '%b', Hour = %d, Minute = %d," +
                 " Monday = '%b', Tuesday = '%b', Wednesday = '%b', Thursday = '%b', Friday = '%b', Saturday = '%b', Sunday = '%b'," +
@@ -200,7 +202,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         sql = String.format(sqlFormat,
                 enable, hour, minute,
                 listRepeatDay.get(0), listRepeatDay.get(1), listRepeatDay.get(2), listRepeatDay.get(3), listRepeatDay.get(4), listRepeatDay.get(5), listRepeatDay.get(6),
-                ringtoneUrl, ringtoneName, label, vibrate, snoozeTime, volume, challengeType, idAlarm);
+                ringtoneUrl, ringtoneName, label, vibrate, snoozeTime, volume, challengeType.getValue(), idAlarm);
         db.execSQL(sql);
     }
     public void updateAlarmEnable(Alarm updatedAlarm){
@@ -339,7 +341,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         boolean vibrate = getValueAtColumn(cursor, "Vibrate", Boolean.class);
         int snoozeTime = getValueAtColumn(cursor, "SnoozeTime", Integer.class);
         int volume = getValueAtColumn(cursor, "Volume", Integer.class);
-        int challengeType = getValueAtColumn(cursor, "ChallengeType", Integer.class);
+        ChallengeType challengeType = ChallengeType.newInstance(getValueAtColumn(cursor, "ChallengeType", Integer.class));
         if (closeCursor) {
             cursor.close();
         }
@@ -369,7 +371,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         boolean vibrate = getValueAtColumn(cursor, "Vibrate", Boolean.class);
         int snoozeTime = getValueAtColumn(cursor, "SnoozeTime", Integer.class);
         int volume = getValueAtColumn(cursor, "Volume", Integer.class);
-        int challengeType = getValueAtColumn(cursor, "ChallengeType", Integer.class);
+        ChallengeType challengeType = ChallengeType.newInstance(getValueAtColumn(cursor, "ChallengeType", Integer.class));
         if (closeCursor) {
             cursor.close();
         }
@@ -396,7 +398,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             boolean vibrate = getValueAtColumn(cursor, "Vibrate", Boolean.class);
             int snoozeTime = getValueAtColumn(cursor, "SnoozeTime", Integer.class);
             int volume = getValueAtColumn(cursor, "Volume", Integer.class);
-            int challengeType = getValueAtColumn(cursor, "ChallengeType", Integer.class);
+            ChallengeType challengeType = ChallengeType.newInstance(getValueAtColumn(cursor, "ChallengeType", Integer.class));
             Alarm alarm = new Alarm(idAlarm, enable, hour, minute, listRepeatDay, new Music(ringtoneUrl, ringtoneName), label, snoozeTime, vibrate, volume, challengeType);
             listAlarm.add(alarm);
         }
@@ -415,18 +417,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
 
-    public void deleteChallengeDetail(int idAlarm, int challengeType){
+    public void deleteChallengeDetail(int idAlarm, ChallengeType challengeType){
         sqlFormat = "delete from '%s' where IdAlarm = %d";
         String tableName = "";
         switch(challengeType){
-            case 1:
+            case DEFAULT:
                 return;
-            case 2:
+            case MATH:
                 tableName = "MathDetail";
                 break;
-            case 3:
+            case SHAKE:
                 tableName = "ShakeDetail";
                 break;
+            case WALK:
+                throw new RuntimeException("must implement");
         }
         sql = String.format(sqlFormat, tableName, idAlarm);
         db.execSQL(sql);

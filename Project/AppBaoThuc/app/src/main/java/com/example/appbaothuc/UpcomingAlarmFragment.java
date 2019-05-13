@@ -23,9 +23,7 @@ import com.example.appbaothuc.models.ShakeDetail;
 import java.util.Collections;
 import java.util.List;
 
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.DEFAULT;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.MATH;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.SHAKE;
+import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType;
 
 
 public class UpcomingAlarmFragment extends Fragment implements AppSettingFragment.OnHourModeChangedListener {
@@ -70,7 +68,7 @@ public class UpcomingAlarmFragment extends Fragment implements AppSettingFragmen
     }
 
     public void addAlarm(Alarm alarm){
-        alarm.setChallengeType(DEFAULT);
+        alarm.setChallengeType(ChallengeType.DEFAULT);
         this.databaseHandler.insertAlarm(alarm);
         alarm.setIdAlarm(databaseHandler.getRecentAddedAlarm().getIdAlarm());
         listAlarm.add(alarm);
@@ -79,7 +77,7 @@ public class UpcomingAlarmFragment extends Fragment implements AppSettingFragmen
         MainActivity.restartAlarmService(getContext());
     }
     public void addAlarm(Alarm alarm, MathDetail mathDetail){
-        alarm.setChallengeType(MATH);
+        alarm.setChallengeType(ChallengeType.MATH);
         this.databaseHandler.insertAlarm(alarm);
         alarm.setIdAlarm(databaseHandler.getRecentAddedAlarm().getIdAlarm());
         mathDetail.setIdAlarm(alarm.getIdAlarm());
@@ -90,7 +88,7 @@ public class UpcomingAlarmFragment extends Fragment implements AppSettingFragmen
         MainActivity.restartAlarmService(getContext());
     }
     public void addAlarm(Alarm alarm, ShakeDetail shakeDetail){
-        alarm.setChallengeType(SHAKE);
+        alarm.setChallengeType(ChallengeType.SHAKE);
         this.databaseHandler.insertAlarm(alarm);
         alarm.setIdAlarm(databaseHandler.getRecentAddedAlarm().getIdAlarm());
         shakeDetail.setIdAlarm(alarm.getIdAlarm());
@@ -101,10 +99,10 @@ public class UpcomingAlarmFragment extends Fragment implements AppSettingFragmen
         MainActivity.restartAlarmService(getContext());
     }
     public void editAlarm(Alarm alarm){
-        if(alarm.getChallengeType() != DEFAULT){
+        if(alarm.getChallengeType() != ChallengeType.DEFAULT){
             this.databaseHandler.deleteChallengeDetail(alarm.getIdAlarm(), alarm.getChallengeType());
         }
-        alarm.setChallengeType(DEFAULT);
+        alarm.setChallengeType(ChallengeType.DEFAULT);
         this.databaseHandler.updateAlarm(alarm);
         for(int i = 0; i < listAlarm.size(); i++){
             if(listAlarm.get(i).getIdAlarm() == alarm.getIdAlarm()){
@@ -117,8 +115,8 @@ public class UpcomingAlarmFragment extends Fragment implements AppSettingFragmen
         MainActivity.restartAlarmService(getContext());
     }
     public void editAlarm(Alarm alarm, MathDetail mathDetail){
-        if(alarm.getChallengeType() != MATH){
-            if(alarm.getChallengeType() != DEFAULT){
+        if(alarm.getChallengeType() != ChallengeType.MATH){
+            if(alarm.getChallengeType() != ChallengeType.DEFAULT){
                 this.databaseHandler.deleteChallengeDetail(alarm.getIdAlarm(), alarm.getChallengeType());
             }
             this.databaseHandler.insertMathDetail(mathDetail);
@@ -128,7 +126,7 @@ public class UpcomingAlarmFragment extends Fragment implements AppSettingFragmen
                 this.databaseHandler.updateMathDetail(mathDetail);
             }
         }
-        alarm.setChallengeType(MATH);
+        alarm.setChallengeType(ChallengeType.MATH);
         this.databaseHandler.updateAlarm(alarm);
         for(int i = 0; i < listAlarm.size(); i++){
             if(listAlarm.get(i).getIdAlarm() == alarm.getIdAlarm()){
@@ -141,8 +139,8 @@ public class UpcomingAlarmFragment extends Fragment implements AppSettingFragmen
         MainActivity.restartAlarmService(getContext());
     }
     public void editAlarm(Alarm alarm, ShakeDetail shakeDetail){
-        if(alarm.getChallengeType() != SHAKE){
-            if(alarm.getChallengeType() != DEFAULT){
+        if(alarm.getChallengeType() != ChallengeType.SHAKE){
+            if(alarm.getChallengeType() != ChallengeType.DEFAULT){
                 this.databaseHandler.deleteChallengeDetail(alarm.getIdAlarm(), alarm.getChallengeType());
             }
             this.databaseHandler.insertShakeDetail(shakeDetail);
@@ -152,7 +150,7 @@ public class UpcomingAlarmFragment extends Fragment implements AppSettingFragmen
                 this.databaseHandler.updateShakeDetail(shakeDetail);
             }
         }
-        alarm.setChallengeType(SHAKE);
+        alarm.setChallengeType(ChallengeType.SHAKE);
         this.databaseHandler.updateAlarm(alarm);
         for(int i = 0; i < listAlarm.size(); i++){
             if(listAlarm.get(i).getIdAlarm() == alarm.getIdAlarm()){
