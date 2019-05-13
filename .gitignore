@@ -3,8 +3,8 @@
 .gradle
 
 **/local.properties
-**/*iml
 **/output.json
+*iml
 
 
 **/build/generated
