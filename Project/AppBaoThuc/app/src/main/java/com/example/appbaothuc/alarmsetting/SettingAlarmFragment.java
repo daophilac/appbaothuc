@@ -30,6 +30,7 @@ import com.example.appbaothuc.R;
 import com.example.appbaothuc.UpcomingAlarmFragment;
 import com.example.appbaothuc.appsetting.AppSettingFragment;
 import com.example.appbaothuc.models.Alarm;
+import com.example.appbaothuc.models.ChallengeType;
 import com.example.appbaothuc.models.MathDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 
@@ -38,7 +39,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.example.appbaothuc.appsetting.AppSettingFragment.HOUR_MODE_24;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType;
 
 
 public class SettingAlarmFragment extends Fragment implements LableDialogFragment.LabelDialogListener,
@@ -266,7 +266,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         btnPlayMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!MainActivity.validateAlarmRingtoneUrl(context, alarm)){
+                if(!alarm.validateRingtoneUrl(context)){
                     textViewRingtone.setText(alarm.getRingtone().getName());
                 }
                 if(!mediaPlayer.isPlaying()){

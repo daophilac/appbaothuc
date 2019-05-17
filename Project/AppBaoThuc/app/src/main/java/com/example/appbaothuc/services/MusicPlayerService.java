@@ -41,6 +41,9 @@ public class MusicPlayerService extends Service {
             case MUTE_A_LITTLE:
                 this.alarmMusicPlayer.muteALittle();
                 break;
+            case RESUME:
+                alarmMusicPlayer.resume();
+                break;
             case CHANGE_HEADSET_STATE:
                 this.alarmMusicPlayer.setHeadsetState(intent.getIntExtra("state", 2));
                 break;
@@ -62,6 +65,6 @@ public class MusicPlayerService extends Service {
 
 
     public enum AlarmMusicPlayerCommand{
-        START, STOP, MUTE_A_LITTLE, CHANGE_HEADSET_STATE
+        START, STOP, MUTE_A_LITTLE, RESUME, CHANGE_HEADSET_STATE
     }
 }

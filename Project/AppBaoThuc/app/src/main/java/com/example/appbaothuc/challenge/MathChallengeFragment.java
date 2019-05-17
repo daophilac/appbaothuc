@@ -13,8 +13,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.appbaothuc.R;
-import com.example.appbaothuc.listeners.ChallengeActivityListener;
-import com.example.appbaothuc.listeners.OnSaveChallengeStateListener;
 import com.example.appbaothuc.models.MathDetail;
 
 import java.util.ArrayList;
@@ -27,7 +25,9 @@ import static com.example.appbaothuc.models.MathDetail.MathDifficulty.INSANE;
 import static com.example.appbaothuc.models.MathDetail.MathDifficulty.MODERATE;
 import static com.example.appbaothuc.models.MathDetail.MathDifficulty.NIGHTMARE;
 
-public class MathChallengeFragment extends Fragment implements OnSaveChallengeStateListener {
+public class MathChallengeFragment extends Fragment {
+    private ChallengeActivity challengeActivity;
+    private ChallengeDialogFragment challengeDialogFragment;
     private MathDetail mathDetail;
     private int mathDifficulty;
     private int iNumCaculate;
@@ -43,7 +43,6 @@ public class MathChallengeFragment extends Fragment implements OnSaveChallengeSt
     private ImageButton buttonDelete;
     private String sUserResult="";
 
-    private ChallengeActivityListener challengeActivityListener;
     public void setMathDetail(MathDetail mathDetail) {
         this.mathDetail = mathDetail;
         this.mathDifficulty = mathDetail.getDifficulty();
@@ -52,7 +51,20 @@ public class MathChallengeFragment extends Fragment implements OnSaveChallengeSt
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.challengeActivityListener = (ChallengeActivityListener) context;
+        challengeActivity = (ChallengeActivity) context;
+        challengeDialogFragment = (ChallengeDialogFragment) getParentFragment();
+        challengeDialogFragment.setOnSaveChallengeState(new ChallengeDialogFragment.OnSaveChallengeState() {
+            @Override
+            public Bundle onSaveChallengeState() {
+                Bundle mathSavedState = new Bundle();
+                mathSavedState.putInt("iNumCaculate", iNumCaculate);
+                mathSavedState.putInt("iNumberOfDoneCalculation", iNumberOfDoneCalculation);
+                mathSavedState.putStringArrayList("listCaculate", listCaculate);
+                mathSavedState.putIntegerArrayList("listResult", listResult);
+                mathSavedState.putString("textView_ResultString", textView_Result.getText().toString());
+                return mathSavedState;
+            }
+        });
     }
 
     @Nullable
@@ -67,7 +79,6 @@ public class MathChallengeFragment extends Fragment implements OnSaveChallengeSt
         buttonDelete=view.findViewById(R.id.btnDelete);
         listCaculate=new ArrayList<>();
         listResult=new ArrayList<>();
-//        generateCalculation();
 
         final Button btnSo0=view.findViewById(R.id.so0);
         btnSo0.setOnClickListener(new View.OnClickListener() {
@@ -156,12 +167,7 @@ public class MathChallengeFragment extends Fragment implements OnSaveChallengeSt
                 if(iUserResult==listResult.get(iNumberOfDoneCalculation)){
                     iNumberOfDoneCalculation++;
                     if(iNumberOfDoneCalculation==iNumCaculate){
-                        challengeActivityListener.onFinishChallenge();
-//                        mathDialogListener.onFinishChallenge();
-//                        buttonConfirm.setEnabled(false);
-//                        textView_Question.setText("Done!");
-//                        textView_Question.setTextColor(Color.GREEN);
-//                        textView_Result.setText("");
+                        challengeActivity.challengeFinished();
                     }
                     else{
                         getNextCaculate();
@@ -187,7 +193,7 @@ public class MathChallengeFragment extends Fragment implements OnSaveChallengeSt
             this.iNumberOfDoneCalculation = bundleChallenge.getInt("iNumberOfDoneCalculation");
             this.listCaculate = bundleChallenge.getStringArrayList("listCaculate");
             this.listResult = bundleChallenge.getIntegerArrayList("listResult");
-            this.textView_Result.setText(bundleChallenge.getString("editText_ResultString"));
+            this.textView_Result.setText(bundleChallenge.getString("textView_ResultString"));
             this.textView_Question.setText(listCaculate.get(iNumberOfDoneCalculation));
         }
         else{
@@ -266,16 +272,5 @@ public class MathChallengeFragment extends Fragment implements OnSaveChallengeSt
         int b = random.nextInt(maxRange);
         int c = random.nextInt(maxRange);
         return "(" + a + " x " + b + ") + " + c;
-    }
-
-    @Override
-    public Bundle onSaveChallengeState() {
-        Bundle mathSavedState = new Bundle();
-        mathSavedState.putInt("iNumCaculate", iNumCaculate);
-        mathSavedState.putInt("iNumberOfDoneCalculation", iNumberOfDoneCalculation);
-        mathSavedState.putStringArrayList("listCaculate", listCaculate);
-        mathSavedState.putIntegerArrayList("listResult", listResult);
-        mathSavedState.putString("editText_ResultString", textView_Result.getText().toString());
-        return mathSavedState;
     }
 }

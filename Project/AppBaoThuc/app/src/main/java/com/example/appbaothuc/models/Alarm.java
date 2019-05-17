@@ -1,13 +1,15 @@
 package com.example.appbaothuc.models;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.appbaothuc.DatabaseHandler;
 import com.example.appbaothuc.Music;
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.challenge.ChallengeActivity;
-import com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -240,7 +242,17 @@ public class Alarm implements Comparable<Alarm>, Parcelable {
             this.describeRepeatDay = this.describeRepeatDay.substring(0, this.describeRepeatDay.lastIndexOf(','));
         }
     }
-
+    public boolean validateRingtoneUrl(Context context){
+        DatabaseHandler databaseHandler = new DatabaseHandler(context);
+        File file = new File(this.getRingtone().getUrl());
+        if (!file.exists()){
+            this.setRingtone(new Music(Music.defaultRingtoneUrl, Music.defaultRingtoneName));
+            databaseHandler.updateAlarmSetDefaultRingtone(this.getIdAlarm());
+            return false;
+        }
+        databaseHandler.close();
+        return true;
+    }
     // Comparable
     @Override
     public int compareTo(Alarm o) {
