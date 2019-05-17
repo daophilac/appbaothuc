@@ -118,7 +118,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             @Override
             public void onClick(View v) {
                 Alarm checkedAlarm = mapViewAlarm.get(constraintLayoutParent);
-                MainActivity.validateAlarmRingtoneUrl(context, checkedAlarm);
+                checkedAlarm.validateRingtoneUrl(context);
                 settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
                 fragmentManager.beginTransaction()
                         .add(R.id.full_screen_fragment_container, settingAlarmFragment)
@@ -129,7 +129,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             @Override
             public void onClick(View v) {
                 Alarm checkedAlarm = mapViewAlarm.get(constraintLayoutParent);
-                MainActivity.validateAlarmRingtoneUrl(context, checkedAlarm);
+                checkedAlarm.validateRingtoneUrl(context);
                 settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
                 fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, settingAlarmFragment).addToBackStack(null).commit();
             }

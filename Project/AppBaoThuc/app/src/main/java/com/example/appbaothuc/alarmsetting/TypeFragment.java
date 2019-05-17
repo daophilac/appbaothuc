@@ -21,10 +21,10 @@ import android.widget.LinearLayout;
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.challenge.ChallengeActivity;
 import com.example.appbaothuc.models.Alarm;
+import com.example.appbaothuc.models.ChallengeType;
 import com.example.appbaothuc.models.MathDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType;
 
 public class TypeFragment extends Fragment implements MathConfigurationFragment.MathConfigurationFragmentListener, ShakeConfigurationFragment.ShakeConfigurationFragmentListener {
     private TypeFragmentListener listener;

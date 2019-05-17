@@ -5,10 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.example.appbaothuc.challenge.ChallengeActivity;
-import com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType;
 import com.example.appbaothuc.models.Alarm;
+import com.example.appbaothuc.models.ChallengeType;
 import com.example.appbaothuc.models.MathDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 
@@ -341,7 +339,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         boolean vibrate = getValueAtColumn(cursor, "Vibrate", Boolean.class);
         int snoozeTime = getValueAtColumn(cursor, "SnoozeTime", Integer.class);
         int volume = getValueAtColumn(cursor, "Volume", Integer.class);
-        ChallengeType challengeType = ChallengeType.newInstance(getValueAtColumn(cursor, "ChallengeType", Integer.class));
+        ChallengeType challengeType = ChallengeType.newInstanceFromValue(getValueAtColumn(cursor, "ChallengeType", Integer.class));
         if (closeCursor) {
             cursor.close();
         }
@@ -371,7 +369,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         boolean vibrate = getValueAtColumn(cursor, "Vibrate", Boolean.class);
         int snoozeTime = getValueAtColumn(cursor, "SnoozeTime", Integer.class);
         int volume = getValueAtColumn(cursor, "Volume", Integer.class);
-        ChallengeType challengeType = ChallengeType.newInstance(getValueAtColumn(cursor, "ChallengeType", Integer.class));
+        ChallengeType challengeType = ChallengeType.newInstanceFromValue(getValueAtColumn(cursor, "ChallengeType", Integer.class));
         if (closeCursor) {
             cursor.close();
         }
@@ -398,7 +396,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             boolean vibrate = getValueAtColumn(cursor, "Vibrate", Boolean.class);
             int snoozeTime = getValueAtColumn(cursor, "SnoozeTime", Integer.class);
             int volume = getValueAtColumn(cursor, "Volume", Integer.class);
-            ChallengeType challengeType = ChallengeType.newInstance(getValueAtColumn(cursor, "ChallengeType", Integer.class));
+            ChallengeType challengeType = ChallengeType.newInstanceFromValue(getValueAtColumn(cursor, "ChallengeType", Integer.class));
             Alarm alarm = new Alarm(idAlarm, enable, hour, minute, listRepeatDay, new Music(ringtoneUrl, ringtoneName), label, snoozeTime, vibrate, volume, challengeType);
             listAlarm.add(alarm);
         }
