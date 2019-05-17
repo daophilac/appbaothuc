@@ -51,7 +51,7 @@
             app:layout_constraintTop_toBottomOf="@id/text_view_ringtone_name">
 
             <TextView
-                android:id="@+id/text_view_hour"
+                android:id="@+id/textviewHour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="23sp"
@@ -60,22 +60,22 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/text_view_colon"
+                android:id="@+id/textviewColon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=":"
                 android:textSize="23sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/text_view_hour"
+                app:layout_constraintStart_toEndOf="@id/textviewHour"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/text_view_minute"
+                android:id="@+id/textviewMinute"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="23sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/text_view_colon"
+                app:layout_constraintStart_toEndOf="@id/textviewColon"
                 app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
 
@@ -88,11 +88,92 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/constraint_layout_header" />
-    <Button
-        android:id="@+id/button_give_up"
-        android:layout_width="wrap_content"
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraint_layout_footer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/challenge_fragment_container"
-        android:layout_alignParentEnd="true"
-        android:text="GIVE UP" />
+        android:layout_below="@+id/challenge_fragment_container">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraint_layout_mute_time_count_down"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_give_up"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/text_view_count_down_reason"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFF0000"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline_vertical_center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/text_view_count_down_dot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline_vertical_center"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/text_view_count_down_second"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/text_view_count_down_dot"
+                app:layout_constraintEnd_toStartOf="@id/guideline_vertical_center" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/text_view_count_down_millisecond"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/text_view_count_down_dot"
+                app:layout_constraintStart_toEndOf="@id/text_view_count_down_dot" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/text_view_count_down_colon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/text_view_count_down_dot"
+                app:layout_constraintEnd_toStartOf="@id/text_view_count_down_second" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/text_view_count_down_minute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/text_view_count_down_dot"
+                app:layout_constraintEnd_toStartOf="@id/text_view_count_down_colon" />
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/button_give_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GIVE UP"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 </RelativeLayout>

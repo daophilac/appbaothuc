@@ -11,16 +11,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.appbaothuc.R;
-import com.example.appbaothuc.listeners.ChallengeActivityListener;
-import com.example.appbaothuc.listeners.OnSaveChallengeStateListener;
 
-public class DefaultChallengeFragment extends Fragment implements OnSaveChallengeStateListener{
+public class DefaultChallengeFragment extends Fragment {
+    private ChallengeActivity challengeActivity;
     private Button buttonDismiss;
-    private ChallengeActivityListener challengeActivityListener;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.challengeActivityListener = (ChallengeActivityListener) context;
+        challengeActivity = (ChallengeActivity) context;
     }
 
     @Nullable
@@ -31,14 +29,9 @@ public class DefaultChallengeFragment extends Fragment implements OnSaveChalleng
         buttonDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                challengeActivityListener.onFinishChallenge();
+                challengeActivity.challengeFinished();
             }
         });
         return view;
-    }
-
-    @Override
-    public Bundle onSaveChallengeState() {
-        return null;
     }
 }

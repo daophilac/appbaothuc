@@ -12,8 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.appbaothuc.R;
-import com.example.appbaothuc.listeners.ChallengeActivityListener;
-import com.example.appbaothuc.listeners.OnSaveChallengeStateListener;
 import com.example.appbaothuc.models.ShakeDetail;
 import com.peanut.androidlib.sensormanager.ShakeDetector;
 
@@ -21,8 +19,9 @@ import static com.example.appbaothuc.models.ShakeDetail.ShakeDifficulty.EASY;
 import static com.example.appbaothuc.models.ShakeDetail.ShakeDifficulty.HARD;
 import static com.example.appbaothuc.models.ShakeDetail.ShakeDifficulty.MODERATE;
 
-public class ShakeChallengeFragment extends Fragment implements OnSaveChallengeStateListener, ShakeDetector.ShakeListener {
-    private Context context;
+public class ShakeChallengeFragment extends Fragment {
+    private ChallengeActivity challengeActivity;
+    private ChallengeDialogFragment challengeDialogFragment;
     private ShakeDetail shakeDetail;
     private int shakeDifficulty;
     private int numberOfProblem;
@@ -30,7 +29,6 @@ public class ShakeChallengeFragment extends Fragment implements OnSaveChallengeS
     private float minForce;
     private TextView textViewShakeNumberOfProblem;
     private ShakeDetector shakeDetector;
-    private ChallengeActivityListener challengeActivityListener;
 
     public void setShakeDetail(ShakeDetail shakeDetail) {
         this.shakeDetail = shakeDetail;
@@ -40,8 +38,18 @@ public class ShakeChallengeFragment extends Fragment implements OnSaveChallengeS
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context = context;
-        this.challengeActivityListener = (ChallengeActivityListener) context;
+        challengeActivity = (ChallengeActivity) context;
+        challengeDialogFragment = (ChallengeDialogFragment) getParentFragment();
+        challengeDialogFragment.setOnSaveChallengeState(new ChallengeDialogFragment.OnSaveChallengeState() {
+            @Override
+            public Bundle onSaveChallengeState() {
+                Bundle shakeSavedState = new Bundle();
+                shakeSavedState.putInt("numberOfProblem", numberOfProblem);
+                shakeSavedState.putLong("minInterval", minInterval);
+                shakeSavedState.putFloat("minForce", minForce);
+                return shakeSavedState;
+            }
+        });
     }
     @Nullable
     @Override
@@ -50,7 +58,7 @@ public class ShakeChallengeFragment extends Fragment implements OnSaveChallengeS
         View view = inflater.inflate(R.layout.fragment_shake_challenge, container, false);
         this.textViewShakeNumberOfProblem = view.findViewById(R.id.text_view_shake_number_of_problem);
         this.textViewShakeNumberOfProblem.setText(String.valueOf(this.numberOfProblem));
-        this.shakeDetector = ShakeDetector.newInstance(this.context);
+        shakeDetector = new ShakeDetector(challengeActivity);
         this.minInterval = 100;
         switch(shakeDifficulty){
             case EASY:
@@ -64,7 +72,38 @@ public class ShakeChallengeFragment extends Fragment implements OnSaveChallengeS
                 break;
         }
         this.shakeDetector.configure(this.minInterval, this.minForce);
-        this.shakeDetector.start(this);
+        this.shakeDetector.start(new ShakeDetector.ShakeDetectorListener() {
+            @Override
+            public void onAccelerationChange(float x, float y, float z) {
+
+            }
+
+            @Override
+            public void onShake(float force) {
+                numberOfProblem--;
+                if(numberOfProblem == 0){
+                    challengeActivity.challengeFinished();
+                }
+                else{
+                    textViewShakeNumberOfProblem.setText("Shake for " + numberOfProblem + " times");
+                }
+            }
+
+            @Override
+            public void onSupportDetection() {
+
+            }
+
+            @Override
+            public void onNoSupportDetection() {
+
+            }
+
+            @Override
+            public void onStopDetection() {
+
+            }
+        });
 
         if(bundleChallenge != null){
             this.numberOfProblem = bundleChallenge.getInt("numberOfProblem");
@@ -83,46 +122,5 @@ public class ShakeChallengeFragment extends Fragment implements OnSaveChallengeS
     public void onStop() {
         super.onStop();
         this.shakeDetector.stop();
-    }
-
-    @Override
-    public Bundle onSaveChallengeState() {
-        Bundle shakeSavedState = new Bundle();
-        shakeSavedState.putInt("numberOfProblem", this.numberOfProblem);
-        shakeSavedState.putLong("minInterval", this.minInterval);
-        shakeSavedState.putFloat("minForce", this.minForce);
-        return shakeSavedState;
-    }
-
-    @Override
-    public void onAccelerationChange(float v, float v1, float v2) {
-
-    }
-
-    @Override
-    public void onShake(float v) {
-        Toast.makeText(this.context, "Shake detection.", Toast.LENGTH_SHORT).show();
-        this.numberOfProblem--;
-        if(this.numberOfProblem == 0){
-            this.challengeActivityListener.onFinishChallenge();
-        }
-        else{
-            this.textViewShakeNumberOfProblem.setText("Shake for " + this.numberOfProblem + " times");
-        }
-    }
-
-    @Override
-    public void onSupportDetection() {
-
-    }
-
-    @Override
-    public void onNoSupportDetection() {
-
-    }
-
-    @Override
-    public void onStopDetection() {
-//        Toast.makeText(context, "Shake detection has stopped.", Toast.LENGTH_SHORT).show();
     }
 }

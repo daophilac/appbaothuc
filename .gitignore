@@ -4,6 +4,8 @@
 
 **/local.properties
 **/output.json
+*iml
+
 
 **/build/generated
 **/build/intermediates
@@ -12,10 +14,3 @@
 **/outputs/logs
 Project/AppBaoThucDinhCao/gradle/wrapper/gradle-wrapper.properties
 Project/AppBaoThucDinhCao/build.gradle
-Project/AppBaoThuc/local.properties
-Project/AppBaoThuc/AppBaoThuc.iml
-Project/AppBaoThuc/local.properties
-Project/AppBaoThuc/app/app.iml
-Training/QuanLyDonHang/app/app.iml
-Training/QuanLyDonHang/app/app.iml
-Project/AppBaoThuc/local.properties
