@@ -24,8 +24,8 @@ public class AgainDialogFragment extends DialogFragment {
     public void setListener(SettingAlarmFragment settingAlarmFragment){
         this.listener = settingAlarmFragment;
     }
-    public AgainDialogFragment() {
-    }
+//    public AgainDialogFragment() {
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,9 +35,7 @@ public class AgainDialogFragment extends DialogFragment {
         btnCancel = viewDialog.findViewById(R.id.btnCancel);
         radioGroupAgain = viewDialog.findViewById(R.id.radioGroupAgain);
 
-        getDialog().setTitle("Hello");
-        getDialog().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        //getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override

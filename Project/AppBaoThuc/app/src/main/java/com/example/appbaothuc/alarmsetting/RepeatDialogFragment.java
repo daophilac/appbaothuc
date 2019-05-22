@@ -90,9 +90,6 @@ public class RepeatDialogFragment extends DialogFragment{
             checkDays();
         }
 
-        getDialog().setTitle("Hello");
-        getDialog().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
 
 

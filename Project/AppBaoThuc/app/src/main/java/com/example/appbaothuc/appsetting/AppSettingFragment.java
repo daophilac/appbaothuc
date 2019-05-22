@@ -1,12 +1,14 @@
 package com.example.appbaothuc.appsetting;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -30,10 +32,13 @@ public class AppSettingFragment extends Fragment {
     static TextView textViewMuteAlarmFor;
     static TextView textViewCanMuteAlarmFor;
     static TextView textViewAutoDismissAfter;
-    private CheckBox checkBoxGraduallyIncreaseVolume;
-    private CheckBox checkBoxPreventTurnOffPhone;
+    private CheckBox checkBoxGraduallyIncreaseVolume; // tăng dần âm lượng
+    private CheckBox checkBoxPreventTurnOffPhone; // ngăn chặn tắt âm lượng
     private RadioButton radioButton24Hour;
     private RadioButton radioButton12Hour;
+    private Button btnMute;
+    private Button btnCanMute;
+    private Button btnDismiss;
 
     public static int muteAlarmIn;
     public static int canMuteAlarmFor;
@@ -48,10 +53,10 @@ public class AppSettingFragment extends Fragment {
     private AutoDismissAfterDialogFragment autoDismissAfterDialogFragment;
     private InternalFileReader internalFileReader;
     private InternalFileWriter internalFileWriter;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        initializeSetting(context);
         this.context = context;
         this.muteAlarmInDialogFragment = new MuteAlarmInDialogFragment();
         this.canMuteAlarmForDialogFragment = new CanMuteAlarmForDialogFragment();
@@ -74,11 +79,15 @@ public class AppSettingFragment extends Fragment {
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        textViewMuteAlarmFor.setText("Báo thức im lặng trong: " + muteAlarmIn + " giây");
-        textViewCanMuteAlarmFor.setText("Có thể im lặng báo thức: " + canMuteAlarmFor + " lần");
-        textViewAutoDismissAfter.setText("Tự động hủy báo thức sau: " + autoDismissAfter + " phút");
+        textViewMuteAlarmFor.setText("Báo thức im lặng trong: " ); //+ muteAlarmIn + " giây");
+        textViewCanMuteAlarmFor.setText("Có thể im lặng báo thức: "); // + canMuteAlarmFor + " lần");
+        textViewAutoDismissAfter.setText("Tự động hủy báo thức sau: "); // + autoDismissAfter + " phút");
         this.checkBoxGraduallyIncreaseVolume.setChecked(graduallyIncreaseVolume);
         this.checkBoxPreventTurnOffPhone.setChecked(preventTurnOffPhone);
+        btnMute.setText(muteAlarmIn + " giây");
+        btnCanMute.setText(canMuteAlarmFor + " giây");
+        btnDismiss.setText(autoDismissAfter + " giây");
+
         if(hourMode == HOUR_MODE_24){
             this.radioButton24Hour.setChecked(true);
         }
@@ -95,6 +104,10 @@ public class AppSettingFragment extends Fragment {
         textViewMuteAlarmFor = view.findViewById(R.id.text_view_mute_alarm_for);
         textViewCanMuteAlarmFor = view.findViewById(R.id.text_view_can_mute_alarm_for);
         textViewAutoDismissAfter = view.findViewById(R.id.text_view_auto_dismiss_after);
+//        btnMute = view.findViewById(R.id.btnMute);
+//        btnCanMute = view.findViewById(R.id.btnCanMute);
+//        btnDismiss = view.findViewById(R.id.btnDismiss);
+
         this.checkBoxGraduallyIncreaseVolume = view.findViewById(R.id.check_box_gradually_increase_volume);
         this.checkBoxPreventTurnOffPhone = view.findViewById(R.id.check_box_prevent_turn_off_phone);
         this.radioButton24Hour = view.findViewById(R.id.radio_button_24_hour);
@@ -108,24 +121,24 @@ public class AppSettingFragment extends Fragment {
             }
         });
 
-        textViewMuteAlarmFor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                muteAlarmInDialogFragment.show(getFragmentManager(), null);
-            }
-        });
-        textViewCanMuteAlarmFor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                canMuteAlarmForDialogFragment.show(getFragmentManager(), null);
-            }
-        });
-        textViewAutoDismissAfter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                autoDismissAfterDialogFragment.show(getFragmentManager(), null);
-            }
-        });
+//        textViewMuteAlarmFor.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //muteAlarmInDialogFragment.show(getFragmentManager(), null);
+//            }
+//        });
+//        textViewCanMuteAlarmFor.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                canMuteAlarmForDialogFragment.show(getFragmentManager(), null);
+//            }
+//        });
+//        textViewAutoDismissAfter.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                autoDismissAfterDialogFragment.show(getFragmentManager(), null);
+//            }
+//        });
         this.checkBoxGraduallyIncreaseVolume.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -155,9 +168,30 @@ public class AppSettingFragment extends Fragment {
             }
         });
 
+        btnMute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                muteAlarmInDialogFragment.show(getFragmentManager(), null);
+            }
+        });
+
+        btnCanMute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                canMuteAlarmForDialogFragment.show(getFragmentManager(), null);
+            }
+        });
+
+        btnDismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                autoDismissAfterDialogFragment.show(getFragmentManager(), null);
+            }
+        });
+
         return view;
     }
-    private static void initializeDefaultSetting(){
+    private static void initializeDefaultSetting(){ // khởi tạo giá trị mặc định
         muteAlarmIn = 30;
         canMuteAlarmFor = 3;
         autoDismissAfter = 10;
@@ -165,25 +199,6 @@ public class AppSettingFragment extends Fragment {
         preventTurnOffPhone = true;
         hourMode = HOUR_MODE_24;
     }
-
-    private void initializeSetting(Context context){
-        this.internalFileReader = new InternalFileReader(context, fileName);
-        if(!internalFileReader.exists(fileName)){
-            initializeDefaultSetting();
-        }
-        else{
-            muteAlarmIn = Integer.parseInt(internalFileReader.readLine());
-            canMuteAlarmFor = Integer.parseInt(internalFileReader.readLine());
-            autoDismissAfter = Integer.parseInt(internalFileReader.readLine());
-            graduallyIncreaseVolume = Boolean.parseBoolean(internalFileReader.readLine());
-            preventTurnOffPhone = Boolean.parseBoolean(internalFileReader.readLine());
-            hourMode = Integer.parseInt(internalFileReader.readLine());
-        }
-        listRingtoneDirectory = new ArrayList<>();
-        listRingtoneDirectory.add("/sdcard/music");
-        listRingtoneDirectory.add("/sdcard/download");
-    }
-
     public static void loadAppSetting(Context context){
         InternalFileReader internalFileReader = new InternalFileReader(context, fileName);
         if(!internalFileReader.exists(fileName)){
@@ -198,7 +213,7 @@ public class AppSettingFragment extends Fragment {
             hourMode = Integer.parseInt(internalFileReader.readLine());
         }
         listRingtoneDirectory = new ArrayList<>();
-        listRingtoneDirectory.add("/sdcard/music");
-        listRingtoneDirectory.add("/sdcard/download");
+        listRingtoneDirectory.add(Environment.getExternalStorageDirectory().getAbsolutePath());
+//        listRingtoneDirectory.add("/sdcard/download");
     }
 }
