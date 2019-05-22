@@ -9,11 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.appbaothuc.MainActivity;
 import com.example.appbaothuc.R;
-import com.example.appbaothuc.listeners.ChallengeActivityListener;
-import com.example.appbaothuc.listeners.ChallengeDialogListener;
-import com.example.appbaothuc.listeners.OnSaveChallengeStateListener;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.services.MusicPlayerService;
+import com.example.appbaothuc.services.NotificationService;
 import com.peanut.androidlib.activitymanager.ActivityFromDeath;
 
 import java.util.HashMap;
@@ -22,22 +20,68 @@ import static com.example.appbaothuc.appsetting.AppSettingFragment.autoDismissAf
 import static com.example.appbaothuc.services.MusicPlayerService.AlarmMusicPlayerCommand.START;
 import static com.example.appbaothuc.services.MusicPlayerService.AlarmMusicPlayerCommand.STOP;
 
-public class ChallengeActivity extends AppCompatActivity implements ChallengeActivityListener, ChallengeDialogListener, ActivityFromDeath.ActivityFromDeathListener {
+public class ChallengeActivity extends AppCompatActivity {
     private Alarm alarm;
-    private OnSaveChallengeStateListener onSaveChallengeStateListener;
-    private ActivityFromDeath activityFromDeath;
+    private ChallengeDialogFragment challengeDialogFragment;
     private static Thread threadTimeout;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challenge);
-        this.activityFromDeath = new ActivityFromDeath(this);
-        this.activityFromDeath.start();
+        ActivityFromDeath.sendOnCreateSignal(this);
+        ActivityFromDeath.start(new ActivityFromDeath.ActivityFromDeathListener() {
+            @Override
+            public void onTimeToInitialize() {
+                byte[] byteAlarm = getIntent().getExtras().getByteArray("byteAlarm");
+                alarm = Alarm.toParcelable(byteAlarm, Alarm.CREATOR);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                challengeDialogFragment = ChallengeDialogFragment.newInstance(alarm,"");
+                challengeDialogFragment.show(fragmentManager, getLocalClassName());
+            }
+
+            @Override
+            public HashMap<String, Bundle> onTimeToBuildBundle() {
+                Bundle bundleActivity = new Bundle();
+                byte[] byteAlarm = Alarm.toByteArray(alarm);
+                bundleActivity.putByteArray("byteAlarm", byteAlarm);
+                Bundle bundleChallenge = challengeDialogFragment.buildBundleForRecreation();
+                HashMap<String, Bundle> result = new HashMap<>();
+                result.put("bundleActivity", bundleActivity);
+                result.put("bundleChallenge", bundleChallenge);
+                return result;
+            }
+
+            @Override
+            public void onTimeToGetBundle(HashMap<String, Bundle> mapBundle) {
+                Bundle bundleActivity = mapBundle.get("bundleActivity");
+                byte[] byteAlarm = bundleActivity.getByteArray("byteAlarm");
+                alarm = Alarm.toParcelable(byteAlarm, Alarm.CREATOR);
+                Bundle bundleChallenge = mapBundle.get("bundleChallenge");
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                challengeDialogFragment = ChallengeDialogFragment.newInstance(alarm,"");
+                challengeDialogFragment.setArguments(bundleChallenge);
+                challengeDialogFragment.show(fragmentManager, getLocalClassName());
+
+            }
+        });
     }
     @Override
     protected void onResume() {
         super.onResume();
-        this.activityFromDeath.sendOnResumeSignal();
+        ActivityFromDeath.sendOnResumeSignal(this);
+        if(!MusicPlayerService.isPlaying()){
+            byte[] byteAlarm = Alarm.toByteArray(alarm);
+            Intent intent = new Intent(this, MusicPlayerService.class);
+            intent.putExtra("command", START);
+            intent.putExtra("byteAlarm", byteAlarm);
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                startForegroundService(intent);
+                startService(intent);
+            }
+            else{
+                startService(intent);
+            }
+        }
         if(threadTimeout == null){
             threadTimeout = new Thread(new Runnable() {
                 @Override
@@ -45,7 +89,7 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
                     try {
                         Thread.sleep(autoDismissAfter * 60000);
                         if(MusicPlayerService.isPlaying()){
-                            onFinishChallenge();
+                            challengeFinished();
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -59,62 +103,10 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
     @Override
     protected void onStop() {
         super.onStop();
-        activityFromDeath.sendOnStopSignal();
+        ActivityFromDeath.sendOnStopSignal(this);
     }
-    @Override
-    public HashMap<String, Bundle> buildBundle() {
-        Bundle bundleActivity = new Bundle();
-        byte[] byteAlarm = Alarm.toByteArray(alarm);
-        bundleActivity.putByteArray("byteAlarm", byteAlarm);
-        Bundle bundleChallenge = onSaveChallengeStateListener.onSaveChallengeState();
-        HashMap<String, Bundle> result = new HashMap<>();
-        result.put("bundleActivity", bundleActivity);
-        result.put("bundleChallenge", bundleChallenge);
-        return result;
-    }
-    @Override
-    public void getBundle() {
-        Bundle bundleActivity = getIntent().getBundleExtra("bundleActivity");
-        byte[] byteAlarm;
-        if(bundleActivity != null){
-            byteAlarm = bundleActivity.getByteArray("byteAlarm");
-            alarm = Alarm.toParcelable(byteAlarm, Alarm.CREATOR);
-            Bundle bundleChallenge = getIntent().getBundleExtra("bundleChallenge");
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            ChallengeDialogFragment challengeDialogFragment = ChallengeDialogFragment.newInstance(alarm,"");
-            challengeDialogFragment.setArguments(bundleChallenge);
-            challengeDialogFragment.show(fragmentManager, this.getLocalClassName());
-        }
-        else{
-            byteAlarm = getIntent().getExtras().getByteArray("alarm");
-            alarm = Alarm.toParcelable(byteAlarm, Alarm.CREATOR);
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            ChallengeDialogFragment challengeDialogFragment = ChallengeDialogFragment.newInstance(alarm,"");
-            challengeDialogFragment.show(fragmentManager, this.getLocalClassName());
-        }
-
-
-
-
-        if(!MusicPlayerService.isPlaying()){
-            Intent intent = new Intent(this, MusicPlayerService.class);
-            intent.putExtra("command", START);
-            intent.putExtra("byteAlarm", byteAlarm);
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                startForegroundService(intent);
-                startService(intent);
-            }
-            else{
-                startService(intent);
-            }
-        }
-    }
-
-    @Override
-    public void onFinishChallenge() {
-        this.activityFromDeath.stop();
-        threadTimeout = null;
-
+    public void challengeFinished(){
+        ActivityFromDeath.stop();
         finish();
         Intent intent = new Intent(this, MusicPlayerService.class);
         intent.putExtra("command", STOP);
@@ -125,17 +117,6 @@ public class ChallengeActivity extends AppCompatActivity implements ChallengeAct
         else{
             startService(intent);
         }
-        MainActivity.restartAlarmService(this);
-    }
-
-    @Override
-    public void onChallengeActivated(OnSaveChallengeStateListener onSaveChallengeStateListener) {
-        this.onSaveChallengeStateListener = onSaveChallengeStateListener;
-    }
-
-    public static final class ChallengeType{
-        public static final int DEFAULT = 1;
-        public static final int MATH = 2;
-        public static final int SHAKE = 3;
+        NotificationService.update(this);
     }
 }

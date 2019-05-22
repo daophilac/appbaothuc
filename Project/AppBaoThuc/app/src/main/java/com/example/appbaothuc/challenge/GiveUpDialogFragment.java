@@ -15,8 +15,7 @@ import android.widget.TextView;
 import com.example.appbaothuc.R;
 
 public class GiveUpDialogFragment extends DialogFragment {
-    private OnGiveUpListener listener;
-
+    private ChallengeActivity challengeActivity;
     private ImageButton imageButtonBack;
     private TextView textViewCount;
     private Button buttonGiveUp;
@@ -31,7 +30,7 @@ public class GiveUpDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.listener = (OnGiveUpListener) getParentFragment();
+        challengeActivity = (ChallengeActivity) context;
     }
 
     @Nullable
@@ -55,16 +54,12 @@ public class GiveUpDialogFragment extends DialogFragment {
             public void onClick(View v) {
                 countDownFrom--;
                 if(countDownFrom == 0){
-                    listener.onGaveUp();
+                    challengeActivity.challengeFinished();
                     getDialog().dismiss();
                 }
                 textViewCount.setText("Press button for " + countDownFrom + " times.");
             }
         });
         return view;
-    }
-
-    public interface OnGiveUpListener{
-        void onGaveUp();
     }
 }

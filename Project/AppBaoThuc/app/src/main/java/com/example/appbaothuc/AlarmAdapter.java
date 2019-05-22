@@ -24,9 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.example.appbaothuc.appsetting.AppSettingFragment.HOUR_MODE_24;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.DEFAULT;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.MATH;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.SHAKE;
 
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
     private Context context;
@@ -121,7 +118,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             @Override
             public void onClick(View v) {
                 Alarm checkedAlarm = mapViewAlarm.get(constraintLayoutParent);
-                MainActivity.validateAlarmRingtoneUrl(context, checkedAlarm);
+                checkedAlarm.validateRingtoneUrl(context);
                 settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
                 fragmentManager.beginTransaction()
                         .add(R.id.full_screen_fragment_container, settingAlarmFragment)
@@ -132,7 +129,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             @Override
             public void onClick(View v) {
                 Alarm checkedAlarm = mapViewAlarm.get(constraintLayoutParent);
-                MainActivity.validateAlarmRingtoneUrl(context, checkedAlarm);
+                checkedAlarm.validateRingtoneUrl(context);
                 settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
                 fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, settingAlarmFragment).addToBackStack(null).commit();
             }

@@ -13,7 +13,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 import com.example.appbaothuc.MainActivity;
 import com.example.appbaothuc.R;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppSettingFragment extends Fragment {
-    private static List<OnHourModeChangedListener> listOnHourModeChangedListener;
+    private OnHourModeChangeListener onHourModeChangeListener;
     public static final int HOUR_MODE_24 = 1;
     public static final int HOUR_MODE_12 = 2;
     private static final String fileName = "setting.txt";
@@ -50,7 +49,6 @@ public class AppSettingFragment extends Fragment {
     private MuteAlarmInDialogFragment muteAlarmInDialogFragment;
     private CanMuteAlarmForDialogFragment canMuteAlarmForDialogFragment;
     private AutoDismissAfterDialogFragment autoDismissAfterDialogFragment;
-    private InternalFileReader internalFileReader;
     private InternalFileWriter internalFileWriter;
 
 
@@ -133,8 +131,8 @@ public class AppSettingFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     hourMode = HOUR_MODE_24;
-                    for(OnHourModeChangedListener l : listOnHourModeChangedListener){
-                        l.onHourModeChanged();
+                    if(onHourModeChangeListener != null){
+                        onHourModeChangeListener.onHourModeChange(hourMode);
                     }
                 }
             }
@@ -144,8 +142,8 @@ public class AppSettingFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     hourMode = HOUR_MODE_12;
-                    for(OnHourModeChangedListener l : listOnHourModeChangedListener){
-                        l.onHourModeChanged();
+                    if(onHourModeChangeListener != null){
+                        onHourModeChangeListener.onHourModeChange(hourMode);
                     }
                 }
             }
@@ -182,8 +180,7 @@ public class AppSettingFragment extends Fragment {
         preventTurnOffPhone = true;
         hourMode = HOUR_MODE_24;
     }
-    public static void loadAppSetting(Context context){
-        listOnHourModeChangedListener = new ArrayList<>();
+    public void loadAppSetting(Context context){
         InternalFileReader internalFileReader = new InternalFileReader(context, fileName);
         if(!internalFileReader.exists(fileName)){
             initializeDefaultSetting();
@@ -198,12 +195,12 @@ public class AppSettingFragment extends Fragment {
         }
         listRingtoneDirectory = new ArrayList<>();
         listRingtoneDirectory.add(Environment.getExternalStorageDirectory().getAbsolutePath());
-//        listRingtoneDirectory.add("/sdcard/download");
     }
-    public static void registerOnHourModeChangedListener(OnHourModeChangedListener onHourModeChangedListener){
-        listOnHourModeChangedListener.add(onHourModeChangedListener);
+    public void setOnHourModeChangeListener(OnHourModeChangeListener onHourModeChangeListener){
+        this.onHourModeChangeListener = onHourModeChangeListener;
     }
-    public interface OnHourModeChangedListener{
-        void onHourModeChanged();
+
+    public interface OnHourModeChangeListener {
+        void onHourModeChange(int hourMode);
     }
 }

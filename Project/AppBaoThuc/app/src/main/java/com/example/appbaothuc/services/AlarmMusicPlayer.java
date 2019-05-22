@@ -7,15 +7,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.widget.Toast;
 
 import com.example.appbaothuc.models.Alarm;
 
-import static com.example.appbaothuc.appsetting.AppSettingFragment.canMuteAlarmFor;
 import static com.example.appbaothuc.appsetting.AppSettingFragment.graduallyIncreaseVolume;
-import static com.example.appbaothuc.appsetting.AppSettingFragment.muteAlarmIn;
 
-public class AlarmMusicPlayer {
+class AlarmMusicPlayer {
     private Context context;
     private Alarm alarm;
     private Vibrator vibrator;
@@ -36,19 +33,18 @@ public class AlarmMusicPlayer {
     private boolean isRunning;
     private boolean isDismissed;
     private boolean isMuting;
-    private boolean snoozeAgain;
+    private boolean resumed;
     private Thread threadSnooze;
-    private int muteTime;
 
-    public AlarmMusicPlayer(Context context){
+    AlarmMusicPlayer(Context context){
         this.context = context;
     }
 
-    public void setAlarm(Alarm alarm) {
+    void setAlarm(Alarm alarm) {
         this.alarm = alarm;
     }
 
-    public void setHeadsetState(int headsetState){
+    void setHeadsetState(int headsetState){
         this.headsetState = headsetState;
         if(this.isRunning){
             if(headsetState == 1){
@@ -62,7 +58,6 @@ public class AlarmMusicPlayer {
         }
     }
     private void initialize(){
-        this.muteTime = 0;
         this.uri = Uri.parse(this.alarm.getRingtone().getUrl());
         this.alarmVolume = this.alarm.getVolume();
         if(this.alarmVolume == 0){
@@ -92,8 +87,7 @@ public class AlarmMusicPlayer {
             this.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int) (this.alarmVolumeInPercent * this.maxAudioVolume) , 0);
         }
     }
-
-    public void start() {
+    void start() {
         initialize();
         this.isRunning = true;
         if(this.alarm.isVibrate()){
@@ -134,26 +128,17 @@ public class AlarmMusicPlayer {
             }).start();
         }
     }
-    public void muteALittle(){
-        if(canMuteAlarmFor == 0){
-            Toast.makeText(context, "Based on your setting, you can't mute the alarm.", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if(muteTime >= canMuteAlarmFor){
-            Toast.makeText(context, "You can't mute the alarm for more than " + canMuteAlarmFor + " times", Toast.LENGTH_LONG).show();
-            return;
-        }
-        Toast.makeText(context, "Mute for " + muteAlarmIn + " seconds.", Toast.LENGTH_LONG).show();
-        SnoozeManager snoozeManager = new SnoozeManager(muteAlarmIn);
-        if (this.threadSnooze == null || !this.threadSnooze.isAlive()) {
-            this.threadSnooze = new Thread(snoozeManager);
-            this.threadSnooze.start();
-        }
-        else {
-            this.snoozeAgain = true;
-        }
+    void muteALittle(){
+        isMuting = true;
+        resumed = false;
+        SnoozeManager snoozeManager = new SnoozeManager();
+        this.threadSnooze = new Thread(snoozeManager);
+        this.threadSnooze.start();
     }
-    public void stopPlaying(){
+    void resume(){
+        resumed = true;
+    }
+    void stopPlaying(){
         if(!this.isRunning){
             return;
         }
@@ -169,59 +154,51 @@ public class AlarmMusicPlayer {
         }
         this.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, this.currentAudioVolume, 0);
     }
-
-
-
-
     private class SnoozeManager implements Runnable {
-        private int snoozeTime;
-        SnoozeManager(int snoozeTime) {
-            this.snoozeTime = snoozeTime;
-        }
+        @Override
         public void run() {
-            isMuting = true;
             if(alarm.isVibrate()){
                 vibrator.cancel();
             }
             mediaPlayer.setVolume(0, 0);
-            try {
-                Thread.sleep(this.snoozeTime * 1000);
-                isMuting = false;
-                if(alarm.isVibrate()){
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                        vibrator.vibrate(VibrationEffect.createWaveform(timings, amplitudes, 0));
-                    }
-                    else{
-                        vibrator.vibrate(timings, 0);
-                    }
+            while(!resumed){
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                if (!graduallyIncreaseVolume){
-                    mediaPlayer.setVolume(alarmVolumeInPercent, alarmVolumeInPercent);
-                    muteTime++;
+            }
+            isMuting = false;
+            if(alarm.isVibrate()){
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                    vibrator.vibrate(VibrationEffect.createWaveform(timings, amplitudes, 0));
+                }
+                else{
+                    vibrator.vibrate(timings, 0);
+                }
+            }
+            if (!graduallyIncreaseVolume){
+                mediaPlayer.setVolume(alarmVolumeInPercent, alarmVolumeInPercent);
+                return;
+            }
+            for (float i = 1; i <= 1000; i++) {
+                if(isMuting){
+                    run();
                     return;
                 }
-                for (float i = 1; i <= 1000; i++) {
-                    if (isDismissed) {
-                        if(alarm.isVibrate()){
-                            vibrator.cancel();
-                        }
-                        return;
+                if (isDismissed) {
+                    if(alarm.isVibrate()){
+                        vibrator.cancel();
                     }
-                    if (snoozeAgain) {
-                        snoozeAgain = false;
-                        run();
-                        return;
-                    }
-                    mediaPlayer.setVolume(i / 1000, i / 1000);
-                    Thread.sleep(10);
+                    return;
                 }
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
+                mediaPlayer.setVolume(i / 1000, i / 1000);
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-            muteTime++;
         }
     }
 }

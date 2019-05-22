@@ -1,7 +1,6 @@
 package com.example.appbaothuc.challenge;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,13 +8,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.appbaothuc.R;
-import com.example.appbaothuc.listeners.ChallengeActivityListener;
-import com.example.appbaothuc.listeners.OnSaveChallengeStateListener;
 import com.example.appbaothuc.models.MathDetail;
 
 import java.util.ArrayList;
@@ -28,21 +25,23 @@ import static com.example.appbaothuc.models.MathDetail.MathDifficulty.INSANE;
 import static com.example.appbaothuc.models.MathDetail.MathDifficulty.MODERATE;
 import static com.example.appbaothuc.models.MathDetail.MathDifficulty.NIGHTMARE;
 
-public class MathChallengeFragment extends Fragment implements OnSaveChallengeStateListener {
+public class MathChallengeFragment extends Fragment {
+    private ChallengeActivity challengeActivity;
+    private ChallengeDialogFragment challengeDialogFragment;
     private MathDetail mathDetail;
     private int mathDifficulty;
-    private int numberOfProblem;
-    private int numberOfDoneProblem;
-    private ArrayList<String> listProblem;
-    private ArrayList<Integer> listResult;
+    private int iNumCaculate;
+    private int iNumberOfDoneCalculation;
     private Random random;
+    private ArrayList<String> listCaculate;
+    private ArrayList<Integer> listResult;
+    private ArrayList arr;
 
-    private TextView textViewProblemLeft;
-    private TextView textViewQuestion;
-    private EditText editTextResult;
-    private ImageButton buttonConfirm;
-
-    private ChallengeActivityListener challengeActivityListener;
+    private TextView textView_Question;
+    private TextView textView_Result;
+    private Button buttonConfirm;
+    private ImageButton buttonDelete;
+    private String sUserResult="";
 
     public void setMathDetail(MathDetail mathDetail) {
         this.mathDetail = mathDetail;
@@ -52,7 +51,20 @@ public class MathChallengeFragment extends Fragment implements OnSaveChallengeSt
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.challengeActivityListener = (ChallengeActivityListener) context;
+        challengeActivity = (ChallengeActivity) context;
+        challengeDialogFragment = (ChallengeDialogFragment) getParentFragment();
+        challengeDialogFragment.setOnSaveChallengeState(new ChallengeDialogFragment.OnSaveChallengeState() {
+            @Override
+            public Bundle onSaveChallengeState() {
+                Bundle mathSavedState = new Bundle();
+                mathSavedState.putInt("iNumCaculate", iNumCaculate);
+                mathSavedState.putInt("iNumberOfDoneCalculation", iNumberOfDoneCalculation);
+                mathSavedState.putStringArrayList("listCaculate", listCaculate);
+                mathSavedState.putIntegerArrayList("listResult", listResult);
+                mathSavedState.putString("textView_ResultString", textView_Result.getText().toString());
+                return mathSavedState;
+            }
+        });
     }
 
     @Nullable
@@ -60,59 +72,145 @@ public class MathChallengeFragment extends Fragment implements OnSaveChallengeSt
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Bundle bundleChallenge = getArguments();
         View view = inflater.inflate(R.layout.fragment_math_challenge, container, false);
+        textView_Question=view.findViewById(R.id.textView_Question);
+        textView_Result =view.findViewById(R.id.textView_Result);
+        textView_Result.setText(textView_Result.getText());
+        buttonConfirm=view.findViewById(R.id.btnConfirm);
+        buttonDelete=view.findViewById(R.id.btnDelete);
+        listCaculate=new ArrayList<>();
+        listResult=new ArrayList<>();
 
-        listProblem = new ArrayList<>();
-        listResult = new ArrayList<>();
-        random = new Random();
-
-        textViewProblemLeft = view.findViewById(R.id.text_view_problem_left);
-        textViewQuestion = view.findViewById(R.id.text_view_question);
-        editTextResult = view.findViewById(R.id.edit_text_result);
-        buttonConfirm = view.findViewById(R.id.button_confirm);
+        final Button btnSo0=view.findViewById(R.id.so0);
+        btnSo0.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sUserResult+=btnSo0.getText();
+                textView_Result.setText(sUserResult);
+            }
+        });
+        final Button btnSo1=view.findViewById(R.id.so1);
+        btnSo1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sUserResult+=btnSo1.getText();
+                textView_Result.setText(sUserResult);
+            }
+        });
+        final Button btnSo2=view.findViewById(R.id.so2);
+        btnSo2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sUserResult+=btnSo2.getText();
+                textView_Result.setText(sUserResult);
+            }
+        });
+        final Button btnSo3=view.findViewById(R.id.so3);
+        btnSo3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sUserResult+=btnSo3.getText();
+                textView_Result.setText(sUserResult);
+            }
+        });
+        final Button btnSo4=view.findViewById(R.id.so4);
+        btnSo4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sUserResult+=btnSo4.getText();
+                textView_Result.setText(sUserResult);
+            }
+        });
+        final Button btnSo5=view.findViewById(R.id.so5);
+        btnSo5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sUserResult+=btnSo5.getText();
+                textView_Result.setText(sUserResult);
+            }
+        });
+        final Button btnSo6=view.findViewById(R.id.so6);
+        btnSo6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sUserResult+=btnSo6.getText();
+                textView_Result.setText(sUserResult);
+            }
+        });
+        final Button btnSo7=view.findViewById(R.id.so7);
+        btnSo7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sUserResult+=btnSo7.getText();
+                textView_Result.setText(sUserResult);
+            }
+        });
+        final Button btnSo8=view.findViewById(R.id.so8);
+        btnSo8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sUserResult+=btnSo8.getText();
+                textView_Result.setText(sUserResult);
+            }
+        });
+        final Button btnSo9=view.findViewById(R.id.so9);
+        btnSo9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sUserResult+=btnSo9.getText();
+                textView_Result.setText(sUserResult);
+            }
+        });
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                int userResult = Integer.parseInt(editTextResult.getText().toString());
-                if(userResult == listResult.get(numberOfDoneProblem)){ // A tricky use of numberOfDoneProblem
-                    numberOfDoneProblem++;
-                    if(numberOfDoneProblem == numberOfProblem){
-                        buttonConfirm.setEnabled(false);
-                        challengeActivityListener.onFinishChallenge();
-                        textViewQuestion.setTextColor(Color.GREEN);
-                        textViewQuestion.setText("DONE");
-                        editTextResult.setText("");
-                        editTextResult.setEnabled(false);
+            public void onClick(View view) {
+                int iUserResult=Integer.parseInt(textView_Result.getText().toString());
+                if(iUserResult==listResult.get(iNumberOfDoneCalculation)){
+                    iNumberOfDoneCalculation++;
+                    if(iNumberOfDoneCalculation==iNumCaculate){
+                        challengeActivity.challengeFinished();
                     }
                     else{
-                        getNextCalculation();
+                        getNextCaculate();
                     }
                 }
             }
         });
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String sSysResult=sUserResult;
+                sUserResult=sSysResult.substring(0,sUserResult.length()-1);
+
+                textView_Result.setText(sUserResult);
+            }
+        });
+
+
+
 
         if(bundleChallenge != null){
-            this.numberOfProblem = bundleChallenge.getInt("numberOfProblem");
-            this.numberOfDoneProblem = bundleChallenge.getInt("numberOfDoneProblem");
-            this.listProblem = bundleChallenge.getStringArrayList("listProblem");
+            this.iNumCaculate = bundleChallenge.getInt("iNumCaculate");
+            this.iNumberOfDoneCalculation = bundleChallenge.getInt("iNumberOfDoneCalculation");
+            this.listCaculate = bundleChallenge.getStringArrayList("listCaculate");
             this.listResult = bundleChallenge.getIntegerArrayList("listResult");
-            this.editTextResult.setText(bundleChallenge.getString("editTextResultString"));
-            this.textViewQuestion.setText(listProblem.get(numberOfDoneProblem));
+            this.textView_Result.setText(bundleChallenge.getString("textView_ResultString"));
+            this.textView_Question.setText(listCaculate.get(iNumberOfDoneCalculation));
         }
         else{
-            this.numberOfProblem = this.mathDetail.getNumberOfProblem();
-            this.numberOfDoneProblem = 0;
+            this.iNumCaculate = this.mathDetail.getNumberOfProblem();
+            this.iNumberOfDoneCalculation = 0;
             generateCalculation();
         }
-        this.textViewProblemLeft.setText("Left: " + (numberOfProblem - numberOfDoneProblem));
         return view;
     }
+    private void getNextCaculate(){
+        sUserResult="";
+        textView_Question.setText(listCaculate.get(iNumberOfDoneCalculation));
+        textView_Result.setText("");
 
-    private void getNextCalculation(){
-        this.textViewProblemLeft.setText("Left: " + (numberOfProblem - numberOfDoneProblem));
-        this.textViewQuestion.setText(listProblem.get(numberOfDoneProblem));
-        this.editTextResult.setText("");
     }
     private void generateCalculation(){
+        random = new Random();
         int maxRange = 0;
         switch (mathDifficulty){
             case EASY:
@@ -134,16 +232,18 @@ public class MathChallengeFragment extends Fragment implements OnSaveChallengeSt
                 maxRange = 10000;
                 break;
         }
-        for(int i = 0; i < numberOfProblem; i++){
+
+        for(int i=0;i<iNumCaculate;i++) {
             int a = random.nextInt(maxRange);
             int b = random.nextInt(maxRange);
             int c = random.nextInt(maxRange);
-            String Problem = "(" + a + " x " + b + ") + " + c;
-            int result = a * b + c;
-            listProblem.add(Problem);
-            listResult.add(result);
+
+            String sCaculation= "(" + a + " x " + b + ") + "+ c;
+            int iResult=a*b+c;
+            listCaculate.add(sCaculation);
+            listResult.add(iResult);
         }
-        getNextCalculation();
+        getNextCaculate();
     }
     public static String getCalculationExample(int mathDifficulty){
         Random random = new Random();
@@ -172,16 +272,5 @@ public class MathChallengeFragment extends Fragment implements OnSaveChallengeSt
         int b = random.nextInt(maxRange);
         int c = random.nextInt(maxRange);
         return "(" + a + " x " + b + ") + " + c;
-    }
-
-    @Override
-    public Bundle onSaveChallengeState() {
-        Bundle mathSavedState = new Bundle();
-        mathSavedState.putInt("numberOfProblem", numberOfProblem);
-        mathSavedState.putInt("numberOfDoneProblem", numberOfDoneProblem);
-        mathSavedState.putStringArrayList("listProblem", listProblem);
-        mathSavedState.putIntegerArrayList("listResult", listResult);
-        mathSavedState.putString("editTextResultString", editTextResult.getText().toString());
-        return mathSavedState;
     }
 }
