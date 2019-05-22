@@ -46,7 +46,8 @@ public class MusicPickerFragment extends Fragment {
     private List<Music> listMusic;
 
     private ChooseMusicType chooseMusicType;
-    private HashMap<SortBy, Order> mapSortOrder;
+    private SortBy isSortingBy;
+    private Order isWithOrder;
 
     public static MusicPickerFragment newInstance(SettingAlarmFragment settingAlarmFragment, Alarm alarm){
         MusicPickerFragment musicPickerFragment = new MusicPickerFragment();
@@ -87,9 +88,8 @@ public class MusicPickerFragment extends Fragment {
         musicAdapter = new MusicAdapter(context, alarm, listMusic);
         recyclerViewListMusic.setAdapter(musicAdapter);
         recyclerViewListMusic.setLayoutManager(new LinearLayoutManager(getContext()));
-        mapSortOrder = new HashMap<>();
-        mapSortOrder.put(SortBy.NAME, Order.ASC);
-        mapSortOrder.put(SortBy.URL, Order.ASC);
+        isSortingBy = SortBy.NAME;
+        isWithOrder = Order.ASC;
 //        buttonRingtone.setOnClickListener(new View.OnClickListener(){
 //            @Override
 //            public void onClick(View v) {
@@ -128,43 +128,47 @@ public class MusicPickerFragment extends Fragment {
         buttonSortByName.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Order order = mapSortOrder.get(SortBy.NAME);
-                if(order == Order.DESC){
-                    order = Order.ASC;
-                    mapSortOrder.put(SortBy.NAME, order);
+                if(isSortingBy != SortBy.NAME){
+                    isSortingBy = SortBy.NAME;
+                    isWithOrder = Order.ASC;
+                    Collections.sort(listMusic, new Music.NameComparator());
+                    imageViewSortByName.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_down));
+                }
+                else if(isWithOrder == Order.ASC){
+                    isWithOrder = Order.DESC;
                     Collections.sort(listMusic, new Music.NameComparator());
                     imageViewSortByName.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_up));
-                    musicAdapter.notifyDataSetChanged();
                 }
-                else{
-                    order = Order.DESC;
-                    mapSortOrder.put(SortBy.NAME, order);
+                else if(isWithOrder == Order.DESC){
+                    isWithOrder = Order.ASC;
                     Collections.sort(listMusic, new Music.NameComparator());
                     Collections.reverse(listMusic);
                     imageViewSortByName.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_down));
-                    musicAdapter.notifyDataSetChanged();
                 }
+                musicAdapter.notifyDataSetChanged();
             }
         });
         buttonSortByUrl.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Order order = mapSortOrder.get(SortBy.URL);
-                if(order == Order.DESC){
-                    order = Order.ASC;
-                    mapSortOrder.put(SortBy.URL, order);
+                if(isSortingBy != SortBy.URL){
+                    isSortingBy = SortBy.URL;
+                    isWithOrder = Order.ASC;
                     Collections.sort(listMusic, new Music.UrlComparator());
-                    imageViewSortByUrl.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_up));
-                    musicAdapter.notifyDataSetChanged();
+                    imageViewSortByUrl.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_down));
                 }
-                else{
-                    order = Order.DESC;
-                    mapSortOrder.put(SortBy.URL, order);
+                else if(isWithOrder == Order.ASC){
+                    isWithOrder = Order.DESC;
                     Collections.sort(listMusic, new Music.UrlComparator());
                     Collections.reverse(listMusic);
-                    imageViewSortByUrl.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_down));
-                    musicAdapter.notifyDataSetChanged();
+                    imageViewSortByUrl.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_up));
                 }
+                else if(isWithOrder == Order.DESC){
+                    isWithOrder = Order.ASC;
+                    Collections.sort(listMusic, new Music.UrlComparator());
+                    imageViewSortByUrl.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_down));
+                }
+                musicAdapter.notifyDataSetChanged();
             }
         });
         makeListMusic();

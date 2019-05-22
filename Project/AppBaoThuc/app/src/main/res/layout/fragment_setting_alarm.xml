@@ -24,10 +24,10 @@
 
         <TimePicker
             android:id="@+id/timePicker"
+            style="@style/myTimePickerStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:timePickerMode="spinner"
-            app:buttonTint="@color/colortext" ></TimePicker>
+            android:timePickerMode="spinner"></TimePicker>
 
         <LinearLayout
             android:layout_width="match_parent"
