@@ -59,6 +59,7 @@ public class AppSettingFragment extends Fragment {
         this.muteAlarmInDialogFragment = new MuteAlarmInDialogFragment();
         this.canMuteAlarmForDialogFragment = new CanMuteAlarmForDialogFragment();
         this.autoDismissAfterDialogFragment = new AutoDismissAfterDialogFragment();
+
     }
 
     @Override
@@ -81,7 +82,7 @@ public class AppSettingFragment extends Fragment {
         this.checkBoxGraduallyIncreaseVolume.setChecked(graduallyIncreaseVolume);
         this.checkBoxPreventTurnOffPhone.setChecked(preventTurnOffPhone);
         btnMute.setText(muteAlarmIn + " giây");
-        btnCanMute.setText(canMuteAlarmFor + " giây");
+        btnCanMute.setText(canMuteAlarmFor + " lần");
         btnDismiss.setText(autoDismissAfter + " giây");
 
         if(hourMode == HOUR_MODE_24){
