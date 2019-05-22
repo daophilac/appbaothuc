@@ -56,7 +56,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     private TimePicker timePicker; // Chọn giờ
     private Button btnPlayMusic, btnCancel, btnDelete, btnOk; //Phát nhạc đang chọn, Hủy thao tác, Xóa báo thức, Hoàn tất
     private LinearLayout linearLayoutLabel, linearLayoutType, linearLayoutRingTone,
-            linearLayoutRepeat, linearLayoutAgain;
+            linearLayoutRepeat, linearLayoutAgain, layoutSettingAlarm;
     private TextView textViewPlus10M, textViewMinus10M, textViewPlus1H,
             textViewMinus1H;
     private TextView textViewTimeLeft /*thời gian còn lại*/, textViewType, textViewRepeat,
@@ -131,6 +131,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         linearLayoutRepeat = view.findViewById(R.id.linearLayoutRepeat);
         linearLayoutAgain = view.findViewById(R.id.linearLayoutAgain);
         linearLayoutLabel = view.findViewById(R.id.linearLayoutLabel);
+        layoutSettingAlarm = view.findViewById(R.id.layoutSettingAlarm);
 
         //textViewTimeLeft = view.findViewById(R.id.textViewTimeLeft);
         textViewPlus10M = view.findViewById(R.id.textViewPlus10M);
@@ -158,8 +159,8 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
         animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
         animFadein.setAnimationListener(this);
-        timePicker.startAnimation(animFadein);
-        animBlink = AnimationUtils.loadAnimation(getContext(), R.anim.blink);
+        layoutSettingAlarm.startAnimation(animFadein);
+        animBlink = AnimationUtils.loadAnimation(getContext(), R.anim.anim_lac);
         animBlink.setAnimationListener(this);
         imageView4.startAnimation(animBlink);
 
