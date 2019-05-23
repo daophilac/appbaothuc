@@ -220,6 +220,13 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                 fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, typeFragment).addToBackStack(null).commit();
             }
         });
+        imageView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(seekBar.getProgress() == 0) seekBar.setProgress(50);
+                else seekBar.setProgress(0);
+            }
+        });
         linearLayoutRingTone.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
