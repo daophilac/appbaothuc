@@ -114,7 +114,7 @@ public class AppSettingFragment extends Fragment implements Animation.AnimationL
 
         layoutSetting = view.findViewById(R.id.layoutSetting);
 
-        animationFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+        animationFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in); // animation fade_in
         animationFadein.setAnimationListener(this);
         layoutSetting.startAnimation(animationFadein);
 
