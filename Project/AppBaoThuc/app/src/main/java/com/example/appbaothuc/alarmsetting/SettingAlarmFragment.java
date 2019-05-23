@@ -51,12 +51,12 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     private ChallengeType currentChallengeType;
     private MathDetail mathDetail;
     private ShakeDetail shakeDetail;
-    private Animation animFadein, animBlink;
+    private Animation animFadein, animBlink; // Tạo biến animation
 
     private TimePicker timePicker; // Chọn giờ
     private Button btnPlayMusic, btnCancel, btnDelete, btnOk; //Phát nhạc đang chọn, Hủy thao tác, Xóa báo thức, Hoàn tất
     private LinearLayout linearLayoutLabel, linearLayoutType, linearLayoutRingTone,
-            linearLayoutRepeat, linearLayoutAgain;
+            linearLayoutRepeat, linearLayoutAgain, layoutSettingAlarm;
     private TextView textViewPlus10M, textViewMinus10M, textViewPlus1H,
             textViewMinus1H;
     private TextView textViewTimeLeft /*thời gian còn lại*/, textViewType, textViewRepeat,
@@ -131,6 +131,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         linearLayoutRepeat = view.findViewById(R.id.linearLayoutRepeat);
         linearLayoutAgain = view.findViewById(R.id.linearLayoutAgain);
         linearLayoutLabel = view.findViewById(R.id.linearLayoutLabel);
+        layoutSettingAlarm = view.findViewById(R.id.layoutSettingAlarm);
 
         //textViewTimeLeft = view.findViewById(R.id.textViewTimeLeft);
         textViewPlus10M = view.findViewById(R.id.textViewPlus10M);
@@ -158,10 +159,11 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
         animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
         animFadein.setAnimationListener(this);
-        timePicker.startAnimation(animFadein);
-        animBlink = AnimationUtils.loadAnimation(getContext(), R.anim.blink);
-        animBlink.setAnimationListener(this);
-        imageView4.startAnimation(animBlink);
+        layoutSettingAlarm.startAnimation(animFadein); // gán cho bất cứ cái nào. Này là nguyên cái form setting của t.
+
+        animBlink = AnimationUtils.loadAnimation(getContext(), R.anim.anim_lac); // gán animation cho biến mới tạo ở trên kia
+        animBlink.setAnimationListener(this); // nhớ set cái này
+        imageView4.startAnimation(animBlink); // imageView4 là cái đối tượng m muốn gán cái animation đó. Ở đây là cái điện thoai đung đưa đó
 
 
         btnOk.setOnClickListener(new View.OnClickListener() {
@@ -219,6 +221,13 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                 fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, typeFragment).addToBackStack(null).commit();
             }
         });
+        imageView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(seekBar.getProgress() == 0) seekBar.setProgress(50);
+                else seekBar.setProgress(0);
+            }
+        });
         linearLayoutRingTone.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -263,12 +272,10 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                     mediaPlayer.setVolume(progress/1000f, progress/1000f);
                 }
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
-
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
