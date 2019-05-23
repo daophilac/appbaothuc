@@ -13,7 +13,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 import com.example.appbaothuc.MainActivity;
 import com.example.appbaothuc.R;
@@ -24,21 +23,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppSettingFragment extends Fragment {
+    private OnHourModeChangeListener onHourModeChangeListener;
     public static final int HOUR_MODE_24 = 1;
     public static final int HOUR_MODE_12 = 2;
     private static final String fileName = "setting.txt";
     private Context context;
     private ImageButton imageButtonBack;
-    static TextView textViewMuteAlarmFor;
-    static TextView textViewCanMuteAlarmFor;
-    static TextView textViewAutoDismissAfter;
+
     private CheckBox checkBoxGraduallyIncreaseVolume; // tăng dần âm lượng
     private CheckBox checkBoxPreventTurnOffPhone; // ngăn chặn tắt âm lượng
     private RadioButton radioButton24Hour;
     private RadioButton radioButton12Hour;
-    private Button btnMute;
-    private Button btnCanMute;
-    private Button btnDismiss;
+    static Button btnMute;
+    static Button btnCanMute;
+    static Button btnDismiss;
 
     public static int muteAlarmIn;
     public static int canMuteAlarmFor;
@@ -51,8 +49,8 @@ public class AppSettingFragment extends Fragment {
     private MuteAlarmInDialogFragment muteAlarmInDialogFragment;
     private CanMuteAlarmForDialogFragment canMuteAlarmForDialogFragment;
     private AutoDismissAfterDialogFragment autoDismissAfterDialogFragment;
-    private InternalFileReader internalFileReader;
     private InternalFileWriter internalFileWriter;
+
 
     @Override
     public void onAttach(Context context) {
@@ -61,6 +59,7 @@ public class AppSettingFragment extends Fragment {
         this.muteAlarmInDialogFragment = new MuteAlarmInDialogFragment();
         this.canMuteAlarmForDialogFragment = new CanMuteAlarmForDialogFragment();
         this.autoDismissAfterDialogFragment = new AutoDismissAfterDialogFragment();
+
     }
 
     @Override
@@ -79,13 +78,11 @@ public class AppSettingFragment extends Fragment {
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        textViewMuteAlarmFor.setText("Báo thức im lặng trong: " ); //+ muteAlarmIn + " giây");
-        textViewCanMuteAlarmFor.setText("Có thể im lặng báo thức: "); // + canMuteAlarmFor + " lần");
-        textViewAutoDismissAfter.setText("Tự động hủy báo thức sau: "); // + autoDismissAfter + " phút");
+
         this.checkBoxGraduallyIncreaseVolume.setChecked(graduallyIncreaseVolume);
         this.checkBoxPreventTurnOffPhone.setChecked(preventTurnOffPhone);
         btnMute.setText(muteAlarmIn + " giây");
-        btnCanMute.setText(canMuteAlarmFor + " giây");
+        btnCanMute.setText(canMuteAlarmFor + " lần");
         btnDismiss.setText(autoDismissAfter + " giây");
 
         if(hourMode == HOUR_MODE_24){
@@ -101,12 +98,9 @@ public class AppSettingFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_app_setting, container, false);
         this.imageButtonBack = view.findViewById(R.id.image_button_back);
-        textViewMuteAlarmFor = view.findViewById(R.id.text_view_mute_alarm_for);
-        textViewCanMuteAlarmFor = view.findViewById(R.id.text_view_can_mute_alarm_for);
-        textViewAutoDismissAfter = view.findViewById(R.id.text_view_auto_dismiss_after);
-//        btnMute = view.findViewById(R.id.btnMute);
-//        btnCanMute = view.findViewById(R.id.btnCanMute);
-//        btnDismiss = view.findViewById(R.id.btnDismiss);
+        btnMute = view.findViewById(R.id.btnMute);
+        btnCanMute = view.findViewById(R.id.btnCanMute);
+        btnDismiss = view.findViewById(R.id.btnDismiss);
 
         this.checkBoxGraduallyIncreaseVolume = view.findViewById(R.id.check_box_gradually_increase_volume);
         this.checkBoxPreventTurnOffPhone = view.findViewById(R.id.check_box_prevent_turn_off_phone);
@@ -121,24 +115,6 @@ public class AppSettingFragment extends Fragment {
             }
         });
 
-//        textViewMuteAlarmFor.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //muteAlarmInDialogFragment.show(getFragmentManager(), null);
-//            }
-//        });
-//        textViewCanMuteAlarmFor.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                canMuteAlarmForDialogFragment.show(getFragmentManager(), null);
-//            }
-//        });
-//        textViewAutoDismissAfter.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                autoDismissAfterDialogFragment.show(getFragmentManager(), null);
-//            }
-//        });
         this.checkBoxGraduallyIncreaseVolume.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -156,6 +132,9 @@ public class AppSettingFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     hourMode = HOUR_MODE_24;
+                    if(onHourModeChangeListener != null){
+                        onHourModeChangeListener.onHourModeChange(hourMode);
+                    }
                 }
             }
         });
@@ -164,6 +143,9 @@ public class AppSettingFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     hourMode = HOUR_MODE_12;
+                    if(onHourModeChangeListener != null){
+                        onHourModeChangeListener.onHourModeChange(hourMode);
+                    }
                 }
             }
         });
@@ -199,7 +181,7 @@ public class AppSettingFragment extends Fragment {
         preventTurnOffPhone = true;
         hourMode = HOUR_MODE_24;
     }
-    public static void loadAppSetting(Context context){
+    public void loadAppSetting(Context context){
         InternalFileReader internalFileReader = new InternalFileReader(context, fileName);
         if(!internalFileReader.exists(fileName)){
             initializeDefaultSetting();
@@ -214,6 +196,12 @@ public class AppSettingFragment extends Fragment {
         }
         listRingtoneDirectory = new ArrayList<>();
         listRingtoneDirectory.add(Environment.getExternalStorageDirectory().getAbsolutePath());
-//        listRingtoneDirectory.add("/sdcard/download");
+    }
+    public void setOnHourModeChangeListener(OnHourModeChangeListener onHourModeChangeListener){
+        this.onHourModeChangeListener = onHourModeChangeListener;
+    }
+
+    public interface OnHourModeChangeListener {
+        void onHourModeChange(int hourMode);
     }
 }

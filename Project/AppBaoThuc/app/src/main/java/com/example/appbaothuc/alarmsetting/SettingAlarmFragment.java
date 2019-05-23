@@ -14,6 +14,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,11 +25,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.appbaothuc.MainActivity;
-import com.example.appbaothuc.appsetting.AppSettingFragment;
-import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.Music;
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.UpcomingAlarmFragment;
+import com.example.appbaothuc.appsetting.AppSettingFragment;
+import com.example.appbaothuc.models.Alarm;
+import com.example.appbaothuc.models.ChallengeType;
 import com.example.appbaothuc.models.MathDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 
@@ -36,31 +39,29 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.example.appbaothuc.appsetting.AppSettingFragment.HOUR_MODE_24;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.DEFAULT;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.MATH;
-import static com.example.appbaothuc.challenge.ChallengeActivity.ChallengeType.SHAKE;
 
 
 public class SettingAlarmFragment extends Fragment implements LableDialogFragment.LabelDialogListener,
-        AgainDialogFragment.AgainDialogListener, RepeatDialogFragment.RepeatDialogListener, View.OnClickListener, TypeFragment.TypeFragmentListener {
+        AgainDialogFragment.AgainDialogListener, RepeatDialogFragment.RepeatDialogListener,
+        View.OnClickListener, TypeFragment.TypeFragmentListener, Animation.AnimationListener {
     private Context context;
     private UpcomingAlarmFragment upcomingAlarmFragment;
     private SettingAlarmMode settingAlarmMode;
     private Alarm alarm;
-    private int currentChallengeType;
+    private ChallengeType currentChallengeType;
     private MathDetail mathDetail;
     private ShakeDetail shakeDetail;
-
+    private Animation animFadein, animBlink;
 
     private TimePicker timePicker; // Chọn giờ
     private Button btnPlayMusic, btnCancel, btnDelete, btnOk; //Phát nhạc đang chọn, Hủy thao tác, Xóa báo thức, Hoàn tất
     private LinearLayout linearLayoutLabel, linearLayoutType, linearLayoutRingTone,
-            linearLayoutRepeat, linearLayoutAgain;
+            linearLayoutRepeat, linearLayoutAgain, layoutSettingAlarm;
     private TextView textViewPlus10M, textViewMinus10M, textViewPlus1H,
             textViewMinus1H;
     private TextView textViewTimeLeft /*thời gian còn lại*/, textViewType, textViewRepeat,
             textViewRingtone, textViewAgain, textViewLabel;
-    private ImageView imageViewType; //cái hình điện thoại rung
+    private ImageView imageViewType, imageView4, imageView2; //cái hình điện thoại rung
     private SeekBar seekBar; // thanh âm lượng
     private Switch aSwitch; // bật tắt rung
 
@@ -99,6 +100,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting_alarm, container, false);
         setControl(view);
+
         return view;
     }
 
@@ -129,6 +131,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         linearLayoutRepeat = view.findViewById(R.id.linearLayoutRepeat);
         linearLayoutAgain = view.findViewById(R.id.linearLayoutAgain);
         linearLayoutLabel = view.findViewById(R.id.linearLayoutLabel);
+        layoutSettingAlarm = view.findViewById(R.id.layoutSettingAlarm);
 
         //textViewTimeLeft = view.findViewById(R.id.textViewTimeLeft);
         textViewPlus10M = view.findViewById(R.id.textViewPlus10M);
@@ -140,6 +143,8 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         textViewRingtone = view.findViewById(R.id.textViewRingTone);
         textViewAgain = view.findViewById(R.id.textViewAgain);
         textViewLabel = view.findViewById(R.id.textViewLabel);
+        imageView4 = view.findViewById(R.id.imageView4);
+        imageView2 = view.findViewById(R.id.imageView2);
 
         imageViewType = view.findViewById(R.id.imageViewType);
         seekBar = view.findViewById(R.id.seekBar);
@@ -151,6 +156,13 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         else{
             timePicker.setIs24HourView(false);
         }
+
+        animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+        animFadein.setAnimationListener(this);
+        layoutSettingAlarm.startAnimation(animFadein);
+        animBlink = AnimationUtils.loadAnimation(getContext(), R.anim.anim_lac);
+        animBlink.setAnimationListener(this);
+        imageView4.startAnimation(animBlink);
 
 
         btnOk.setOnClickListener(new View.OnClickListener() {
@@ -241,6 +253,12 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(seekBar.getProgress() == 0) {
+                    imageView2.setBackground(getContext().getDrawable(R.drawable.ic_volume_off_black_24dp));
+                }
+                else {
+                    imageView2.setBackground(getContext().getDrawable(R.drawable.ic_volume_up_24dp));
+                }
                 alarm.setVolume(progress);
                 if(mediaPlayer.isPlaying()){
                     mediaPlayer.setVolume(progress/1000f, progress/1000f);
@@ -261,7 +279,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         btnPlayMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!MainActivity.validateAlarmRingtoneUrl(context, alarm)){
+                if(!alarm.validateRingtoneUrl(context)){
                     textViewRingtone.setText(alarm.getRingtone().getName());
                 }
                 if(!mediaPlayer.isPlaying()){
@@ -536,14 +554,14 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
     @Override
     public void getDefaultChallenge() {
-        this.currentChallengeType = DEFAULT;
+        this.currentChallengeType = ChallengeType.DEFAULT;
         this.imageViewType.setImageDrawable(context.getDrawable(R.drawable.ic_alarm_60dp));
         this.textViewType.setText("Default");
     }
 
     @Override
     public void getMathChallenge(MathDetail mathDetail) {
-        this.currentChallengeType = MATH;
+        this.currentChallengeType = ChallengeType.MATH;
         this.mathDetail = mathDetail;
         this.imageViewType.setImageDrawable(context.getDrawable(R.drawable.ic_math_36));
         this.textViewType.setText("Math");
@@ -551,10 +569,26 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
     @Override
     public void getShakeChallenge(ShakeDetail shakeDetail) {
-        this.currentChallengeType = SHAKE;
+        this.currentChallengeType = ChallengeType.SHAKE;
         this.shakeDetail = shakeDetail;
         this.imageViewType.setImageDrawable(context.getDrawable(R.drawable.icons8_shake_phone_60));
         this.textViewType.setText("Shake");
+    }
+
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
     }
 
 

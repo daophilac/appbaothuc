@@ -39,7 +39,7 @@ public class CanMuteAlarmForDialogFragment extends DialogFragment {
             public void onClick(View v) {
                 int value = numberPickerCanMuteAlarmFor.getValue();
                 AppSettingFragment.canMuteAlarmFor = value;
-                AppSettingFragment.textViewCanMuteAlarmFor.setText("Có thể im lặng báo thức: " + value + " lần");
+                AppSettingFragment.btnCanMute.setText(value + " lần");
                 getDialog().dismiss();
             }
         });

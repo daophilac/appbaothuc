@@ -1,6 +1,7 @@
 package com.example.appbaothuc;
 
 import android.Manifest;
+import android.app.Notification;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,8 +30,8 @@ import java.io.File;
 public class MainActivity extends AppCompatActivity {
     private ImageButton buttonAlarm;
     private ImageButton buttonSetting;
-    private UpcomingAlarmFragment upcomingAlarmFragment;
-    private AppSettingFragment appSettingFragment;
+    public UpcomingAlarmFragment upcomingAlarmFragment;
+    public AppSettingFragment appSettingFragment;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
     public boolean appSettingFragmentIsAdded;
@@ -49,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         Music.defaultRingtoneUrl = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(resId) + '/' + resources.getResourceTypeName(resId) + '/' + resources.getResourceEntryName(resId);
         PermissionInquirer permissionInquirer = new PermissionInquirer(this);
         permissionInquirer.askPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 1);
-        AppSettingFragment.loadAppSetting(this);
 
         buttonAlarm = findViewById(R.id.button_alarm);
         buttonSetting = findViewById(R.id.button_setting);
@@ -74,40 +74,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         appSettingFragment = new AppSettingFragment();
+        appSettingFragment.loadAppSetting(this);
         appSettingFragment.setEnterTransition(new Slide(Gravity.END));
         appSettingFragment.setExitTransition(new Slide(Gravity.END));
         upcomingAlarmFragment = new UpcomingAlarmFragment();
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().add(R.id.main_fragment_container, upcomingAlarmFragment).commit();
-        MainActivity.restartAlarmService(this);
+        NotificationService.update(this);
     }
     public void test1(View view){
         NotificationService.DEBUG_MODE = true;
-        MainActivity.restartAlarmService(this);
+        NotificationService.update(this);
     }
-    public static void restartAlarmService(Context context){
-        Intent notificationIntent = new Intent(context, NotificationService.class);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            context.startForegroundService(notificationIntent);
-            context.startService(notificationIntent);
-        }
-        else{
-            context.startService(notificationIntent);
-        }
-    }
-
-    public static boolean validateAlarmRingtoneUrl(Context context, Alarm alarm){
-        DatabaseHandler databaseHandler = new DatabaseHandler(context);
-        File file = new File(alarm.getRingtone().getUrl());
-        if (!file.exists()){
-            alarm.setRingtone(new Music(Music.defaultRingtoneUrl, Music.defaultRingtoneName));
-            databaseHandler.updateAlarmSetDefaultRingtone(alarm.getIdAlarm());
-            return false;
-        }
-        databaseHandler.close();
-        return true;
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

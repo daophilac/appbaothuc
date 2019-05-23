@@ -419,4 +419,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.execSQL("DROP TABLE " + "TEMPMH");
     }
+    public void getKhachHangMuaNhieuNhat(ArrayList<KhachHang> arrayList) {
+        String sql = "CREATE TEMPORARY TABLE TEMPDDH AS SELECT SODDH, SUM(SLDAT) as TONG FROM CTDONDH GROUP BY SODDH order by TONG DESC limit 3";
+        db.execSQL(sql);
+        sql = "CREATE TEMPORARY TABLE TEMPKH AS SELECT DONDH.MAKH from DONDH, TEMPDDH WHERE DONDH.SODDH = TEMPDDH.SODDH";
+        db.execSQL(sql);
+        sql = "SELECT * from KHACHHANG, TEMPKH where KHACHHANG.MAKH = TEMPKH.MAKH";
+        Cursor cursor = db.rawQuery(sql, null);
+        if (cursor.moveToFirst()) {
+            do {
+                KhachHang khachHang = new KhachHang();
+                khachHang.setMaKH(cursor.getString(cursor.getColumnIndex("MAKH")));
+                khachHang.setTenKH(cursor.getString(cursor.getColumnIndex("TENKH")));
+                arrayList.add(khachHang);
+            } while (cursor.moveToNext());
+        }
+        db.execSQL("DROP TABLE " + "TEMPDDH");
+        db.execSQL("DROP TABLE " + "TEMPKH");
+    }
 }

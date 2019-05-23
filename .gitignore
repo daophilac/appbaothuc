@@ -4,9 +4,13 @@
 
 **/local.properties
 **/output.json
+*iml
+
 
 **/build/generated
 **/build/intermediates
 **/build/tmp
 **/outputs/bundle
 **/outputs/logs
+Project/AppBaoThucDinhCao/gradle/wrapper/gradle-wrapper.properties
+Project/AppBaoThucDinhCao/build.gradle

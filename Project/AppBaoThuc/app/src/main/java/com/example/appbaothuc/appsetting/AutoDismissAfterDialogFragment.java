@@ -39,7 +39,7 @@ public class AutoDismissAfterDialogFragment extends DialogFragment {
             public void onClick(View v) {
                 int value = numberPickerAutoDismissAfter.getValue();
                 AppSettingFragment.autoDismissAfter = value;
-                AppSettingFragment.textViewAutoDismissAfter.setText("Tự động hủy báo thức sau: " + value + " phút");
+                AppSettingFragment.btnDismiss.setText(value + " phút");
                 getDialog().dismiss();
             }
         });

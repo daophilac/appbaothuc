@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.quanlydonhang.DatabaseHandler;
@@ -32,7 +33,8 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
 
     private ImageButton imageButtonCloseDDH;
     private Button btnEdit, btnInsert, btnClearText, btnFindBySoDDH, btnReLoadDDH;
-    private EditText editTextSoDDH, editTextNgayDH, editTextSoNgay, editTextTinhTrang;
+    private EditText editTextSoDDH, editTextSoNgay, editTextTinhTrang;
+    private TextView textViewNgayDH;
     private ListView listViewDDH;
     private ArrayList<DonDH> data;
     private DonDHAdapter adapter;
@@ -54,7 +56,7 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
     void setControl(){
         editTextSoDDH = findViewById(R.id.editTextSoDDH);
         //editTextMaKH = findViewById(R.id.editTextMaKH);
-        editTextNgayDH = findViewById(R.id.editTextNgayDH);
+        textViewNgayDH = findViewById(R.id.textViewNgayDH);
         editTextSoNgay = findViewById(R.id.editTextSoNgay);
         editTextTinhTrang = findViewById(R.id.editTextTinhTrang);
         btnEdit = findViewById(R.id.btnEdit);
@@ -73,7 +75,6 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                // TODO Auto-generated method stub
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -82,7 +83,7 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
 
         };
 
-        editTextNgayDH.setOnClickListener(new View.OnClickListener() {
+        textViewNgayDH.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(DonDHActivity.this, date, myCalendar
@@ -97,6 +98,7 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
                 finish();
             }
         });
+
         databaseHandler.getMaKH(arr);
         spinMaKH = findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arr);
@@ -108,22 +110,22 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
 
     private void updateLabel() {
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        editTextNgayDH.setText(sdf.format(myCalendar.getTime()));
+        textViewNgayDH.setText(sdf.format(myCalendar.getTime()));
     }
     @Override
     public void onFinishDDHHDialog(int input){
-        if(input == 0){
+        if(input == 0){ // Dialog đóng
             loadDB();
             listViewDDH.setEnabled(true);
         }
-        else if(input == 1){
+        else if(input == 1){ // Dialog đóng nhưng chọn chế độ sửa
             listViewDDH.setEnabled(false);
             checkEditInsert = 1;
             editTextSoDDH.setText(donDH.getSoDH()+"");
             editTextSoDDH.setEnabled(false);
             int spinnerPosition = arr.indexOf(donDH.getMaKH());
             spinMaKH.setSelection(spinnerPosition);
-            editTextNgayDH.setText(donDH.getStringNgayDH());
+            textViewNgayDH.setText(donDH.getStringNgayDH());
             editTextSoNgay.setText(donDH.getSoNgay()+"");
             editTextTinhTrang.setText(donDH.getTinhTrang());
             btnInsert.setVisibility(View.GONE);
@@ -145,7 +147,7 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
                     editTextSoDDH.setText("");
                 }
                 //editTextMaKH.setText("");
-                editTextNgayDH.setText("");
+                textViewNgayDH.setText("");
                 editTextSoNgay.setText("");
                 editTextTinhTrang.setText("");
             }
@@ -171,7 +173,6 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void onClick(View view) {
                 if(!checkInput()) return;
-                DatabaseHandler databaseHandler = new DatabaseHandler(DonDHActivity.this);
                 SQLiteDatabase db = databaseHandler.getWritableDatabase();
                 String sql = "select * from DONDH where SODDH = " + Integer.parseInt(editTextSoDDH.getText().toString());
                 Cursor curosr = db.rawQuery(sql, null);
@@ -197,19 +198,18 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
         btnFindBySoDDH.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final EditText txtUrl = new EditText(DonDHActivity.this);
-                txtUrl.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                final EditText txtSoDDH = new EditText(DonDHActivity.this);
+                txtSoDDH.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 new AlertDialog.Builder(DonDHActivity.this)
                         .setTitle("Nhập Số Đơn Hàng:")
-                        .setView(txtUrl)
+                        .setView(txtSoDDH)
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                int url = Integer.parseInt(txtUrl.getText().toString());
-                                DatabaseHandler db = new DatabaseHandler(DonDHActivity.this);
+                                int soDDH = Integer.parseInt(txtSoDDH.getText().toString());
                                 if(data!=null) {
                                     data.clear();
                                 }
-                                db.findBySoDDH(data, url);
+                                databaseHandler.findBySoDDH(data, soDDH);
                                 if (data.size() == 0) {
                                     Toast.makeText(getApplication(), "Không tìm thấy đơn đặt hàng nào", Toast.LENGTH_SHORT).show();
                                     return;
@@ -236,10 +236,10 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
             spinMaKH.requestFocus();
             return false;
         }
-        if(TextUtils.isEmpty(editTextNgayDH.getText().toString())){
+        if(TextUtils.isEmpty(textViewNgayDH.getText().toString())){
             Toast.makeText(DonDHActivity.this, "Chưa chọn Ngày Đặt Hàng!",
                     Toast.LENGTH_SHORT).show();
-            editTextNgayDH.requestFocus();
+            textViewNgayDH.requestFocus();
             return false;
         }
         if(TextUtils.isEmpty(editTextSoNgay.getText().toString())){
@@ -257,43 +257,39 @@ public class DonDHActivity extends AppCompatActivity implements AdapterView.OnIt
         if(!Calendar.getInstance().getTime().after(myCalendar.getTime())){
             Toast.makeText(DonDHActivity.this, "Ngày đặt hàng không được lớn hơn ngày hiện tại!",
                     Toast.LENGTH_SHORT).show();
-            editTextNgayDH.requestFocus();
+            textViewNgayDH.requestFocus();
             return false;
         }
         return true;
     }
     public void saveDB(){
-        DatabaseHandler db = new DatabaseHandler(this);
         DonDH donDH = new DonDH();
 
         donDH.setSoDH(Integer.parseInt(editTextSoDDH.getText().toString()));
         donDH.setMaKH(spinMaKH.getSelectedItem().toString());
 
-        donDH.setNgayDH(editTextNgayDH.getText().toString());
+        donDH.setNgayDH(textViewNgayDH.getText().toString());
         donDH.setSoNgay(Integer.parseInt(editTextSoNgay.getText().toString()));
         donDH.setTinhTrang(editTextTinhTrang.getText().toString());
-        db.saveDonDHs(donDH);
+        databaseHandler.saveDonDHs(donDH);
     }
     public void updateDB(){
-        DatabaseHandler db = new DatabaseHandler(this);
         DonDH donDH = new DonDH();
 
         donDH.setSoDH(Integer.parseInt(editTextSoDDH.getText().toString()));
         donDH.setMaKH(spinMaKH.getSelectedItem().toString());
 
-        donDH.setNgayDH(editTextNgayDH.getText().toString());
+        donDH.setNgayDH(textViewNgayDH.getText().toString());
         donDH.setSoNgay(Integer.parseInt(editTextSoNgay.getText().toString()));
         donDH.setTinhTrang(editTextTinhTrang.getText().toString());
-        db.updateDonDH(donDH);
+        databaseHandler.updateDonDH(donDH);
     }
     public void loadDB(){
-        DatabaseHandler db = new DatabaseHandler(this);
         data.clear();
-        db.getDonDHS(data);
+        databaseHandler.getDonDHS(data);
         adapter.notifyDataSetChanged();
     }
     public void loadOneDDH(){
-        DatabaseHandler db = new DatabaseHandler(this);
         data.clear();
         data.add(donDH);
         adapter.notifyDataSetChanged();
