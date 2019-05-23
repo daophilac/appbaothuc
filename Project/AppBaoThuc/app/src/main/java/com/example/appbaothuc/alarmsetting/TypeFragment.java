@@ -81,6 +81,7 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
                 getFragmentManager().popBackStack();
             }
         });
+
         imageButtonDefault.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,12 +123,6 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
         linearLayoutDefault.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                challengeType = 0;
-//                linearLayoutDefault.setBackgroundColor(Color.BLUE);
-//                linearLayoutMath.setBackgroundColor(getResources().getColor(R.color.colortext2));
-//                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
-//                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
-//                linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.colortext2));
                 listener.getDefaultChallenge();
                 updateChallengeLayoutColor(ChallengeType.DEFAULT);
             }
@@ -135,27 +130,17 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
         linearLayoutMath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                linearLayoutMath.setBackgroundColor(Color.BLUE);
-//                linearLayoutDefault.setBackgroundColor(getResources().getColor(R.color.colortext2));
-//                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
-//                linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.colortext2));
-//                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
                 mathConfigurationFragment.configure(TypeFragment.this, alarm);
-                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, mathConfigurationFragment).addToBackStack(null).commit();
-                //challengeType = 1;
+                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container,
+                        mathConfigurationFragment).addToBackStack(null).commit();
             }
         });
         linearLayoutShake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                challengeType = 2;
-//                linearLayoutShake.setBackgroundColor(Color.BLUE);
-//                linearLayoutDefault.setBackgroundColor(getResources().getColor(R.color.colortext2));
-//                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.colortext2));
-//                linearLayoutMath.setBackgroundColor(getResources().getColor(R.color.colortext2));
-//                linearLayoutQRCode.setBackgroundColor(getResources().getColor(R.color.colortext2));
                 shakeConfigurationFragment.configure(TypeFragment.this, alarm);
-                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, shakeConfigurationFragment).addToBackStack(null).commit();
+                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container,
+                        shakeConfigurationFragment).addToBackStack(null).commit();
             }
         });
 

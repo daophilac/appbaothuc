@@ -272,12 +272,10 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                     mediaPlayer.setVolume(progress/1000f, progress/1000f);
                 }
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
-
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
