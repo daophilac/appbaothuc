@@ -51,7 +51,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     private ChallengeType currentChallengeType;
     private MathDetail mathDetail;
     private ShakeDetail shakeDetail;
-    private Animation animFadein, animBlink;
+    private Animation animFadein, animBlink; // Tạo biến animation
 
     private TimePicker timePicker; // Chọn giờ
     private Button btnPlayMusic, btnCancel, btnDelete, btnOk; //Phát nhạc đang chọn, Hủy thao tác, Xóa báo thức, Hoàn tất
@@ -159,10 +159,11 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
         animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
         animFadein.setAnimationListener(this);
-        layoutSettingAlarm.startAnimation(animFadein);
-        animBlink = AnimationUtils.loadAnimation(getContext(), R.anim.anim_lac);
-        animBlink.setAnimationListener(this);
-        imageView4.startAnimation(animBlink);
+        layoutSettingAlarm.startAnimation(animFadein); // gán cho bất cứ cái nào. Này là nguyên cái form setting của t.
+
+        animBlink = AnimationUtils.loadAnimation(getContext(), R.anim.anim_lac); // gán animation cho biến mới tạo ở trên kia
+        animBlink.setAnimationListener(this); // nhớ set cái này
+        imageView4.startAnimation(animBlink); // imageView4 là cái đối tượng m muốn gán cái animation đó. Ở đây là cái điện thoai đung đưa đó
 
 
         btnOk.setOnClickListener(new View.OnClickListener() {
