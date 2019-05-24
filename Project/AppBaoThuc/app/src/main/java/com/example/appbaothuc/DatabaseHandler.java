@@ -305,7 +305,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             }
         }
 
-
         for (int i = 8; i < nowWeekDay + 7; i++) {
             int mod = i % 7;
             weekDayToCompare = getDayOfWeekInString(mod);
