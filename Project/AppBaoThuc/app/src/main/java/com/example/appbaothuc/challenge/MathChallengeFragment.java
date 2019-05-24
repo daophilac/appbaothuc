@@ -180,7 +180,6 @@ public class MathChallengeFragment extends Fragment {
             public void onClick(View view) {
                 String sSysResult=sUserResult;
                 sUserResult=sSysResult.substring(0,sUserResult.length()-1);
-
                 textView_Result.setText(sUserResult);
             }
         });
