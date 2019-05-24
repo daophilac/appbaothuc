@@ -129,6 +129,9 @@ public class UpcomingAlarmFragment extends Fragment {
                     if (minutes > 0) {
                         time = time + minutes + " minutes remaining";
                     }
+                    if (timeDelta < 60000){
+                        time="Less than 1 minute remaining";
+                    }
                     tvTimeRemaining.setText(time);
                     time = "";
                 }
