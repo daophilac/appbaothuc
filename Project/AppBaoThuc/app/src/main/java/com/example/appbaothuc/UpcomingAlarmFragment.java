@@ -2,6 +2,7 @@ package com.example.appbaothuc;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.appbaothuc.alarmsetting.SettingAlarmFragment;
 import com.example.appbaothuc.appsetting.AppSettingFragment;
@@ -22,8 +24,14 @@ import com.example.appbaothuc.models.MathDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 import com.example.appbaothuc.services.NotificationService;
 
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.appbaothuc.models.ChallengeType.DEFAULT;
 import static com.example.appbaothuc.models.ChallengeType.MATH;
@@ -35,14 +43,19 @@ public class UpcomingAlarmFragment extends Fragment {
     private DatabaseHandler databaseHandler;
     private RecyclerView recyclerViewListAlarm;
     private ImageButton buttonAddAlarm;
+    private TextView tvTimeRemaining;
     private List<Alarm> listAlarm;
     private AlarmAdapter alarmAdapter;
     private SettingAlarmFragment settingAlarmFragment;
     private FragmentManager fragmentManager;
+
+    private Runnable runnable;
+    private Handler handler;
+
     @Override
     public void onAttach(final Context context) {
         super.onAttach(context);
-        mainActivity = (MainActivity)context;
+        mainActivity = (MainActivity) context;
         databaseHandler = new DatabaseHandler(getContext());
         settingAlarmFragment = new SettingAlarmFragment();
         settingAlarmFragment.setEnterTransition(new Slide(Gravity.END));
@@ -59,17 +72,23 @@ public class UpcomingAlarmFragment extends Fragment {
             }
         });
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_upcoming_alarm, container, false);
+
         recyclerViewListAlarm = view.findViewById(R.id.recycler_view_list_alarm);
         buttonAddAlarm = view.findViewById(R.id.button_add_alarm);
+        tvTimeRemaining = view.findViewById(R.id.textviewTimeRemaining);
+
         recyclerViewListAlarm.setAdapter(alarmAdapter);
         recyclerViewListAlarm.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        buttonAddAlarm.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        setTimeRemaining();
+
+        buttonAddAlarm.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 settingAlarmFragment.configure(UpcomingAlarmFragment.this, null);
                 fragmentManager.beginTransaction()
                         .add(R.id.full_screen_fragment_container, settingAlarmFragment)
@@ -80,7 +99,74 @@ public class UpcomingAlarmFragment extends Fragment {
         return view;
     }
 
-    public void addAlarm(Alarm alarm){
+    private void setTimeRemaining() {
+//        runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                Alarm alarm = databaseHandler.getTheNearestAlarm();
+//                if (alarm == null) {
+//                    tvTimeRemaining.setText("Off");
+//                } else {
+//                    tvTimeRemaining.setText(alarm.getDayOfWeek() + " Day - " + alarm.getHour() + " Hours - " + alarm.getMinute() + " Minutes");
+//                }
+//                handler.postDelayed(runnable, 1000);
+//            }
+//        };
+//        handler = new Handler();
+//        handler.postDelayed(runnable, 1000);
+
+        Thread thread = new Thread() {
+            Calendar calendarAlarm=Calendar.getInstance();
+            long timeDelta=0;
+            long days, hours, minutes;
+            String time="";
+            @Override
+            public void run() {
+                super.run();
+                while (!isInterrupted()) {
+                    try {
+                        Thread.sleep(1000);
+                        mainActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Alarm alarm = databaseHandler.getTheNearestAlarm();
+                                if (alarm == null) {
+                                    tvTimeRemaining.setText("Off");
+                                } else {
+                                    calendarAlarm.set(Calendar.DAY_OF_WEEK,alarm.getDayOfWeek());
+                                    calendarAlarm.set(Calendar.HOUR_OF_DAY,alarm.getHour());
+                                    calendarAlarm.set(Calendar.MINUTE,alarm.getMinute());
+                                    calendarAlarm.set(Calendar.SECOND,0);
+                                    timeDelta=Math.abs(Calendar.getInstance().getTimeInMillis()-calendarAlarm.getTimeInMillis());
+
+                                    days= TimeUnit.MILLISECONDS.toDays(timeDelta);
+                                    hours= TimeUnit.MILLISECONDS.toHours(timeDelta-days*24*60*60*1000);
+                                    minutes=TimeUnit.MILLISECONDS.toMinutes(timeDelta-days*24*60*60*1000-hours*60*60*1000);
+
+                                    if(days>0){
+                                        time=days + " days ";
+                                    }
+                                    if(hours>0){
+                                        time=time+hours+" hours ";
+                                    }
+                                    if(minutes>0){
+                                        time=time+minutes+" minutes remaining";
+                                    }
+                                    tvTimeRemaining.setText(time);
+                                    time="";
+                                }
+                            }
+                        });
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        thread.start();
+    }
+
+    public void addAlarm(Alarm alarm) {
         alarm.setChallengeType(DEFAULT);
         this.databaseHandler.insertAlarm(alarm);
         alarm.setIdAlarm(databaseHandler.getRecentAddedAlarm().getIdAlarm());
@@ -89,7 +175,8 @@ public class UpcomingAlarmFragment extends Fragment {
         alarmAdapter.notifyDataSetChanged();
         NotificationService.update(getContext());
     }
-    public void addAlarm(Alarm alarm, MathDetail mathDetail){
+
+    public void addAlarm(Alarm alarm, MathDetail mathDetail) {
         alarm.setChallengeType(MATH);
         this.databaseHandler.insertAlarm(alarm);
         alarm.setIdAlarm(databaseHandler.getRecentAddedAlarm().getIdAlarm());
@@ -100,7 +187,8 @@ public class UpcomingAlarmFragment extends Fragment {
         alarmAdapter.notifyDataSetChanged();
         NotificationService.update(getContext());
     }
-    public void addAlarm(Alarm alarm, ShakeDetail shakeDetail){
+
+    public void addAlarm(Alarm alarm, ShakeDetail shakeDetail) {
         alarm.setChallengeType(SHAKE);
         this.databaseHandler.insertAlarm(alarm);
         alarm.setIdAlarm(databaseHandler.getRecentAddedAlarm().getIdAlarm());
@@ -111,14 +199,15 @@ public class UpcomingAlarmFragment extends Fragment {
         alarmAdapter.notifyDataSetChanged();
         NotificationService.update(getContext());
     }
-    public void editAlarm(Alarm alarm){
-        if(alarm.getChallengeType() != DEFAULT){
+
+    public void editAlarm(Alarm alarm) {
+        if (alarm.getChallengeType() != DEFAULT) {
             this.databaseHandler.deleteChallengeDetail(alarm.getIdAlarm(), alarm.getChallengeType());
         }
         alarm.setChallengeType(DEFAULT);
         this.databaseHandler.updateAlarm(alarm);
-        for(int i = 0; i < listAlarm.size(); i++){
-            if(listAlarm.get(i).getIdAlarm() == alarm.getIdAlarm()){
+        for (int i = 0; i < listAlarm.size(); i++) {
+            if (listAlarm.get(i).getIdAlarm() == alarm.getIdAlarm()) {
                 listAlarm.set(i, alarm);
                 Collections.sort(listAlarm);
                 alarmAdapter.notifyDataSetChanged();
@@ -127,22 +216,22 @@ public class UpcomingAlarmFragment extends Fragment {
         }
         NotificationService.update(getContext());
     }
-    public void editAlarm(Alarm alarm, MathDetail mathDetail){
-        if(alarm.getChallengeType() != MATH){
-            if(alarm.getChallengeType() != DEFAULT){
+
+    public void editAlarm(Alarm alarm, MathDetail mathDetail) {
+        if (alarm.getChallengeType() != MATH) {
+            if (alarm.getChallengeType() != DEFAULT) {
                 this.databaseHandler.deleteChallengeDetail(alarm.getIdAlarm(), alarm.getChallengeType());
             }
             this.databaseHandler.insertMathDetail(mathDetail);
-        }
-        else{
-            if(mathDetail != null){
+        } else {
+            if (mathDetail != null) {
                 this.databaseHandler.updateMathDetail(mathDetail);
             }
         }
         alarm.setChallengeType(MATH);
         this.databaseHandler.updateAlarm(alarm);
-        for(int i = 0; i < listAlarm.size(); i++){
-            if(listAlarm.get(i).getIdAlarm() == alarm.getIdAlarm()){
+        for (int i = 0; i < listAlarm.size(); i++) {
+            if (listAlarm.get(i).getIdAlarm() == alarm.getIdAlarm()) {
                 listAlarm.set(i, alarm);
                 Collections.sort(listAlarm);
                 alarmAdapter.notifyDataSetChanged();
@@ -151,22 +240,22 @@ public class UpcomingAlarmFragment extends Fragment {
         }
         NotificationService.update(getContext());
     }
-    public void editAlarm(Alarm alarm, ShakeDetail shakeDetail){
-        if(alarm.getChallengeType() != SHAKE){
-            if(alarm.getChallengeType() != DEFAULT){
+
+    public void editAlarm(Alarm alarm, ShakeDetail shakeDetail) {
+        if (alarm.getChallengeType() != SHAKE) {
+            if (alarm.getChallengeType() != DEFAULT) {
                 this.databaseHandler.deleteChallengeDetail(alarm.getIdAlarm(), alarm.getChallengeType());
             }
             this.databaseHandler.insertShakeDetail(shakeDetail);
-        }
-        else{
-            if(shakeDetail != null){
+        } else {
+            if (shakeDetail != null) {
                 this.databaseHandler.updateShakeDetail(shakeDetail);
             }
         }
         alarm.setChallengeType(SHAKE);
         this.databaseHandler.updateAlarm(alarm);
-        for(int i = 0; i < listAlarm.size(); i++){
-            if(listAlarm.get(i).getIdAlarm() == alarm.getIdAlarm()){
+        for (int i = 0; i < listAlarm.size(); i++) {
+            if (listAlarm.get(i).getIdAlarm() == alarm.getIdAlarm()) {
                 listAlarm.set(i, alarm);
                 Collections.sort(listAlarm);
                 alarmAdapter.notifyDataSetChanged();
@@ -175,10 +264,11 @@ public class UpcomingAlarmFragment extends Fragment {
         }
         NotificationService.update(getContext());
     }
-    public void deleteAlarm(int idAlarm){
+
+    public void deleteAlarm(int idAlarm) {
         databaseHandler.deleteAlarm(idAlarm);
-        for(int i = 0; i < listAlarm.size(); i++){
-            if(listAlarm.get(i).getIdAlarm() == idAlarm){
+        for (int i = 0; i < listAlarm.size(); i++) {
+            if (listAlarm.get(i).getIdAlarm() == idAlarm) {
                 listAlarm.remove(i);
                 alarmAdapter.notifyItemRemoved(i);
                 NotificationService.update(getContext());
@@ -186,7 +276,8 @@ public class UpcomingAlarmFragment extends Fragment {
             }
         }
     }
-    public void updateAlarmEnable(Alarm alarm){
+
+    public void updateAlarmEnable(Alarm alarm) {
         databaseHandler.updateAlarmEnable(alarm.getIdAlarm(), alarm.isEnable());
         NotificationService.update(getContext());
     }
