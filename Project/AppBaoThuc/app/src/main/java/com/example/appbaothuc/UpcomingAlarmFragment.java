@@ -49,9 +49,6 @@ public class UpcomingAlarmFragment extends Fragment {
     private SettingAlarmFragment settingAlarmFragment;
     private FragmentManager fragmentManager;
 
-    private Runnable runnable;
-    private Handler handler;
-
     @Override
     public void onAttach(final Context context) {
         super.onAttach(context);
@@ -100,70 +97,44 @@ public class UpcomingAlarmFragment extends Fragment {
     }
 
     private void setTimeRemaining() {
-//        runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                Alarm alarm = databaseHandler.getTheNearestAlarm();
-//                if (alarm == null) {
-//                    tvTimeRemaining.setText("Off");
-//                } else {
-//                    tvTimeRemaining.setText(alarm.getDayOfWeek() + " Day - " + alarm.getHour() + " Hours - " + alarm.getMinute() + " Minutes");
-//                }
-//                handler.postDelayed(runnable, 1000);
-//            }
-//        };
-//        handler = new Handler();
-//        handler.postDelayed(runnable, 1000);
-
-        Thread thread = new Thread() {
-            Calendar calendarAlarm=Calendar.getInstance();
-            long timeDelta=0;
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            Calendar calendarAlarm = Calendar.getInstance();
+            long timeDelta;
             long days, hours, minutes;
-            String time="";
+            String time = "";
+
             @Override
             public void run() {
-                super.run();
-                while (!isInterrupted()) {
-                    try {
-                        Thread.sleep(1000);
-                        mainActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Alarm alarm = databaseHandler.getTheNearestAlarm();
-                                if (alarm == null) {
-                                    tvTimeRemaining.setText("Off");
-                                } else {
-                                    calendarAlarm.set(Calendar.DAY_OF_WEEK,alarm.getDayOfWeek());
-                                    calendarAlarm.set(Calendar.HOUR_OF_DAY,alarm.getHour());
-                                    calendarAlarm.set(Calendar.MINUTE,alarm.getMinute());
-                                    calendarAlarm.set(Calendar.SECOND,0);
-                                    timeDelta=Math.abs(Calendar.getInstance().getTimeInMillis()-calendarAlarm.getTimeInMillis());
+                Alarm alarm = databaseHandler.getTheNearestAlarm();
+                if (alarm == null) {
+                    tvTimeRemaining.setText("Off");
+                } else {
+                    calendarAlarm.set(Calendar.DAY_OF_WEEK, alarm.getDayOfWeek());
+                    calendarAlarm.set(Calendar.HOUR_OF_DAY, alarm.getHour());
+                    calendarAlarm.set(Calendar.MINUTE, alarm.getMinute());
+                    calendarAlarm.set(Calendar.SECOND, 0);
+                    timeDelta = Math.abs(Calendar.getInstance().getTimeInMillis() - calendarAlarm.getTimeInMillis());
 
-                                    days= TimeUnit.MILLISECONDS.toDays(timeDelta);
-                                    hours= TimeUnit.MILLISECONDS.toHours(timeDelta-days*24*60*60*1000);
-                                    minutes=TimeUnit.MILLISECONDS.toMinutes(timeDelta-days*24*60*60*1000-hours*60*60*1000);
+                    days = TimeUnit.MILLISECONDS.toDays(timeDelta);
+                    hours = TimeUnit.MILLISECONDS.toHours(timeDelta - days * 24 * 60 * 60 * 1000);
+                    minutes = TimeUnit.MILLISECONDS.toMinutes(timeDelta - days * 24 * 60 * 60 * 1000 - hours * 60 * 60 * 1000);
 
-                                    if(days>0){
-                                        time=days + " days ";
-                                    }
-                                    if(hours>0){
-                                        time=time+hours+" hours ";
-                                    }
-                                    if(minutes>0){
-                                        time=time+minutes+" minutes remaining";
-                                    }
-                                    tvTimeRemaining.setText(time);
-                                    time="";
-                                }
-                            }
-                        });
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    if (days > 0) {
+                        time = days + " days ";
                     }
+                    if (hours > 0) {
+                        time = time + hours + " hours ";
+                    }
+                    if (minutes > 0) {
+                        time = time + minutes + " minutes remaining";
+                    }
+                    tvTimeRemaining.setText(time);
+                    time = "";
                 }
+                handler.postDelayed(this,1000);
             }
-        };
-        thread.start();
+        }, 1000);
     }
 
     public void addAlarm(Alarm alarm) {
