@@ -86,8 +86,8 @@ public class UpcomingAlarmFragment extends Fragment {
 
         setTimeRemaining();
 
-        final Animation animBtnAddAlarmPress=AnimationUtils.loadAnimation(getContext(), R.anim.anim_button_add_alarm_press);
-        animBtnAddAlarmState=AnimationUtils.loadAnimation(getContext(), R.anim.anim_button_add_alarm_state);
+        final Animation animBtnAddAlarmPress = AnimationUtils.loadAnimation(getContext(), R.anim.anim_button_add_alarm_press);
+        animBtnAddAlarmState = AnimationUtils.loadAnimation(getContext(), R.anim.anim_button_add_alarm_state);
 
         btnAddAlarm.startAnimation(animBtnAddAlarmState);
         btnAddAlarm.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +106,8 @@ public class UpcomingAlarmFragment extends Fragment {
     private void setTimeRemaining() {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
-            Calendar calendarAlarm;
+            Calendar calendarAlarm = Calendar.getInstance();
+            Calendar calendarNow = Calendar.getInstance();
             long timeDelta;
             long days, hours, minutes;
             String time = "";
@@ -117,17 +118,23 @@ public class UpcomingAlarmFragment extends Fragment {
                 if (alarm == null) {
                     tvTimeRemaining.setText("Off");
                 } else {
-                    calendarAlarm=Calendar.getInstance();
-                    Log.d("WEEK","Now: "+calendarAlarm.get(Calendar.DAY_OF_WEEK));
+                    calendarAlarm.set(1970, 1, 1, 1, 1, 1);
+                    calendarNow.set(1970, 1, 1, 1, 1, 1);
+                    //Log.d("MILI", "TotalMili: " + calendarNow.getTimeInMillis() + ", " + calendarAlarm.getTimeInMillis());
+                    calendarNow.set(Calendar.DAY_OF_WEEK, Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+                    calendarNow.set(Calendar.HOUR_OF_DAY, Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+                    calendarNow.set(Calendar.MINUTE, Calendar.getInstance().get(Calendar.MINUTE));
+                    calendarNow.set(Calendar.SECOND, Calendar.getInstance().get(Calendar.SECOND));
+                    //Log.d("WEEKMONTH",""+calendarNow.get(Calendar.WEEK_OF_MONTH)+", "+calendarAlarm.get(Calendar.WEEK_OF_MONTH));
                     calendarAlarm.set(Calendar.DAY_OF_WEEK, alarm.getDayOfWeek());
-                    Log.d("WEEK","Alarm "+calendarAlarm.get(Calendar.DAY_OF_WEEK));
-                    if(calendarAlarm.get(Calendar.DAY_OF_WEEK)<Calendar.getInstance().get(Calendar.DAY_OF_WEEK)){
-                        calendarAlarm.set(Calendar.WEEK_OF_MONTH,Calendar.getInstance().get(Calendar.WEEK_OF_MONTH)+1);
+                    if (calendarAlarm.get(Calendar.DAY_OF_WEEK) < calendarNow.get(Calendar.DAY_OF_WEEK)) {
+                        calendarAlarm.set(Calendar.WEEK_OF_MONTH, calendarNow.get(Calendar.WEEK_OF_MONTH) + 1);
                     }
+                    //Log.d("WEEKMONTH2", "" + calendarNow.get(Calendar.WEEK_OF_MONTH) + ", " + calendarAlarm.get(Calendar.WEEK_OF_MONTH));
                     calendarAlarm.set(Calendar.HOUR_OF_DAY, alarm.getHour());
                     calendarAlarm.set(Calendar.MINUTE, alarm.getMinute());
                     calendarAlarm.set(Calendar.SECOND, 0);
-                    timeDelta=Math.abs(calendarAlarm.getTimeInMillis()-Calendar.getInstance().getTimeInMillis());
+                    timeDelta = Math.abs(calendarAlarm.getTimeInMillis() - calendarNow.getTimeInMillis());
 
                     days = TimeUnit.MILLISECONDS.toDays(timeDelta);
                     hours = TimeUnit.MILLISECONDS.toHours(timeDelta - days * 24 * 60 * 60 * 1000);
@@ -142,14 +149,14 @@ public class UpcomingAlarmFragment extends Fragment {
                     if (minutes > 0) {
                         time = time + minutes + " minutes ";
                     }
-                    if (timeDelta < 60000){
-                        time="Less than 1 minute ";
+                    if (timeDelta < 60000) {
+                        time = "Less than 1 minute ";
                     }
-                    tvTimeRemaining.setText(time+"remaining");
+                    tvTimeRemaining.setText(time + "remaining");
                     time = "";
-                    timeDelta=0;
+                    timeDelta = 0;
                 }
-                handler.postDelayed(this,1000);
+                handler.postDelayed(this, 1000);
             }
         }, 1000);
     }
