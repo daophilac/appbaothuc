@@ -55,7 +55,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         return new AlarmViewHolder(alarmView);
     }
 
-    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull final AlarmViewHolder alarmViewHolder, int i) {
         final Alarm alarm = listAlarm.get(i);
@@ -88,7 +87,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
                 } else tvHour.setText(""+hour);
             } else {//hour >=12
                 tvAMPM.setText("PM");
-                if(hour==12) tvHour.setText("hour");
+                if(hour==12) tvHour.setText(""+hour);
                 else{
                     if((hour-12)<10){
                         tvHour.setText("0"+(hour-12));

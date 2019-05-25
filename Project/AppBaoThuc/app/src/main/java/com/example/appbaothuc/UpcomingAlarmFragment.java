@@ -14,8 +14,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.appbaothuc.alarmsetting.SettingAlarmFragment;
 import com.example.appbaothuc.appsetting.AppSettingFragment;
@@ -24,12 +27,8 @@ import com.example.appbaothuc.models.MathDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 import com.example.appbaothuc.services.NotificationService;
 
-import java.sql.Time;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -42,12 +41,14 @@ public class UpcomingAlarmFragment extends Fragment {
     private MainActivity mainActivity;
     private DatabaseHandler databaseHandler;
     private RecyclerView recyclerViewListAlarm;
-    private ImageButton buttonAddAlarm;
+    private ImageButton btnAddAlarm;
     private TextView tvTimeRemaining;
     private List<Alarm> listAlarm;
     private AlarmAdapter alarmAdapter;
     private SettingAlarmFragment settingAlarmFragment;
     private FragmentManager fragmentManager;
+
+    private Animation animBtnAddAlarmState;
 
     @Override
     public void onAttach(final Context context) {
@@ -55,8 +56,8 @@ public class UpcomingAlarmFragment extends Fragment {
         mainActivity = (MainActivity) context;
         databaseHandler = new DatabaseHandler(getContext());
         settingAlarmFragment = new SettingAlarmFragment();
-        settingAlarmFragment.setEnterTransition(new Slide(Gravity.END));
-        settingAlarmFragment.setExitTransition(new Slide(Gravity.END));
+//        settingAlarmFragment.setEnterTransition(R.anim.anim_button_add_alarm_press);
+//        settingAlarmFragment.setExitTransition(new Slide(Gravity.END));
         listAlarm = databaseHandler.getAllAlarm();
         Collections.sort(listAlarm);
         alarmAdapter = new AlarmAdapter(getContext(), this, listAlarm);
@@ -75,8 +76,8 @@ public class UpcomingAlarmFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_upcoming_alarm, container, false);
 
-        recyclerViewListAlarm = view.findViewById(R.id.recycler_view_list_alarm);
-        buttonAddAlarm = view.findViewById(R.id.button_add_alarm);
+        recyclerViewListAlarm = view.findViewById(R.id.recyclerViewListAlarm);
+        btnAddAlarm = view.findViewById(R.id.buttonAddAlarm);
         tvTimeRemaining = view.findViewById(R.id.textviewTimeRemaining);
 
         recyclerViewListAlarm.setAdapter(alarmAdapter);
@@ -84,8 +85,13 @@ public class UpcomingAlarmFragment extends Fragment {
 
         setTimeRemaining();
 
-        buttonAddAlarm.setOnClickListener(new View.OnClickListener() {
+        final Animation animBtnAddAlarmPress=AnimationUtils.loadAnimation(getContext(), R.anim.anim_button_add_alarm_press);
+        animBtnAddAlarmState=AnimationUtils.loadAnimation(getContext(), R.anim.anim_button_add_alarm_state);
+
+        btnAddAlarm.startAnimation(animBtnAddAlarmState);
+        btnAddAlarm.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                btnAddAlarm.startAnimation(animBtnAddAlarmPress);
                 settingAlarmFragment.configure(UpcomingAlarmFragment.this, null);
                 fragmentManager.beginTransaction()
                         .add(R.id.full_screen_fragment_container, settingAlarmFragment)
@@ -99,8 +105,8 @@ public class UpcomingAlarmFragment extends Fragment {
     private void setTimeRemaining() {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
-            Calendar calendarAlarm = Calendar.getInstance();
-            long timeDelta;
+            Calendar calendarAlarm;
+            long timeDelta, timeNow, timeAlarm;
             long days, hours, minutes;
             String time = "";
 
@@ -110,11 +116,14 @@ public class UpcomingAlarmFragment extends Fragment {
                 if (alarm == null) {
                     tvTimeRemaining.setText("Off");
                 } else {
+                    calendarAlarm=Calendar.getInstance();
                     calendarAlarm.set(Calendar.DAY_OF_WEEK, alarm.getDayOfWeek());
                     calendarAlarm.set(Calendar.HOUR_OF_DAY, alarm.getHour());
                     calendarAlarm.set(Calendar.MINUTE, alarm.getMinute());
                     calendarAlarm.set(Calendar.SECOND, 0);
-                    timeDelta = Math.abs(Calendar.getInstance().getTimeInMillis() - calendarAlarm.getTimeInMillis());
+                    timeAlarm=calendarAlarm.getTimeInMillis();
+                    timeNow=Calendar.getInstance().getTimeInMillis();
+                    timeDelta=Math.abs(timeAlarm-timeNow);
 
                     days = TimeUnit.MILLISECONDS.toDays(timeDelta);
                     hours = TimeUnit.MILLISECONDS.toHours(timeDelta - days * 24 * 60 * 60 * 1000);
@@ -127,13 +136,14 @@ public class UpcomingAlarmFragment extends Fragment {
                         time = time + hours + " hours ";
                     }
                     if (minutes > 0) {
-                        time = time + minutes + " minutes remaining";
+                        time = time + minutes + " minutes ";
                     }
                     if (timeDelta < 60000){
-                        time="Less than 1 minute remaining";
+                        time="Less than 1 minute ";
                     }
-                    tvTimeRemaining.setText(time);
+                    tvTimeRemaining.setText(time+"remaining");
                     time = "";
+                    timeDelta=0;
                 }
                 handler.postDelayed(this,1000);
             }
