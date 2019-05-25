@@ -85,7 +85,7 @@ public class MathConfigurationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_math_configuration, container, false);
+        View view = inflater.inflate(R.layout.fragment_math_configuration2, container, false);
         this.textViewMathNumberOfProblem = view.findViewById(R.id.text_view_math_number_of_problem);
         this.numberPickerNumberOfProblem = view.findViewById(R.id.number_picker_math_number_of_problem);
         this.textViewCalculationExample = view.findViewById(R.id.text_view_calculation_example);
