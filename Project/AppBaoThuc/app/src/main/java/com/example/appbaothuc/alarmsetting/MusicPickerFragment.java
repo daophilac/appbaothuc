@@ -13,23 +13,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.example.appbaothuc.appsetting.AppSettingFragment;
-import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.DatabaseHandler;
 import com.example.appbaothuc.Music;
 import com.example.appbaothuc.MusicAdapter;
 import com.example.appbaothuc.R;
+import com.example.appbaothuc.appsetting.AppSettingFragment;
+import com.example.appbaothuc.models.Alarm;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 public class MusicPickerFragment extends Fragment {
-    private Context context;
-    private SettingAlarmFragment settingAlarmFragment;
-    private DatabaseHandler databaseHandler;
+    private OnFinishPickMusicListener onFinishPickMusicListener;
     private Alarm alarm;
     private Button buttonRingtone;
     private Button buttonMusic;
@@ -49,17 +46,16 @@ public class MusicPickerFragment extends Fragment {
     private SortBy isSortingBy;
     private Order isWithOrder;
 
-    public static MusicPickerFragment newInstance(SettingAlarmFragment settingAlarmFragment, Alarm alarm){
-        MusicPickerFragment musicPickerFragment = new MusicPickerFragment();
-        musicPickerFragment.settingAlarmFragment = settingAlarmFragment;
-        musicPickerFragment.alarm = alarm;
-        return musicPickerFragment;
+    public void setAlarm(Alarm alarm) {
+        this.alarm = alarm;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context = context;
+        listRingtone = new ArrayList<>();
+        listMusic = new ArrayList<>();
+        musicAdapter = new MusicAdapter(context, alarm.getRingtone(), listMusic);
     }
 
     @Override
@@ -72,7 +68,6 @@ public class MusicPickerFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_music_picker, container, false);
-        databaseHandler = new DatabaseHandler(context);
         buttonRingtone = view.findViewById(R.id.button_ringtone);
         buttonMusic = view.findViewById(R.id.button_music);
         buttonSortByName = view.findViewById(R.id.button_sort_by_name);
@@ -83,9 +78,6 @@ public class MusicPickerFragment extends Fragment {
         buttonCancel = view.findViewById(R.id.button_give_up);
         buttonOk = view.findViewById(R.id.button_ok);
 
-        listRingtone = new ArrayList<>();
-        listMusic = new ArrayList<>();
-        musicAdapter = new MusicAdapter(context, alarm, listMusic);
         recyclerViewListMusic.setAdapter(musicAdapter);
         recyclerViewListMusic.setLayoutManager(new LinearLayoutManager(getContext()));
         isSortingBy = SortBy.NAME;
@@ -110,19 +102,14 @@ public class MusicPickerFragment extends Fragment {
         });
         buttonCancel.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
-                alarm.setRingtone(musicAdapter.getMusicForCancelOperation());
-                getFragmentManager().beginTransaction().remove(MusicPickerFragment.this).commit();
+            public void onClick(View v) {getFragmentManager().popBackStack();
             }
         });
         buttonOk.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Music checkedMusic = musicAdapter.getCheckedMusic();
-                if(checkedMusic != null){
-                    settingAlarmFragment.setAlarmRingtone(checkedMusic);
-                }
-                getFragmentManager().beginTransaction().remove(MusicPickerFragment.this).commit();
+                onFinishPickMusicListener.onFinishPickMusic(musicAdapter.getCurrentMusic());
+                getFragmentManager().popBackStack();
             }
         });
         buttonSortByName.setOnClickListener(new View.OnClickListener(){
@@ -132,18 +119,18 @@ public class MusicPickerFragment extends Fragment {
                     isSortingBy = SortBy.NAME;
                     isWithOrder = Order.ASC;
                     Collections.sort(listMusic, new Music.NameComparator());
-                    imageViewSortByName.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_down));
+                    imageViewSortByName.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_up));
                 }
                 else if(isWithOrder == Order.ASC){
                     isWithOrder = Order.DESC;
                     Collections.sort(listMusic, new Music.NameComparator());
-                    imageViewSortByName.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_up));
+                    Collections.reverse(listMusic);
+                    imageViewSortByName.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_down));
                 }
                 else if(isWithOrder == Order.DESC){
                     isWithOrder = Order.ASC;
                     Collections.sort(listMusic, new Music.NameComparator());
-                    Collections.reverse(listMusic);
-                    imageViewSortByName.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_down));
+                    imageViewSortByName.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_up));
                 }
                 musicAdapter.notifyDataSetChanged();
             }
@@ -155,18 +142,18 @@ public class MusicPickerFragment extends Fragment {
                     isSortingBy = SortBy.URL;
                     isWithOrder = Order.ASC;
                     Collections.sort(listMusic, new Music.UrlComparator());
-                    imageViewSortByUrl.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_down));
+                    imageViewSortByUrl.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_up));
                 }
                 else if(isWithOrder == Order.ASC){
                     isWithOrder = Order.DESC;
                     Collections.sort(listMusic, new Music.UrlComparator());
                     Collections.reverse(listMusic);
-                    imageViewSortByUrl.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_up));
+                    imageViewSortByUrl.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_down));
                 }
                 else if(isWithOrder == Order.DESC){
                     isWithOrder = Order.ASC;
                     Collections.sort(listMusic, new Music.UrlComparator());
-                    imageViewSortByUrl.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_down));
+                    imageViewSortByUrl.setImageDrawable(getContext().getDrawable(R.drawable.ic_arrow_drop_up));
                 }
                 musicAdapter.notifyDataSetChanged();
             }
@@ -184,7 +171,6 @@ public class MusicPickerFragment extends Fragment {
             listMusic.add(new Music(path, path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."))));
         }
         Collections.sort(listMusic, new Music.NameComparator());
-        musicAdapter.setListMusic(listMusic);
         musicAdapter.notifyDataSetChanged();
     }
     private List<String> getAllMusicFileRecursively(String fileOrDirectory){
@@ -221,14 +207,19 @@ public class MusicPickerFragment extends Fragment {
         return false;
     }
 
-
+    public void setOnFinishPickMusicListener(OnFinishPickMusicListener onFinishPickMusicListener) {
+        this.onFinishPickMusicListener = onFinishPickMusicListener;
+    }
+    public interface OnFinishPickMusicListener{
+        void onFinishPickMusic(Music music);
+    }
+    public enum ChooseMusicType {
+        RINGTONE, MUSIC
+    }
     enum SortBy{
         NAME, URL
     }
     enum Order{
         ASC, DESC
-    }
-    public enum ChooseMusicType {
-        RINGTONE, MUSIC
     }
 }

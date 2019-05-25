@@ -19,6 +19,7 @@ import com.example.appbaothuc.alarmsetting.SettingAlarmFragment;
 import com.example.appbaothuc.appsetting.AppSettingFragment;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.models.MathDetail;
+import com.example.appbaothuc.models.MovingDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 import com.example.appbaothuc.services.NotificationService;
 
@@ -27,6 +28,7 @@ import java.util.List;
 
 import static com.example.appbaothuc.models.ChallengeType.DEFAULT;
 import static com.example.appbaothuc.models.ChallengeType.MATH;
+import static com.example.appbaothuc.models.ChallengeType.MOVING;
 import static com.example.appbaothuc.models.ChallengeType.SHAKE;
 
 
@@ -111,6 +113,17 @@ public class UpcomingAlarmFragment extends Fragment {
         alarmAdapter.notifyDataSetChanged();
         NotificationService.update(getContext());
     }
+    public void addAlarm(Alarm alarm, MovingDetail movingDetail){
+        alarm.setChallengeType(MOVING);
+        databaseHandler.insertAlarm(alarm);
+        alarm.setIdAlarm(databaseHandler.getRecentAddedAlarm().getIdAlarm());
+        movingDetail.setIdAlarm(alarm.getIdAlarm());
+        databaseHandler.insertMovingDetail(movingDetail);
+        listAlarm.add(alarm);
+        Collections.sort(listAlarm);
+        alarmAdapter.notifyDataSetChanged();
+        NotificationService.update(getContext());
+    }
     public void editAlarm(Alarm alarm){
         if(alarm.getChallengeType() != DEFAULT){
             this.databaseHandler.deleteChallengeDetail(alarm.getIdAlarm(), alarm.getChallengeType());
@@ -165,6 +178,30 @@ public class UpcomingAlarmFragment extends Fragment {
         }
         alarm.setChallengeType(SHAKE);
         this.databaseHandler.updateAlarm(alarm);
+        for(int i = 0; i < listAlarm.size(); i++){
+            if(listAlarm.get(i).getIdAlarm() == alarm.getIdAlarm()){
+                listAlarm.set(i, alarm);
+                Collections.sort(listAlarm);
+                alarmAdapter.notifyDataSetChanged();
+                break;
+            }
+        }
+        NotificationService.update(getContext());
+    }
+    public void editAlarm(Alarm alarm, MovingDetail movingDetail){
+        if(alarm.getChallengeType() != MOVING){
+            if(alarm.getChallengeType() != DEFAULT){
+                databaseHandler.deleteChallengeDetail(alarm.getIdAlarm(), alarm.getChallengeType());
+            }
+            databaseHandler.insertMovingDetail(movingDetail);
+        }
+        else{
+            if(movingDetail != null){
+                databaseHandler.updateMovingDetail(movingDetail);
+            }
+        }
+        alarm.setChallengeType(MOVING);
+        databaseHandler.updateAlarm(alarm);
         for(int i = 0; i < listAlarm.size(); i++){
             if(listAlarm.get(i).getIdAlarm() == alarm.getIdAlarm()){
                 listAlarm.set(i, alarm);

@@ -60,6 +60,7 @@ public class ChallengeDialogFragment extends DialogFragment {
     private DefaultChallengeFragment defaultChallengeFragment;
     private MathChallengeFragment mathChallengeFragment;
     private ShakeChallengeFragment shakeChallengeFragment;
+    private MovingChallengeFragment movingChallengeFragment;
     private GiveUpDialogFragment giveUpDialogFragment;
 
     private CountDownTimer countDownTimer;
@@ -237,8 +238,12 @@ public class ChallengeDialogFragment extends DialogFragment {
                 shakeChallengeFragment.setArguments(bundleChallenge);
                 fragmentManager.beginTransaction().replace(R.id.challenge_fragment_container, shakeChallengeFragment).commit();
                 break;
-            case WALK:
-                throw new RuntimeException("must implement");
+            case MOVING:
+                movingChallengeFragment = new MovingChallengeFragment();
+                movingChallengeFragment.setMovingDetail(databaseHandler.getAlarmMovingDetail(alarm.getIdAlarm()));
+                movingChallengeFragment.setArguments(bundleChallenge);
+                fragmentManager.beginTransaction().replace(R.id.challenge_fragment_container, movingChallengeFragment).commit();
+                break;
         }
         return view;
     }

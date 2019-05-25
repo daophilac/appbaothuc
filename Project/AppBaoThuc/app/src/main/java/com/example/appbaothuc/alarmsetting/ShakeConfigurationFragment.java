@@ -25,7 +25,7 @@ import static com.example.appbaothuc.models.ShakeDetail.ShakeDifficulty.MODERATE
 
 public class ShakeConfigurationFragment extends Fragment {
     private Context context;
-    private ShakeConfigurationFragmentListener listener;
+    private ShakeConfigurationFragmentListener shakeConfigurationFragmentListener;
     private Alarm alarm;
     private ShakeDetail shakeDetail;
     private DatabaseHandler databaseHandler;
@@ -42,8 +42,7 @@ public class ShakeConfigurationFragment extends Fragment {
     private Button buttonCancel;
     private Button buttonOk;
 
-    public void configure(TypeFragment typeFragment, Alarm alarm){
-        this.listener = typeFragment;
+    public void setAlarm(Alarm alarm){
         this.alarm = alarm;
     }
 
@@ -81,7 +80,7 @@ public class ShakeConfigurationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_shake_configuration, container, false);
+        View view = inflater.inflate(R.layout.fragment_configuration_shake, container, false);
         this.textViewShakeNumberOfProblem = view.findViewById(R.id.text_view_shake_number_of_problem);
         this.numberPickerNumberOfProblem = view.findViewById(R.id.number_picker_shake_number_of_problem);
         this.textViewPlus25 = view.findViewById(R.id.text_view_plus_25);
@@ -92,7 +91,7 @@ public class ShakeConfigurationFragment extends Fragment {
         this.radioButtonEasy = view.findViewById(R.id.radio_button_easy);
         this.radioButtonModerate = view.findViewById(R.id.radio_button_moderate);
         this.radioButtonHard = view.findViewById(R.id.radio_button_hard);
-        this.buttonCancel = view.findViewById(R.id.button_give_up);
+        this.buttonCancel = view.findViewById(R.id.button_cancel);
         this.buttonOk = view.findViewById(R.id.button_ok);
 
         this.numberPickerNumberOfProblem.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -171,7 +170,7 @@ public class ShakeConfigurationFragment extends Fragment {
         this.buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onShakeConfigurationSetup(shakeDetail);
+                shakeConfigurationFragmentListener.onShakeConfigurationSetup(shakeDetail);
                 getFragmentManager().popBackStack();
             }
         });
@@ -196,6 +195,10 @@ public class ShakeConfigurationFragment extends Fragment {
                 this.radioButtonHard.setChecked(true);
                 break;
         }
+    }
+
+    public void setShakeConfigurationFragmentListener(ShakeConfigurationFragmentListener shakeConfigurationFragmentListener) {
+        this.shakeConfigurationFragmentListener = shakeConfigurationFragmentListener;
     }
 
     public interface ShakeConfigurationFragmentListener{

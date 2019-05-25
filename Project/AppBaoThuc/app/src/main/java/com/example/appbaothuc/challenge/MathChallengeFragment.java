@@ -71,7 +71,7 @@ public class MathChallengeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Bundle bundleChallenge = getArguments();
-        View view = inflater.inflate(R.layout.fragment_math_challenge, container, false);
+        View view = inflater.inflate(R.layout.fragment_challenge_math, container, false);
         textView_Question=view.findViewById(R.id.textView_Question);
         textView_Result =view.findViewById(R.id.textView_Result);
         textView_Result.setText(textView_Result.getText());

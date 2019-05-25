@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.models.ShakeDetail;
@@ -55,7 +54,7 @@ public class ShakeChallengeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Bundle bundleChallenge = getArguments();
-        View view = inflater.inflate(R.layout.fragment_shake_challenge, container, false);
+        View view = inflater.inflate(R.layout.fragment_challenge_shake, container, false);
         this.textViewShakeNumberOfProblem = view.findViewById(R.id.text_view_shake_number_of_problem);
         this.textViewShakeNumberOfProblem.setText(String.valueOf(this.numberOfProblem));
         shakeDetector = new ShakeDetector(challengeActivity);

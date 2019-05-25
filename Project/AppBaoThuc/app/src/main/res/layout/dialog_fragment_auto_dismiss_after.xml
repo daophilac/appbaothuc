@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/text_view_auto_dismiss_after_explanation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="Trong trường hợp bạn không giữ điện thoại ở bên mình và có một báo thức diễn ra, đừng lo lắng, nó sẽ không reo mãi mãi. Nó cuối cùng cũng sẽ ngừng lại sau một khoảng thời gian nhất định. Vậy bạn muốn sau bao lâu thì nó tự động tắt? Giá trị nhỏ nhất là 10 phút và lớn nhất là 60 phút."
+        android:textSize="20sp" />
+
+    <NumberPicker
+        android:id="@+id/number_picker_auto_dismiss_after"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_auto_dismiss_after_explanation"
+        android:layout_centerHorizontal="true" />
+
+    <LinearLayout
+        android:id="@+id/linear_layout_confirmation_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/number_picker_auto_dismiss_after"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_give_up"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="CANCEL" />
+
+        <Button
+            android:id="@+id/button_ok"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="OK" />
+    </LinearLayout>
+</RelativeLayout>

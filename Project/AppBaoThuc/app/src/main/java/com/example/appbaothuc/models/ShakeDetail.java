@@ -8,6 +8,9 @@ public class ShakeDetail {
     public static ShakeDetail obtain(int idAlarm){
         return new ShakeDetail(idAlarm, ShakeDifficulty.MODERATE, 50);
     }
+    public static ShakeDetail obtainAlternative(int idAlarm){
+        return new ShakeDetail(idAlarm, ShakeDifficulty.HARD, 200);
+    }
 
     public ShakeDetail(int idAlarm, int difficulty, int numberOfProblem) {
         this.idAlarm = idAlarm;

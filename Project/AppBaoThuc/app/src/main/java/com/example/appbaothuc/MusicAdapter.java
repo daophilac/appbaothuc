@@ -20,56 +20,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHolder> {
-    private Context context;
-    private Alarm alarm;
-    private List<Music> listMusic;
     private boolean multipleChoice = false; //TODO
-
-    private List<CheckBox> listCheckBoxCheck;
-    private SparseArray<Music> mapCheckBoxMusic;
-    private CheckBox checkBoxCurrentChecked;
-
+    private Context context;
+    private List<Music> listMusic;
+    private List<Music> listCurrentCheckedMusic;
+    private Music currentMusic;
+    private Music nowPlayingMusic;
     private MediaPlayer mediaPlayer;
+    private CheckBox checkBoxPreviousChecked;
+    private CheckBox checkBoxNowChecked;
     private ImageButton buttonPreviousPlay;
     private ImageButton buttonNextPlay;
-
-    private Music musicForCancelOperation;
-    public MusicAdapter(Context context, Alarm alarm, List<Music> listMusic){
+    public MusicAdapter(Context context, Music currentMusic, List<Music> listMusic){
         this.context = context;
-        this.alarm = alarm;
+        this.currentMusic = currentMusic;
         this.listMusic = listMusic;
-
-        this.listCheckBoxCheck = new ArrayList<>();
-        this.mapCheckBoxMusic = new SparseArray<>();
-        this.mediaPlayer = new MediaPlayer();
-
-        this.musicForCancelOperation = new Music(alarm.getRingtone().getUrl(), alarm.getRingtone().getName());
-    }
-    public MusicAdapter(Context context, Alarm alarm){
-        this.context = context;
-        this.alarm = alarm;
-
-        this.listCheckBoxCheck = new ArrayList<>();
         this.mediaPlayer = new MediaPlayer();
     }
-
-    public void setListMusic(List<Music> listMusic) {
-        this.listMusic = listMusic;
-    }
-
-    public Music getCheckedMusic(){
-        if(checkBoxCurrentChecked == null){
-            return null;
-        }
-        return mapCheckBoxMusic.get(checkBoxCurrentChecked.getId());
-    }
-
-    public Music getMusicForCancelOperation(){
-        return this.musicForCancelOperation;
-    }
-
     public void stopMusic(){
-        mediaPlayer.stop();
+        if(mediaPlayer.isPlaying()){
+            mediaPlayer.release();
+        }
+    }
+
+    public Music getCurrentMusic() {
+        return currentMusic;
     }
 
     @NonNull
@@ -77,51 +52,53 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
     public MusicViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View itemView = layoutInflater.inflate(R.layout.item_music, viewGroup, false);
-        MusicViewHolder musicViewHolder = new MusicViewHolder(itemView);
-        listCheckBoxCheck.add(musicViewHolder.checkBoxCheck);
-        return musicViewHolder;
+        return new MusicViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MusicViewHolder musicViewHolder, int i) {
+    public void onBindViewHolder(@NonNull final MusicViewHolder musicViewHolder, int i) {
         final Music music = listMusic.get(i);
-        CheckBox checkBoxCheck = musicViewHolder.checkBoxCheck;
-        TextView textViewMusicName = musicViewHolder.textViewMusicName;
-        TextView textViewMusicUrl = musicViewHolder.textViewMusicUrl;
-        ImageButton buttonPlayMusic = musicViewHolder.buttonPlayMusic;
-
-        if(alarm.getRingtone().getName() != null){
-            checkBoxCheck.setChecked(alarm.getRingtone().getName().equals(music.getName()));
+        if(currentMusic.getName().equals(music.getName())){
+            musicViewHolder.checkBoxCheck.setChecked(true);
+            checkBoxPreviousChecked = musicViewHolder.checkBoxCheck;
+            checkBoxNowChecked = checkBoxPreviousChecked;
         }
-        textViewMusicName.setText(music.getName());
-        textViewMusicUrl.setText(music.getUrl());
+        else{
+            musicViewHolder.checkBoxCheck.setChecked(false);
+        }
+        musicViewHolder.textViewMusicName.setText(music.getName());
+        musicViewHolder.textViewMusicUrl.setText(music.getUrl());
 
-        checkBoxCheck.setId(View.generateViewId());
-        mapCheckBoxMusic.put(checkBoxCheck.getId(), music);
-
-        checkBoxCheck.setOnClickListener(new View.OnClickListener(){
+        if(music == nowPlayingMusic){
+            musicViewHolder.buttonPlayMusic.setImageDrawable(context.getDrawable(R.drawable.ic_pause));
+            buttonPreviousPlay = musicViewHolder.buttonPlayMusic;
+        }
+        else{
+            musicViewHolder.buttonPlayMusic.setImageDrawable(context.getDrawable(R.drawable.ic_play));
+        }
+        musicViewHolder.checkBoxCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CheckBox checkBoxCurrent = (CheckBox)v;
-                if(checkBoxCurrent.isChecked()){
+                if(musicViewHolder.checkBoxCheck.isChecked()){
                     if(!multipleChoice){
-                        for(int i = 0; i < listCheckBoxCheck.size(); i++){
-                            if(listCheckBoxCheck.get(i).isChecked()){
-                                listCheckBoxCheck.get(i).setChecked(false);
-                            }
+                        currentMusic = music;
+                        if(checkBoxPreviousChecked != null){
+                            checkBoxPreviousChecked.setChecked(false);
                         }
-                        checkBoxCurrent.setChecked(true);
-                        checkBoxCurrentChecked = checkBoxCurrent;
-                        alarm.getRingtone().setName(getCheckedMusic().getName());
+                        checkBoxNowChecked = musicViewHolder.checkBoxCheck;
+                        checkBoxNowChecked.setChecked(true);
+                        checkBoxPreviousChecked = checkBoxNowChecked;
+                        currentMusic.setName(music.getName());
                     }
                 }
             }
         });
-        buttonPlayMusic.setOnClickListener(new View.OnClickListener(){
+        musicViewHolder.buttonPlayMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 buttonNextPlay = (ImageButton)v;
                 if(!mediaPlayer.isPlaying()){
+                    nowPlayingMusic = music;
                     buttonNextPlay.setImageDrawable(context.getDrawable(R.drawable.ic_pause));
                     if(buttonPreviousPlay != null){
                         if(buttonPreviousPlay != buttonNextPlay){
@@ -134,10 +111,11 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
                     buttonPreviousPlay = buttonNextPlay;
                 }
                 else{
-
+                    nowPlayingMusic = null;
                     buttonPreviousPlay.setImageDrawable(context.getDrawable(R.drawable.ic_play));
                     if(buttonPreviousPlay == buttonNextPlay){
                         mediaPlayer.stop();
+                        nowPlayingMusic = null;
                     }
                     else{
                         mediaPlayer.stop();
@@ -145,6 +123,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
                         mediaPlayer = MediaPlayer.create(context, Uri.fromFile(new File(music.getUrl())));
                         mediaPlayer.setLooping(true);
                         mediaPlayer.start();
+                        nowPlayingMusic = music;
                     }
                     buttonPreviousPlay = buttonNextPlay;
                 }
