@@ -282,6 +282,6 @@ public class MathChallengeFragment extends Fragment {
         int a = random.nextInt(maxRange);
         int b = random.nextInt(maxRange);
         int c = random.nextInt(maxRange);
-        return "(" + a + " x " + b + ") + " + c;
+        return "Example: (" + a + " x " + b + ") + " + c;
     }
 }
