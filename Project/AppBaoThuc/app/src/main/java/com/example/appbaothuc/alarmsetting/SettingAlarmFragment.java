@@ -157,9 +157,11 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             timePicker.setIs24HourView(false);
         }
 
-        animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
-        animFadein.setAnimationListener(this);
-        layoutSettingAlarm.startAnimation(animFadein); // gán cho bất cứ cái nào. Này là nguyên cái form setting của t.
+//        animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+//        animFadein.setAnimationListener(this);
+//        layoutSettingAlarm.startAnimation(animFadein); // gán cho bất cứ cái nào. Này là nguyên cái form setting của t.
+        Animation anim=AnimationUtils.loadAnimation(getContext(), R.anim.anim_fragment_setting_alarm_enter);
+        layoutSettingAlarm.startAnimation(anim);
 
         animBlink = AnimationUtils.loadAnimation(getContext(), R.anim.anim_lac); // gán animation cho biến mới tạo ở trên kia
         animBlink.setAnimationListener(this); // nhớ set cái này
