@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,7 +107,7 @@ public class UpcomingAlarmFragment extends Fragment {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             Calendar calendarAlarm;
-            long timeDelta, timeNow, timeAlarm;
+            long timeDelta;
             long days, hours, minutes;
             String time = "";
 
@@ -117,13 +118,16 @@ public class UpcomingAlarmFragment extends Fragment {
                     tvTimeRemaining.setText("Off");
                 } else {
                     calendarAlarm=Calendar.getInstance();
+                    Log.d("WEEK","Now: "+calendarAlarm.get(Calendar.DAY_OF_WEEK));
                     calendarAlarm.set(Calendar.DAY_OF_WEEK, alarm.getDayOfWeek());
+                    Log.d("WEEK","Alarm "+calendarAlarm.get(Calendar.DAY_OF_WEEK));
+                    if(calendarAlarm.get(Calendar.DAY_OF_WEEK)<Calendar.getInstance().get(Calendar.DAY_OF_WEEK)){
+                        calendarAlarm.set(Calendar.WEEK_OF_MONTH,Calendar.getInstance().get(Calendar.WEEK_OF_MONTH)+1);
+                    }
                     calendarAlarm.set(Calendar.HOUR_OF_DAY, alarm.getHour());
                     calendarAlarm.set(Calendar.MINUTE, alarm.getMinute());
                     calendarAlarm.set(Calendar.SECOND, 0);
-                    timeAlarm=calendarAlarm.getTimeInMillis();
-                    timeNow=Calendar.getInstance().getTimeInMillis();
-                    timeDelta=Math.abs(timeAlarm-timeNow);
+                    timeDelta=Math.abs(calendarAlarm.getTimeInMillis()-Calendar.getInstance().getTimeInMillis());
 
                     days = TimeUnit.MILLISECONDS.toDays(timeDelta);
                     hours = TimeUnit.MILLISECONDS.toHours(timeDelta - days * 24 * 60 * 60 * 1000);
