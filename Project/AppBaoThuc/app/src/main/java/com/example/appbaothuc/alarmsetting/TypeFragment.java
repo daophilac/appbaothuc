@@ -76,6 +76,7 @@ public class TypeFragment extends Fragment {
                 getFragmentManager().popBackStack();
             }
         });
+
         imageButtonDefault.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

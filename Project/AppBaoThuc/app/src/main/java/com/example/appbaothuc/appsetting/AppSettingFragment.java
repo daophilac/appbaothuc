@@ -4,14 +4,18 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
 import com.example.appbaothuc.MainActivity;
@@ -22,7 +26,7 @@ import com.peanut.androidlib.common.filemanager.InternalFileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppSettingFragment extends Fragment {
+public class AppSettingFragment extends Fragment implements Animation.AnimationListener {
     private OnHourModeChangeListener onHourModeChangeListener;
     public static final int HOUR_MODE_24 = 1;
     public static final int HOUR_MODE_12 = 2;
@@ -51,6 +55,8 @@ public class AppSettingFragment extends Fragment {
     private AutoDismissAfterDialogFragment autoDismissAfterDialogFragment;
     private InternalFileWriter internalFileWriter;
 
+    private Animation animationFadein, animBlink;
+    private ConstraintLayout layoutSetting;
 
     @Override
     public void onAttach(Context context) {
@@ -83,7 +89,7 @@ public class AppSettingFragment extends Fragment {
         this.checkBoxGraduallyIncreaseVolume.setChecked(graduallyIncreaseVolume);
         this.checkBoxPreventTurnOffPhone.setChecked(preventTurnOffPhone);
         btnMute.setText(muteAlarmIn + " giây");
-        btnCanMute.setText(canMuteAlarmFor + " giây");
+        btnCanMute.setText(canMuteAlarmFor + " lần");
         btnDismiss.setText(autoDismissAfter + " giây");
 
         if(hourMode == HOUR_MODE_24){
@@ -108,6 +114,15 @@ public class AppSettingFragment extends Fragment {
         this.radioButton24Hour = view.findViewById(R.id.radio_button_24_hour);
         this.radioButton12Hour = view.findViewById(R.id.radio_button_12_hour);
 
+        layoutSetting = view.findViewById(R.id.layoutSetting);
+
+        animationFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in); // animation fade_in
+        animationFadein.setAnimationListener(this);
+        layoutSetting.startAnimation(animationFadein); // gán animation
+
+        animBlink = AnimationUtils.loadAnimation(getContext(), R.anim.blink);
+        animBlink.setAnimationListener(this);
+        imageButtonBack.startAnimation(animBlink);
 
         this.imageButtonBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,6 +216,21 @@ public class AppSettingFragment extends Fragment {
     }
     public void setOnHourModeChangeListener(OnHourModeChangeListener onHourModeChangeListener){
         this.onHourModeChangeListener = onHourModeChangeListener;
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
     }
 
     public interface OnHourModeChangeListener {

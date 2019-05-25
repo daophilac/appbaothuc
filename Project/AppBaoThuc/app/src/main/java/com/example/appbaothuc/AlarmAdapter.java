@@ -81,14 +81,14 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
                     tvHour.setText("12");
                 } else if (hour<10){
                     tvHour.setText("0"+hour);
-                } else tvHour.setText(hour);
+                } else tvHour.setText(""+hour);
             } else {//hour >=12
                 tvAMPM.setText("PM");
-                if(hour==12) tvHour.setText(String.valueOf(hour));
+                if(hour==12) tvHour.setText("hour");
                 else{
                     if((hour-12)<10){
                         tvHour.setText("0"+(hour-12));
-                    } else tvHour.setText(String.valueOf(hour-12));
+                    } else tvHour.setText(""+(hour-12));
                 }
             }
         }

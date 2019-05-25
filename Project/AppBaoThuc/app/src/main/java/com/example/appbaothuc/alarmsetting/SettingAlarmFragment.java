@@ -53,17 +53,17 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     private ShakeDetail shakeDetail;
     private MovingDetail movingDetail;
     private Music ringtone;
-    private Animation animFadein;
+    private Animation animFadein, animBlink; // Tạo biến animation
 
     private TimePicker timePicker; // Chọn giờ
     private Button btnPlayMusic, btnCancel, btnDelete, btnOk; //Phát nhạc đang chọn, Hủy thao tác, Xóa báo thức, Hoàn tất
     private LinearLayout linearLayoutLabel, linearLayoutType, linearLayoutRingTone,
-            linearLayoutRepeat, linearLayoutAgain;
+            linearLayoutRepeat, linearLayoutAgain, layoutSettingAlarm;
     private TextView textViewPlus10M, textViewMinus10M, textViewPlus1H,
             textViewMinus1H;
     private TextView textViewTimeLeft /*thời gian còn lại*/, textViewType, textViewRepeat,
             textViewRingtone, textViewAgain, textViewLabel;
-    private ImageView imageViewType; //cái hình điện thoại rung
+    private ImageView imageViewType, imageView4, imageView2; //cái hình điện thoại rung
     private SeekBar seekBar; // thanh âm lượng
     private Switch aSwitch; // bật tắt rung
 
@@ -175,6 +175,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         linearLayoutRepeat = view.findViewById(R.id.linearLayoutRepeat);
         linearLayoutAgain = view.findViewById(R.id.linearLayoutAgain);
         linearLayoutLabel = view.findViewById(R.id.linearLayoutLabel);
+        layoutSettingAlarm = view.findViewById(R.id.layoutSettingAlarm);
 
         //textViewTimeLeft = view.findViewById(R.id.textViewTimeLeft);
         textViewPlus10M = view.findViewById(R.id.textViewPlus10M);
@@ -186,6 +187,8 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         textViewRingtone = view.findViewById(R.id.textViewRingTone);
         textViewAgain = view.findViewById(R.id.textViewAgain);
         textViewLabel = view.findViewById(R.id.textViewLabel);
+        imageView4 = view.findViewById(R.id.imageView4);
+        imageView2 = view.findViewById(R.id.imageView2);
 
         imageViewType = view.findViewById(R.id.imageViewType);
         seekBar = view.findViewById(R.id.seekBar);
@@ -198,9 +201,14 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             timePicker.setIs24HourView(false);
         }
 
-        animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.blink);
+        animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
         animFadein.setAnimationListener(this);
-        timePicker.startAnimation(animFadein);
+        layoutSettingAlarm.startAnimation(animFadein); // gán cho bất cứ cái nào. Này là nguyên cái form setting của t.
+
+        animBlink = AnimationUtils.loadAnimation(getContext(), R.anim.anim_lac); // gán animation cho biến mới tạo ở trên kia
+        animBlink.setAnimationListener(this); // nhớ set cái này
+        imageView4.startAnimation(animBlink); // imageView4 là cái đối tượng m muốn gán cái animation đó. Ở đây là cái điện thoai đung đưa đó
+
 
         btnOk.setOnClickListener(new View.OnClickListener() {
             //@RequiresApi(api = Build.VERSION_CODES.M)
@@ -258,6 +266,13 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                 fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, typeFragment).addToBackStack(null).commit();
             }
         });
+        imageView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(seekBar.getProgress() == 0) seekBar.setProgress(50);
+                else seekBar.setProgress(0);
+            }
+        });
         linearLayoutRingTone.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -292,17 +307,21 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(seekBar.getProgress() == 0) {
+                    imageView2.setBackground(getContext().getDrawable(R.drawable.ic_volume_off_black_24dp));
+                }
+                else {
+                    imageView2.setBackground(getContext().getDrawable(R.drawable.ic_volume_up_24dp));
+                }
                 alarm.setVolume(progress);
                 if(mediaPlayer.isPlaying()){
                     mediaPlayer.setVolume(progress/1000f, progress/1000f);
                 }
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
-
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
