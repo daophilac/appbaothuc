@@ -7,8 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.models.Alarm;
@@ -16,17 +19,34 @@ import com.example.appbaothuc.models.Alarm;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class LableDialogFragment extends DialogFragment {
+public class LableDialogFragment extends DialogFragment implements Animation.AnimationListener {
     private SettingAlarmFragment settingAlarmFragment;
     private Alarm alarm;
     private Button btnOk;
     private Button btnCancel;
     private EditText mEditText;
+    private LinearLayout edit_name;
+    private Animation animFadein;
 
 
     public void configure(SettingAlarmFragment settingAlarmFragment, Alarm alarm){
         this.settingAlarmFragment = settingAlarmFragment;
         this.alarm = alarm;
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
     }
 
     public interface LabelDialogListener {
@@ -48,9 +68,13 @@ public class LableDialogFragment extends DialogFragment {
         mEditText = view.findViewById(R.id.txt_your_name);
         mEditText.setText(alarm.getLabel());
 
+        edit_name = view.findViewById(R.id.edit_name);
+        animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+        animFadein.setAnimationListener(this);
+        edit_name.startAnimation(animFadein);
+
         btnOk = view.findViewById(R.id.btnOk);
         btnCancel = view.findViewById(R.id.btnCancel);
-        getDialog().setTitle("Hello");
 
         mEditText.requestFocus();
         getDialog().getWindow().setSoftInputMode(

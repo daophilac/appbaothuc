@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -20,21 +22,25 @@ import com.example.appbaothuc.models.MathDetail;
 import com.example.appbaothuc.models.MovingDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 import static com.example.appbaothuc.models.ChallengeType.MOVING;
-public class TypeFragment extends Fragment {
+
+public class TypeFragment extends Fragment implements Animation.AnimationListener {
     private TypeFragmentListener typeFragmentListener;
     private ChallengeType currentChallengeType;
     private Alarm alarm;
     private LinearLayout linearLayoutDefault;
-    private LinearLayout linearLayoutCamera;
+    private LinearLayout linearLayoutMoving;
     private LinearLayout linearLayoutShake;
     private LinearLayout linearLayoutMath;
     private LinearLayout linearLayoutQRCode;
     private ImageButton imageButtonDefault;
-    private ImageButton imageButtonCamera;
+    private ImageButton imageButtonMoving;
     private ImageButton imageButtonShake;
     private ImageButton imageButtonMath;
     private ImageButton imageButtonQRCode;
     private Button btnOK;
+
+    private LinearLayout layoutType;
+    private Animation animFadein;
 
     private FragmentManager fragmentManager;
     private MathConfigurationFragment mathConfigurationFragment;
@@ -55,15 +61,20 @@ public class TypeFragment extends Fragment {
     public void setControl(View view){
         btnOK = view.findViewById(R.id.btnOK);
         imageButtonDefault = view.findViewById(R.id.imageButtonDefault);
-        imageButtonCamera = view.findViewById(R.id.imageButtonCamera);
+        imageButtonMoving = view.findViewById(R.id.imageButtonCamera);
         imageButtonShake = view.findViewById(R.id.imageButtonShake);
         imageButtonMath = view.findViewById(R.id.imageButtonMath);
         imageButtonQRCode = view.findViewById(R.id.imageButtonQRCode);
         linearLayoutDefault = view.findViewById(R.id.linearLayoutDefault);
-        linearLayoutCamera = view.findViewById(R.id.linearLayoutCamera);
+        linearLayoutMoving = view.findViewById(R.id.linearLayoutCamera);
         linearLayoutShake = view.findViewById(R.id.linearLayoutShake);
         linearLayoutMath = view.findViewById(R.id.linearLayoutMath);
         linearLayoutQRCode = view.findViewById(R.id.linearLayoutQRCode);
+
+        layoutType = view.findViewById(R.id.layoutType);
+        animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+        animFadein.setAnimationListener(this);
+        layoutType.startAnimation(animFadein);
 
         mathConfigurationFragment = new MathConfigurationFragment();
         shakeConfigurationFragment = new ShakeConfigurationFragment();
@@ -85,7 +96,7 @@ public class TypeFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        imageButtonCamera.setOnClickListener(new View.OnClickListener() {
+        imageButtonMoving.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), TypePlayCameraActivity.class);
@@ -130,7 +141,8 @@ public class TypeFragment extends Fragment {
                         .add(R.id.full_screen_fragment_container, mathConfigurationFragment)
                         .addToBackStack(null)
                         .commit();
-                mathConfigurationFragment.setMathConfigurationFragmentListener(new MathConfigurationFragment.MathConfigurationFragmentListener() {
+                mathConfigurationFragment.setMathConfigurationFragmentListener(new MathConfigurationFragment
+                        .MathConfigurationFragmentListener() {
                     @Override
                     public void onMathConfigurationSetup(MathDetail mathDetail) {
                         typeFragmentListener.getMathChallenge(mathDetail);
@@ -147,7 +159,8 @@ public class TypeFragment extends Fragment {
                         .add(R.id.full_screen_fragment_container, shakeConfigurationFragment)
                         .addToBackStack(null)
                         .commit();
-                shakeConfigurationFragment.setShakeConfigurationFragmentListener(new ShakeConfigurationFragment.ShakeConfigurationFragmentListener() {
+                shakeConfigurationFragment.setShakeConfigurationFragmentListener(new ShakeConfigurationFragment
+                        .ShakeConfigurationFragmentListener() {
                     @Override
                     public void onShakeConfigurationSetup(ShakeDetail shakeDetail) {
                         typeFragmentListener.getShakeChallenge(shakeDetail);
@@ -156,7 +169,7 @@ public class TypeFragment extends Fragment {
                 });
             }
         });
-        linearLayoutCamera.setOnClickListener(new View.OnClickListener() {
+        linearLayoutMoving.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 movingConfigurationFragment.setAlarm(alarm);
@@ -164,7 +177,8 @@ public class TypeFragment extends Fragment {
                         .add(R.id.full_screen_fragment_container, movingConfigurationFragment)
                         .addToBackStack(null)
                         .commit();
-                movingConfigurationFragment.setOnMovingConfigurationListener(new MovingConfigurationFragment.OnMovingConfigurationListener() {
+                movingConfigurationFragment.setOnMovingConfigurationListener(new MovingConfigurationFragment
+                        .OnMovingConfigurationListener() {
                     @Override
                     public void onConfirm(MovingDetail movingDetail) {
                         typeFragmentListener.getMovingChallenge(movingDetail);
@@ -185,7 +199,7 @@ public class TypeFragment extends Fragment {
                 linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
                 break;
             case MOVING:
-                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
+                linearLayoutMoving.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
                 break;
         }
     }
@@ -202,7 +216,7 @@ public class TypeFragment extends Fragment {
                 linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.challenge_layout_deactivate));
                 break;
             case MOVING:
-                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.challenge_layout_deactivate));
+                linearLayoutMoving.setBackgroundColor(getResources().getColor(R.color.challenge_layout_deactivate));
                 break;
         }
         switch (newChallenge){
@@ -216,7 +230,7 @@ public class TypeFragment extends Fragment {
                 linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
                 break;
             case MOVING:
-                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
+                linearLayoutMoving.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
                 break;
         }
         currentChallengeType = newChallenge;
@@ -224,6 +238,21 @@ public class TypeFragment extends Fragment {
 
     public void setTypeFragmentListener(TypeFragmentListener typeFragmentListener) {
         this.typeFragmentListener = typeFragmentListener;
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
     }
 
     public interface TypeFragmentListener{
