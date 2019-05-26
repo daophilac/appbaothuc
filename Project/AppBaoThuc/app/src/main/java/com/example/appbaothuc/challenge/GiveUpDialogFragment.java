@@ -36,7 +36,7 @@ public class GiveUpDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dialog_give_up, container, false);
+        View view = inflater.inflate(R.layout.dialog_fragment_give_up, container, false);
         this.imageButtonBack = view.findViewById(R.id.image_button_back);
         this.textViewCount = view.findViewById(R.id.text_view_count);
         this.buttonGiveUp = view.findViewById(R.id.button_give_up);

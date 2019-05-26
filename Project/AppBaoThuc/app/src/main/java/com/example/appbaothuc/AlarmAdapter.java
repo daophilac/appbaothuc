@@ -20,7 +20,6 @@ import com.example.appbaothuc.appsetting.AppSettingFragment;
 import com.example.appbaothuc.models.Alarm;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.example.appbaothuc.appsetting.AppSettingFragment.HOUR_MODE_24;
@@ -31,7 +30,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     private List<Alarm> listAlarm;
     private SettingAlarmFragment settingAlarmFragment;
     private FragmentManager fragmentManager;
-    private HashMap<ConstraintLayout, Alarm> mapViewAlarm;
 
     public AlarmAdapter(Context context, UpcomingAlarmFragment upcomingAlarmFragment, List<Alarm> listAlarm) {
         this.context = context;
@@ -39,7 +37,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         this.listAlarm = listAlarm;
         this.settingAlarmFragment = new SettingAlarmFragment();
         this.fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
-        this.mapViewAlarm = new HashMap<>();
     }
 
     @Override
@@ -66,7 +63,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         TextView tvAMPM=alarmViewHolder.tvAMPM;
         TextView tvRepeatDay = alarmViewHolder.tvRepeatDay;
         ImageView btnAlarmType = alarmViewHolder.btnAlarmType;
-        mapViewAlarm.put(constraintLayoutParent, alarm);
 
         swcEnable.setChecked(alarm.isEnable());
 
@@ -85,14 +81,14 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
                     tvHour.setText("12");
                 } else if (hour<10){
                     tvHour.setText("0"+hour);
-                } else tvHour.setText(hour);
+                } else tvHour.setText(""+hour);
             } else {//hour >=12
                 tvAMPM.setText("PM");
-                if(hour==12) tvHour.setText(String.valueOf(hour));
+                if(hour==12) tvHour.setText("hour");
                 else{
                     if((hour-12)<10){
                         tvHour.setText("0"+(hour-12));
-                    } else tvHour.setText(String.valueOf(hour-12));
+                    } else tvHour.setText(""+(hour-12));
                 }
             }
         }
@@ -117,9 +113,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         constraintLayoutParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Alarm checkedAlarm = mapViewAlarm.get(constraintLayoutParent);
-                checkedAlarm.validateRingtoneUrl(context);
-                settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
+                settingAlarmFragment.configure(upcomingAlarmFragment, alarm);
                 fragmentManager.beginTransaction()
                         .add(R.id.full_screen_fragment_container, settingAlarmFragment)
                         .addToBackStack(null).commit();
@@ -128,9 +122,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         btnAlarmType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Alarm checkedAlarm = mapViewAlarm.get(constraintLayoutParent);
-                checkedAlarm.validateRingtoneUrl(context);
-                settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
+                settingAlarmFragment.configure(upcomingAlarmFragment, alarm);
                 fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, settingAlarmFragment).addToBackStack(null).commit();
             }
         });
@@ -143,6 +135,9 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
                 break;
             case SHAKE:
                 btnAlarmType.setImageDrawable(context.getDrawable(R.drawable.icons8_shake_phone_60));
+                break;
+            case MOVING:
+                btnAlarmType.setImageDrawable(context.getDrawable(R.drawable.ic_move_white_64px));
                 break;
         }
     }

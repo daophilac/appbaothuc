@@ -19,7 +19,7 @@ public class CanMuteAlarmForDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dialog_can_mute_alarm_for, container, false);
+        View view = inflater.inflate(R.layout.dialog_fragment_can_mute_alarm_for, container, false);
         this.numberPickerCanMuteAlarmFor = view.findViewById(R.id.number_picker_can_mute_alarm_for);
         this.buttonCancel = view.findViewById(R.id.button_give_up);
         this.buttonOk = view.findViewById(R.id.button_ok);

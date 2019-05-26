@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -71,7 +73,7 @@ public class MathChallengeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Bundle bundleChallenge = getArguments();
-        View view = inflater.inflate(R.layout.fragment_math_challenge, container, false);
+        View view = inflater.inflate(R.layout.fragment_challenge_math, container, false);
         textView_Question=view.findViewById(R.id.textView_Question);
         textView_Result =view.findViewById(R.id.textView_Result);
         textView_Result.setText(textView_Result.getText());
@@ -79,11 +81,12 @@ public class MathChallengeFragment extends Fragment {
         buttonDelete=view.findViewById(R.id.btnDelete);
         listCaculate=new ArrayList<>();
         listResult=new ArrayList<>();
-
+        final Animation animRotate= AnimationUtils.loadAnimation(getContext(),R.anim.anim_rotate);
         final Button btnSo0=view.findViewById(R.id.so0);
         btnSo0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.startAnimation(animRotate);
                 sUserResult+=btnSo0.getText();
                 textView_Result.setText(sUserResult);
             }
@@ -92,6 +95,7 @@ public class MathChallengeFragment extends Fragment {
         btnSo1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.startAnimation(animRotate);
                 sUserResult+=btnSo1.getText();
                 textView_Result.setText(sUserResult);
             }
@@ -100,6 +104,7 @@ public class MathChallengeFragment extends Fragment {
         btnSo2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.startAnimation(animRotate);
                 sUserResult+=btnSo2.getText();
                 textView_Result.setText(sUserResult);
             }
@@ -108,6 +113,7 @@ public class MathChallengeFragment extends Fragment {
         btnSo3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.startAnimation(animRotate);
                 sUserResult+=btnSo3.getText();
                 textView_Result.setText(sUserResult);
             }
@@ -116,6 +122,7 @@ public class MathChallengeFragment extends Fragment {
         btnSo4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.startAnimation(animRotate);
                 sUserResult+=btnSo4.getText();
                 textView_Result.setText(sUserResult);
             }
@@ -124,6 +131,7 @@ public class MathChallengeFragment extends Fragment {
         btnSo5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.startAnimation(animRotate);
                 sUserResult+=btnSo5.getText();
                 textView_Result.setText(sUserResult);
             }
@@ -132,6 +140,7 @@ public class MathChallengeFragment extends Fragment {
         btnSo6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.startAnimation(animRotate);
                 sUserResult+=btnSo6.getText();
                 textView_Result.setText(sUserResult);
             }
@@ -140,6 +149,7 @@ public class MathChallengeFragment extends Fragment {
         btnSo7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.startAnimation(animRotate);
                 sUserResult+=btnSo7.getText();
                 textView_Result.setText(sUserResult);
             }
@@ -148,6 +158,7 @@ public class MathChallengeFragment extends Fragment {
         btnSo8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.startAnimation(animRotate);
                 sUserResult+=btnSo8.getText();
                 textView_Result.setText(sUserResult);
             }
@@ -156,6 +167,7 @@ public class MathChallengeFragment extends Fragment {
         btnSo9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.startAnimation(animRotate);
                 sUserResult+=btnSo9.getText();
                 textView_Result.setText(sUserResult);
             }
@@ -180,7 +192,6 @@ public class MathChallengeFragment extends Fragment {
             public void onClick(View view) {
                 String sSysResult=sUserResult;
                 sUserResult=sSysResult.substring(0,sUserResult.length()-1);
-
                 textView_Result.setText(sUserResult);
             }
         });

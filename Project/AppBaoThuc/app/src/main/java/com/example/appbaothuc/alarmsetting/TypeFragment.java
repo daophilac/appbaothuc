@@ -1,16 +1,11 @@
 package com.example.appbaothuc.alarmsetting;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.transition.Slide;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +16,17 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.example.appbaothuc.R;
-import com.example.appbaothuc.challenge.ChallengeActivity;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.models.ChallengeType;
 import com.example.appbaothuc.models.MathDetail;
+import com.example.appbaothuc.models.MovingDetail;
 import com.example.appbaothuc.models.ShakeDetail;
-
 
 public class TypeFragment extends Fragment implements MathConfigurationFragment.MathConfigurationFragmentListener, ShakeConfigurationFragment.ShakeConfigurationFragmentListener, Animation.AnimationListener {
     private TypeFragmentListener listener;
+import static com.example.appbaothuc.models.ChallengeType.MOVING;
+public class TypeFragment extends Fragment {
+    private TypeFragmentListener typeFragmentListener;
     private ChallengeType currentChallengeType;
     private Alarm alarm;
     private LinearLayout linearLayoutDefault;
@@ -50,8 +47,8 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
     private FragmentManager fragmentManager;
     private MathConfigurationFragment mathConfigurationFragment;
     private ShakeConfigurationFragment shakeConfigurationFragment;
-    public void configure(SettingAlarmFragment settingAlarmFragment, Alarm alarm, ChallengeType currentChallengeType){
-        this.listener = settingAlarmFragment;
+    private MovingConfigurationFragment movingConfigurationFragment;
+    public void configure(Alarm alarm, ChallengeType currentChallengeType){
         this.currentChallengeType = currentChallengeType;
         this.alarm = alarm;
     }
@@ -83,6 +80,7 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
 
         mathConfigurationFragment = new MathConfigurationFragment();
         shakeConfigurationFragment = new ShakeConfigurationFragment();
+        movingConfigurationFragment = new MovingConfigurationFragment();
         fragmentManager = getFragmentManager();
 
         btnOK.setOnClickListener(new View.OnClickListener() {
@@ -133,24 +131,59 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
         linearLayoutDefault.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.getDefaultChallenge();
+                typeFragmentListener.getDefaultChallenge();
                 updateChallengeLayoutColor(ChallengeType.DEFAULT);
             }
         });
         linearLayoutMath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mathConfigurationFragment.configure(TypeFragment.this, alarm);
-                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container,
-                        mathConfigurationFragment).addToBackStack(null).commit();
+                mathConfigurationFragment.setAlarm(alarm);
+                fragmentManager.beginTransaction()
+                        .add(R.id.full_screen_fragment_container, mathConfigurationFragment)
+                        .addToBackStack(null)
+                        .commit();
+                mathConfigurationFragment.setMathConfigurationFragmentListener(new MathConfigurationFragment.MathConfigurationFragmentListener() {
+                    @Override
+                    public void onMathConfigurationSetup(MathDetail mathDetail) {
+                        typeFragmentListener.getMathChallenge(mathDetail);
+                        updateChallengeLayoutColor(ChallengeType.MATH);
+                    }
+                });
             }
         });
         linearLayoutShake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                shakeConfigurationFragment.configure(TypeFragment.this, alarm);
-                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container,
-                        shakeConfigurationFragment).addToBackStack(null).commit();
+                shakeConfigurationFragment.setAlarm(alarm);
+                fragmentManager.beginTransaction()
+                        .add(R.id.full_screen_fragment_container, shakeConfigurationFragment)
+                        .addToBackStack(null)
+                        .commit();
+                shakeConfigurationFragment.setShakeConfigurationFragmentListener(new ShakeConfigurationFragment.ShakeConfigurationFragmentListener() {
+                    @Override
+                    public void onShakeConfigurationSetup(ShakeDetail shakeDetail) {
+                        typeFragmentListener.getShakeChallenge(shakeDetail);
+                        updateChallengeLayoutColor(ChallengeType.SHAKE);
+                    }
+                });
+            }
+        });
+        linearLayoutCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                movingConfigurationFragment.setAlarm(alarm);
+                fragmentManager.beginTransaction()
+                        .add(R.id.full_screen_fragment_container, movingConfigurationFragment)
+                        .addToBackStack(null)
+                        .commit();
+                movingConfigurationFragment.setOnMovingConfigurationListener(new MovingConfigurationFragment.OnMovingConfigurationListener() {
+                    @Override
+                    public void onConfirm(MovingDetail movingDetail) {
+                        typeFragmentListener.getMovingChallenge(movingDetail);
+                        updateChallengeLayoutColor(MOVING);
+                    }
+                });
             }
         });
 
@@ -163,6 +196,9 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
                 break;
             case SHAKE:
                 linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
+                break;
+            case MOVING:
+                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
                 break;
         }
     }
@@ -178,6 +214,9 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
             case SHAKE:
                 linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.challenge_layout_deactivate));
                 break;
+            case MOVING:
+                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.challenge_layout_deactivate));
+                break;
         }
         switch (newChallenge){
             case DEFAULT:
@@ -189,22 +228,15 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
             case SHAKE:
                 linearLayoutShake.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
                 break;
+            case MOVING:
+                linearLayoutCamera.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
+                break;
         }
         currentChallengeType = newChallenge;
     }
 
-
-
-    @Override
-    public void onMathConfigurationSetup(MathDetail mathDetail) {
-        this.listener.getMathChallenge(mathDetail);
-        updateChallengeLayoutColor(ChallengeType.MATH);
-    }
-
-    @Override
-    public void onShakeConfigurationSetup(ShakeDetail shakeDetail) {
-        this.listener.getShakeChallenge(shakeDetail);
-        updateChallengeLayoutColor(ChallengeType.SHAKE);
+    public void setTypeFragmentListener(TypeFragmentListener typeFragmentListener) {
+        this.typeFragmentListener = typeFragmentListener;
     }
 
     @Override
@@ -226,5 +258,6 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
         void getDefaultChallenge();
         void getMathChallenge(MathDetail mathDetail);
         void getShakeChallenge(ShakeDetail shakeDetail);
+        void getMovingChallenge(MovingDetail movingDetail);
     }
 }

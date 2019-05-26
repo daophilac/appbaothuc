@@ -19,7 +19,7 @@ public class AutoDismissAfterDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dialog_auto_dismiss_after, container, false);
+        View view = inflater.inflate(R.layout.dialog_fragment_auto_dismiss_after, container, false);
         this.numberPickerAutoDismissAfter = view.findViewById(R.id.number_picker_auto_dismiss_after);
         this.buttonCancel = view.findViewById(R.id.button_give_up);
         this.buttonOk = view.findViewById(R.id.button_ok);

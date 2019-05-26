@@ -24,7 +24,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.example.appbaothuc.MainActivity;
 import com.example.appbaothuc.Music;
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.UpcomingAlarmFragment;
@@ -32,6 +31,7 @@ import com.example.appbaothuc.appsetting.AppSettingFragment;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.models.ChallengeType;
 import com.example.appbaothuc.models.MathDetail;
+import com.example.appbaothuc.models.MovingDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ import static com.example.appbaothuc.appsetting.AppSettingFragment.HOUR_MODE_24;
 
 public class SettingAlarmFragment extends Fragment implements LableDialogFragment.LabelDialogListener,
         AgainDialogFragment.AgainDialogListener, RepeatDialogFragment.RepeatDialogListener,
-        View.OnClickListener, TypeFragment.TypeFragmentListener, Animation.AnimationListener {
+        View.OnClickListener, Animation.AnimationListener {
     private Context context;
     private UpcomingAlarmFragment upcomingAlarmFragment;
     private SettingAlarmMode settingAlarmMode; //enum ADD EDIT
@@ -51,7 +51,10 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     private ChallengeType currentChallengeType; // Loai thu thach
     private MathDetail mathDetail;
     private ShakeDetail shakeDetail;
+    
     private Animation animFadein, animBlink;
+    private MovingDetail movingDetail;
+    private Music ringtone;
 
     private TimePicker timePicker; // Chọn giờ
     private Button btnPlayMusic, btnCancel, btnDelete, btnOk; //Phát nhạc đang chọn, Hủy thao tác, Xóa báo thức, Hoàn tất
@@ -89,10 +92,52 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             this.settingAlarmMode = SettingAlarmMode.EDIT;
         }
         this.currentChallengeType = this.alarm.getChallengeType();
+        this.ringtone = this.alarm.getRingtone();
         this.typeFragment = new TypeFragment();
         this.musicPickerFragment = new MusicPickerFragment();
         this.repeatDialogFragment = new RepeatDialogFragment();
         this.mediaPlayer = new MediaPlayer();
+
+        this.musicPickerFragment.setOnFinishPickMusicListener(new MusicPickerFragment.OnFinishPickMusicListener() {
+            @Override
+            public void onFinishPickMusic(Music music) {
+                ringtone = music;
+                textViewRingtone.setText(music.getName());
+            }
+        });
+
+        this.typeFragment.setTypeFragmentListener(new TypeFragment.TypeFragmentListener() {
+            @Override
+            public void getDefaultChallenge() {
+                currentChallengeType = ChallengeType.DEFAULT;
+                imageViewType.setImageDrawable(context.getDrawable(R.drawable.ic_alarm_60dp));
+                textViewType.setText("Default");
+            }
+
+            @Override
+            public void getMathChallenge(MathDetail mathDetail) {
+                currentChallengeType = ChallengeType.MATH;
+                SettingAlarmFragment.this.mathDetail = mathDetail;
+                imageViewType.setImageDrawable(context.getDrawable(R.drawable.ic_math_36));
+                textViewType.setText("Math");
+            }
+
+            @Override
+            public void getShakeChallenge(ShakeDetail shakeDetail) {
+                currentChallengeType = ChallengeType.SHAKE;
+                SettingAlarmFragment.this.shakeDetail = shakeDetail;
+                imageViewType.setImageDrawable(context.getDrawable(R.drawable.icons8_shake_phone_60));
+                textViewType.setText("Shake");
+            }
+
+            @Override
+            public void getMovingChallenge(MovingDetail movingDetail) {
+                currentChallengeType = ChallengeType.MOVING;
+                SettingAlarmFragment.this.movingDetail = movingDetail;
+                imageViewType.setImageDrawable(context.getDrawable(R.drawable.ic_move_white_64px));
+                textViewType.setText("Moving");
+            }
+        });
     }
     @Nullable
     @Override
@@ -185,6 +230,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
                 alarm.setHour(getHour(timePicker));
                 alarm.setMinute(getMinute(timePicker));
+                alarm.setRingtone(ringtone);
                 alarm.setVibrate(aSwitch.isChecked());
                 alarm.setSnoozeTime(snoozeTime);
                 alarm.setVolume(seekBar.getProgress());
@@ -215,7 +261,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         linearLayoutType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                typeFragment.configure(SettingAlarmFragment.this, alarm, currentChallengeType);
+                typeFragment.configure(alarm, currentChallengeType);
                 fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, typeFragment).addToBackStack(null).commit();
             }
         });
@@ -233,6 +279,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                     mediaPlayer.stop();
                     btnPlayMusic.setBackground(context.getDrawable(R.drawable.ic_play_arrow_24dp));
                 }
+                musicPickerFragment.setAlarm(alarm);
                 fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, musicPickerFragment).addToBackStack(null).commit();
             }
         });
@@ -315,6 +362,10 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
                 imageViewType.setImageDrawable(context.getDrawable(R.drawable.icons8_shake_phone_60));
                 textViewType.setText("Shake");
                 break;
+            case MOVING:
+                imageViewType.setImageDrawable(context.getDrawable(R.drawable.ic_move_white_64px));
+                textViewType.setText("Moving");
+                break;
         }
     }
 
@@ -360,9 +411,9 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         textViewPlus10M.setOnClickListener(this);
 
         fragmentManager = getFragmentManager();
-        typeFragment = new TypeFragment();
         typeFragment.setEnterTransition(new Slide(Gravity.TOP));
         typeFragment.setExitTransition(new Slide(Gravity.TOP));
+
         musicPickerFragment = MusicPickerFragment.newInstance(this, alarm);
         musicPickerFragment.setEnterTransition(new Slide(Gravity.BOTTOM));
         musicPickerFragment.setExitTransition(new Slide(Gravity.BOTTOM));
@@ -529,6 +580,9 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             case SHAKE:
                 upcomingAlarmFragment.addAlarm(alarm, shakeDetail);
                 break;
+            case MOVING:
+                upcomingAlarmFragment.addAlarm(alarm, movingDetail);
+                break;
         }
     }
 
@@ -543,41 +597,15 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             case SHAKE:
                 upcomingAlarmFragment.editAlarm(alarm, shakeDetail);
                 break;
+            case MOVING:
+                upcomingAlarmFragment.editAlarm(alarm, movingDetail);
+                break;
         }
-    }
-
-    public void setAlarmRingtone(Music music) {
-        this.alarm.setRingtone(music);
-        textViewRingtone.setText(music.getName());
     }
 
     public Alarm getAlarm() {
         return alarm;
     }
-
-    @Override
-    public void getDefaultChallenge() {
-        this.currentChallengeType = ChallengeType.DEFAULT;
-        this.imageViewType.setImageDrawable(context.getDrawable(R.drawable.ic_alarm_60dp));
-        this.textViewType.setText("Default");
-    }
-
-    @Override
-    public void getMathChallenge(MathDetail mathDetail) {
-        this.currentChallengeType = ChallengeType.MATH;
-        this.mathDetail = mathDetail;
-        this.imageViewType.setImageDrawable(context.getDrawable(R.drawable.ic_math_36));
-        this.textViewType.setText("Math");
-    }
-
-    @Override
-    public void getShakeChallenge(ShakeDetail shakeDetail) {
-        this.currentChallengeType = ChallengeType.SHAKE;
-        this.shakeDetail = shakeDetail;
-        this.imageViewType.setImageDrawable(context.getDrawable(R.drawable.icons8_shake_phone_60));
-        this.textViewType.setText("Shake");
-    }
-
 
     @Override
     public void onAnimationStart(Animation animation) {
@@ -593,7 +621,6 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
     public void onAnimationRepeat(Animation animation) {
 
     }
-
 
     enum SettingAlarmMode{
         ADD_NEW, EDIT

@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.models.ChallengeType;
 import com.example.appbaothuc.models.MathDetail;
+import com.example.appbaothuc.models.MovingDetail;
 import com.example.appbaothuc.models.ShakeDetail;
+import com.peanut.androidlib.view.MeasurementPicker;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -119,6 +121,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 "Difficulty integer," +
                 "NumberOfProblem integer," +
                 "constraint FK_MathDetail foreign key (IdAlarm) references Alarm(IdAlarm))";
+        db.execSQL(sql);
+
+        sql = "create table if not exists MovingDetail(" +
+                "IdAlarm integer primary key," +
+                "Distance real," +
+                "Measurement integer," +
+                "AlternativeChallenge integer," +
+                "constraint FK_MovingDetail foreign key (IdAlarm) references Alarm(IdAlarm))";
         db.execSQL(sql);
     }
 
@@ -305,7 +315,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             }
         }
 
-
         for (int i = 8; i < nowWeekDay + 7; i++) {
             int mod = i % 7;
             weekDayToCompare = getDayOfWeekInString(mod);
@@ -416,22 +425,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     public void deleteChallengeDetail(int idAlarm, ChallengeType challengeType){
-        sqlFormat = "delete from '%s' where IdAlarm = %d";
-        String tableName = "";
         switch(challengeType){
             case DEFAULT:
                 return;
             case MATH:
-                tableName = "MathDetail";
+                deleteMathDetail(idAlarm);
                 break;
             case SHAKE:
-                tableName = "ShakeDetail";
+                deleteShakeDetail(idAlarm);
                 break;
-            case WALK:
-                throw new RuntimeException("must implement");
+            case MOVING:
+                deleteMovingDetail(idAlarm);
+                break;
         }
-        sql = String.format(sqlFormat, tableName, idAlarm);
-        db.execSQL(sql);
     }
     public void insertMathDetail(MathDetail mathDetail){
         sqlFormat = "insert into MathDetail(IdAlarm, Difficulty, NumberOfProblem)" +
@@ -517,7 +523,58 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
 
-
+    public void insertMovingDetail(int idAlarm, float distance, MeasurementPicker.Measurement measurement, ChallengeType alternativeChallenge){
+        sqlFormat = "insert into MovingDetail(IdAlarm, Distance, Measurement, AlternativeChallenge)" +
+                " values(%d, %d, %d, %d)";
+        sql = String.format(sqlFormat, idAlarm, distance, measurement.getIntValue(), alternativeChallenge.getValue());
+        db.execSQL(sql);
+    }
+    public void insertMovingDetail(MovingDetail movingDetail){
+        sqlFormat = "insert into MovingDetail(IdAlarm, Distance, Measurement, AlternativeChallenge)" +
+                " values(%d, %d, %d, %d)";
+        sql = String.format(sqlFormat, movingDetail.getIdAlarm(), movingDetail.getDistance(), movingDetail.getMeasurement().getIntValue(), movingDetail.getAlternativeChallenge().getValue());
+        db.execSQL(sql);
+        switch(movingDetail.getAlternativeChallenge()){
+            case MATH:
+                movingDetail.getMathDetail().setIdAlarm(movingDetail.getIdAlarm());
+                insertMathDetail(movingDetail.getMathDetail());
+                break;
+            case SHAKE:
+                movingDetail.getShakeDetail().setIdAlarm(movingDetail.getIdAlarm());
+                insertShakeDetail(movingDetail.getShakeDetail());
+                break;
+        }
+    }
+    public void updateMovingDetail(MovingDetail movingDetail){
+        sqlFormat = "update MovingDetail set Distance = %d, Measurement = %d, AlternativeChallenge = %d where IdAlarm = %d";
+        sql = String.format(sqlFormat, movingDetail.getDistance(), movingDetail.getMeasurement().getIntValue(), movingDetail.getAlternativeChallenge().getValue(), movingDetail.getIdAlarm());
+        db.execSQL(sql);
+    }
+    public void deleteMovingDetail(int idAlarm){
+        sqlFormat = "delete from MathDetail where IdAlarm = %d";
+        sql = String.format(sqlFormat, idAlarm);
+        db.execSQL(sql);
+        sqlFormat = "delete from ShakeDetail where IdAlarm = %d";
+        sql = String.format(sqlFormat, idAlarm);
+        db.execSQL(sql);
+        sqlFormat = "delete from MovingDetail where IdAlarm = %d";
+        sql = String.format(sqlFormat, idAlarm);
+        db.execSQL(sql);
+    }
+    public MovingDetail getAlarmMovingDetail(int idAlarm){
+        sqlFormat = "select * from MovingDetail where IdAlarm = %d";
+        sql = String.format(sqlFormat, idAlarm);
+        Cursor cursor = db.rawQuery(sql, null);
+        if(!cursor.moveToNext()){
+            cursor.close();
+            return null;
+        }
+        int distance = getValueAtColumn(cursor, "Distance", Integer.class);
+        MeasurementPicker.Measurement measurement = MeasurementPicker.Measurement.newInstanceFromIntValue(getValueAtColumn(cursor, "Measurement", Integer.class));
+        ChallengeType alternativeChallenge = ChallengeType.newInstanceFromValue(getValueAtColumn(cursor, "AlternativeChallenge", Integer.class));
+        cursor.close();
+        return new MovingDetail(idAlarm, distance, measurement, alternativeChallenge);
+    }
 
 
 
@@ -530,6 +587,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         if(columnDataType == Integer.class){
             return columnDataType.cast(cursor.getInt(columnIndex));
+        }
+        else if(columnDataType == Float.class){
+            return columnDataType.cast(cursor.getFloat(columnIndex));
         }
         else if(columnDataType == Boolean.class){
             return columnDataType.cast(cursor.getString(columnIndex).equals("true"));
