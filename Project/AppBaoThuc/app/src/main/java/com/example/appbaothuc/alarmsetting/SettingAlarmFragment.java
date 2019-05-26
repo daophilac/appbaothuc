@@ -247,7 +247,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             @Override
             public void onClick(View v) {
                 if(settingAlarmMode == SettingAlarmMode.EDIT){ // EDIT thi moi cho delete
-                    upcomingAlarmFragment.deleteAlarm(alarm.getIdAlarm());
+                    upcomingAlarmFragment.deleteAlarm(alarm);
                     fragmentManager.popBackStack();
                 }
             }

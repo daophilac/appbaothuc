@@ -82,4 +82,25 @@
                 android:text="INFERNAL" />
         </RadioGroup>
     </android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/linear_layout_confirmation_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancel" />
+
+        <Button
+            android:id="@+id/button_ok"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="OK" />
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

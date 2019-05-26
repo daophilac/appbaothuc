@@ -17,13 +17,16 @@ import android.widget.NumberPicker;
 
 import com.example.appbaothuc.DatabaseHandler;
 import com.example.appbaothuc.R;
+import com.example.appbaothuc.challenge.MovingChallengeFragment;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.models.ChallengeType;
+import com.example.appbaothuc.models.MathDetail;
 import com.example.appbaothuc.models.MovingDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 import com.peanut.androidlib.view.DistancePicker;
 import com.peanut.androidlib.view.MeasurementPicker;
 
+import static com.example.appbaothuc.models.ChallengeType.MATH;
 import static com.example.appbaothuc.models.ChallengeType.MOVING;
 import static com.example.appbaothuc.models.ChallengeType.SHAKE;
 
@@ -117,6 +120,7 @@ public class MovingConfigurationFragment extends Fragment {
         constraintLayoutAlternativeMathChallenge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                alternativeMathConfigurationFragment.configure(MovingConfigurationFragment.this, alarm, movingDetail);
                 fragmentManager.beginTransaction()
                         .add(R.id.full_screen_fragment_container, alternativeMathConfigurationFragment)
                         .addToBackStack(null)
@@ -175,6 +179,23 @@ public class MovingConfigurationFragment extends Fragment {
         movingDetail.setAlternativeChallenge(newChallenge);
     }
 
+    public void getAlternativeMath(MathDetail mathDetail){
+        updateAlternativeChallengeLayoutColor(MATH);
+        if(alarm.getChallengeType() == MATH){
+            if(movingDetail.getAlternativeChallenge() == MATH){
+                databaseHandler.updateMathDetail(mathDetail);
+            }
+            else{
+                switch (movingDetail.getAlternativeChallenge()){
+                    case MATH:
+                        break;
+                    case SHAKE:
+                        databaseHandler.deleteShakeDetail(movingDetail.getIdAlarm());
+                        break;
+                }
+            }
+        }
+    }
     public void getAlternativeShake(ShakeDetail shakeDetail){
         updateAlternativeChallengeLayoutColor(ChallengeType.SHAKE);
         if(alarm.getChallengeType() == MOVING){

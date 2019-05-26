@@ -21,6 +21,22 @@
         app:layout_constraintStart_toEndOf="@id/text_view_distance_to_move"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/text_view_debug_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_view_distance" />
+
+    <Button
+        android:id="@+id/button_debug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DEBUG"
+        app:layout_constraintBaseline_toBaselineOf="@id/button_alternative_challenge"
+        app:layout_constraintEnd_toStartOf="@id/button_alternative_challenge" />
+
     <Button
         android:id="@+id/button_alternative_challenge"
         android:layout_width="wrap_content"

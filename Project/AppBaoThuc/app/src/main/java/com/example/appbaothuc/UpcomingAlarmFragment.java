@@ -274,10 +274,10 @@ public class UpcomingAlarmFragment extends Fragment {
         }
         NotificationService.update(getContext());
     }
-    public void deleteAlarm(int idAlarm){
-        databaseHandler.deleteAlarm(idAlarm);
+    public void deleteAlarm(Alarm alarm){
+        databaseHandler.deleteAlarm(alarm);
         for (int i = 0; i < listAlarm.size(); i++) {
-            if (listAlarm.get(i).getIdAlarm() == idAlarm) {
+            if (listAlarm.get(i).getIdAlarm() == alarm.getIdAlarm()) {
                 listAlarm.remove(i);
                 alarmAdapter.notifyItemRemoved(i);
                 NotificationService.update(getContext());

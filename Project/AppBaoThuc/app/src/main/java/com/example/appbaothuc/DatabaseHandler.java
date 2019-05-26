@@ -234,10 +234,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         sql = String.format(sqlFormat, Music.defaultRingtoneUrl, Music.defaultRingtoneName, idAlarm);
         db.execSQL(sql);
     }
-    public void deleteAlarm(int idAlarm){
+    public void deleteAlarm(Alarm alarm){
         sqlFormat = "delete from Alarm where IdAlarm = %d";
-        sql = String.format(sqlFormat, idAlarm);
+        sql = String.format(sqlFormat, alarm.getIdAlarm());
         db.execSQL(sql);
+        deleteChallengeDetail(alarm.getIdAlarm(), alarm.getChallengeType());
     }
 
     public Alarm getRecentAddedAlarm() {

@@ -8,6 +8,9 @@ public class MathDetail {
     public static MathDetail obtain(int idAlarm){
         return new MathDetail(idAlarm, MathDifficulty.MODERATE, 3);
     }
+    public static MathDetail obtainAlternative(int idAlarm){
+        return new MathDetail(idAlarm, MathDifficulty.INSANE, 10);
+    }
 
     public MathDetail(int idAlarm, int difficulty, int numberOfProblem) {
         this.idAlarm = idAlarm;

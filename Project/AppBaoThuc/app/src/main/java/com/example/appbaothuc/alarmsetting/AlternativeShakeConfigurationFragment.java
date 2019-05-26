@@ -15,7 +15,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.appbaothuc.DatabaseHandler;
-import com.example.appbaothuc.MainActivity;
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.models.MovingDetail;
