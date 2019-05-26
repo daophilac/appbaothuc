@@ -46,12 +46,12 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         View.OnClickListener, TypeFragment.TypeFragmentListener, Animation.AnimationListener {
     private Context context;
     private UpcomingAlarmFragment upcomingAlarmFragment;
-    private SettingAlarmMode settingAlarmMode;
+    private SettingAlarmMode settingAlarmMode; //enum ADD EDIT
     private Alarm alarm;
-    private ChallengeType currentChallengeType;
+    private ChallengeType currentChallengeType; // Loai thu thach
     private MathDetail mathDetail;
     private ShakeDetail shakeDetail;
-    private Animation animFadein, animBlink; // Tạo biến animation
+    private Animation animFadein, animBlink;
 
     private TimePicker timePicker; // Chọn giờ
     private Button btnPlayMusic, btnCancel, btnDelete, btnOk; //Phát nhạc đang chọn, Hủy thao tác, Xóa báo thức, Hoàn tất
@@ -59,7 +59,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             linearLayoutRepeat, linearLayoutAgain, layoutSettingAlarm;
     private TextView textViewPlus10M, textViewMinus10M, textViewPlus1H,
             textViewMinus1H;
-    private TextView textViewTimeLeft /*thời gian còn lại*/, textViewType, textViewRepeat,
+    private TextView textViewType, textViewRepeat,
             textViewRingtone, textViewAgain, textViewLabel;
     private ImageView imageViewType, imageView4, imageView2; //cái hình điện thoại rung
     private SeekBar seekBar; // thanh âm lượng
@@ -67,9 +67,8 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
 
 //    private Music music;
     private String label, outputAgain, outputRepeat;
-    private int hour, minute, snoozeTime, volume;
-    private List<Boolean> listRepeatDay;
-    private boolean vibrate;
+    private int snoozeTime;
+    private List<Boolean> listRepeatDay; // List cac ngay lap lai
 
     private TypeFragment typeFragment;
     private RepeatDialogFragment repeatDialogFragment;
@@ -150,6 +149,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         seekBar = view.findViewById(R.id.seekBar);
         aSwitch = view.findViewById(R.id.aSwitch);
         timePicker = view.findViewById(R.id.timePicker);
+
         if(AppSettingFragment.hourMode == HOUR_MODE_24){
             timePicker.setIs24HourView(true);
         }
@@ -157,15 +157,14 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             timePicker.setIs24HourView(false);
         }
 
-//        animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
-//        animFadein.setAnimationListener(this);
-//        layoutSettingAlarm.startAnimation(animFadein); // gán cho bất cứ cái nào. Này là nguyên cái form setting của t.
-        Animation anim=AnimationUtils.loadAnimation(getContext(), R.anim.anim_fragment_setting_alarm_enter);
-        layoutSettingAlarm.startAnimation(anim);
 
-        animBlink = AnimationUtils.loadAnimation(getContext(), R.anim.anim_lac); // gán animation cho biến mới tạo ở trên kia
-        animBlink.setAnimationListener(this); // nhớ set cái này
-        imageView4.startAnimation(animBlink); // imageView4 là cái đối tượng m muốn gán cái animation đó. Ở đây là cái điện thoai đung đưa đó
+        animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+        animFadein.setAnimationListener(this);
+        layoutSettingAlarm.startAnimation(animFadein);
+
+        animBlink = AnimationUtils.loadAnimation(getContext(), R.anim.anim_lac);
+        animBlink.setAnimationListener(this);
+        imageView4.startAnimation(animBlink);
 
 
         btnOk.setOnClickListener(new View.OnClickListener() {
@@ -174,25 +173,23 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             public void onClick(View view) {
                 outputAgain = textViewAgain.getText().toString();
                 label = textViewLabel.getText().toString();
-
-                if(Build.VERSION.SDK_INT >= 23){
-                    hour = timePicker.getHour();
-                    minute = timePicker.getMinute();
-                }
-                else{
-                    hour = timePicker.getCurrentHour();
-                    minute = timePicker.getCurrentMinute();
-                }
+//
+//                if(Build.VERSION.SDK_INT >= 23){
+//                    hour = timePicker.getHour();
+//                    minute = timePicker.getMinute();
+//                }
+//                else{
+//                    hour = timePicker.getCurrentHour();
+//                    minute = timePicker.getCurrentMinute();
+//                }
                 timePicker.getCurrentHour();
-                volume = seekBar.getProgress();
-                if(aSwitch.isChecked()) vibrate = true;
-                else vibrate = false;
 
                 alarm.setHour(getHour(timePicker));
                 alarm.setMinute(getMinute(timePicker));
                 alarm.setVibrate(aSwitch.isChecked());
                 alarm.setSnoozeTime(snoozeTime);
                 alarm.setVolume(seekBar.getProgress());
+                alarm.setLabel(label);
                 if (settingAlarmMode == SettingAlarmMode.EDIT) {
                     editAlarm();
                 } else if (settingAlarmMode == SettingAlarmMode.ADD_NEW) {
@@ -204,7 +201,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         btnDelete.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                if(settingAlarmMode == SettingAlarmMode.EDIT){
+                if(settingAlarmMode == SettingAlarmMode.EDIT){ // EDIT thi moi cho delete
                     upcomingAlarmFragment.deleteAlarm(alarm.getIdAlarm());
                     fragmentManager.popBackStack();
                 }
@@ -226,7 +223,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         imageView2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(seekBar.getProgress() == 0) seekBar.setProgress(50);
+                if(seekBar.getProgress() == 0) seekBar.setProgress(500);
                 else seekBar.setProgress(0);
             }
         });
@@ -371,7 +368,6 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         musicPickerFragment.setEnterTransition(new Slide(Gravity.BOTTOM));
         musicPickerFragment.setExitTransition(new Slide(Gravity.BOTTOM));
 
-        textViewRingtone.setText(alarm.getRingtone().getName());
 //        String textType = null;
 
 //        if(challengeType == 0) textType = "Default";

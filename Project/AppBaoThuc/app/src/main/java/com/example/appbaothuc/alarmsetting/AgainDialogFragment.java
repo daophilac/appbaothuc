@@ -7,15 +7,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.example.appbaothuc.R;
 
-public class AgainDialogFragment extends DialogFragment {
+public class AgainDialogFragment extends DialogFragment implements Animation.AnimationListener {
     private Button btnOK, btnCancel;
     private RadioGroup radioGroupAgain;
+    private LinearLayout baseLayout;
+    private Animation animFadein;
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
+    }
 
     public interface AgainDialogListener{
         void onFinishChoiceDialog(Integer input);
@@ -34,6 +54,11 @@ public class AgainDialogFragment extends DialogFragment {
         btnOK = viewDialog.findViewById(R.id.btnOK);
         btnCancel = viewDialog.findViewById(R.id.btnCancel);
         radioGroupAgain = viewDialog.findViewById(R.id.radioGroupAgain);
+
+        baseLayout = viewDialog.findViewById(R.id.baseLayout);
+        animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+        animFadein.setAnimationListener(this);
+        baseLayout.startAnimation(animFadein);
 
         //getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
