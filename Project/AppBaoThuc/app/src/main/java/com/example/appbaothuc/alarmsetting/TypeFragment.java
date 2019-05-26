@@ -14,6 +14,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -26,7 +28,7 @@ import com.example.appbaothuc.models.MathDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 
 
-public class TypeFragment extends Fragment implements MathConfigurationFragment.MathConfigurationFragmentListener, ShakeConfigurationFragment.ShakeConfigurationFragmentListener {
+public class TypeFragment extends Fragment implements MathConfigurationFragment.MathConfigurationFragmentListener, ShakeConfigurationFragment.ShakeConfigurationFragmentListener, Animation.AnimationListener {
     private TypeFragmentListener listener;
     private ChallengeType currentChallengeType;
     private Alarm alarm;
@@ -41,6 +43,9 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
     private ImageButton imageButtonMath;
     private ImageButton imageButtonQRCode;
     private Button btnOK;
+
+    private LinearLayout layoutType;
+    private Animation animFadein;
 
     private FragmentManager fragmentManager;
     private MathConfigurationFragment mathConfigurationFragment;
@@ -70,6 +75,11 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
         linearLayoutShake = view.findViewById(R.id.linearLayoutShake);
         linearLayoutMath = view.findViewById(R.id.linearLayoutMath);
         linearLayoutQRCode = view.findViewById(R.id.linearLayoutQRCode);
+
+        layoutType = view.findViewById(R.id.layoutType);
+        animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+        animFadein.setAnimationListener(this);
+        layoutType.startAnimation(animFadein);
 
         mathConfigurationFragment = new MathConfigurationFragment();
         shakeConfigurationFragment = new ShakeConfigurationFragment();
@@ -195,6 +205,21 @@ public class TypeFragment extends Fragment implements MathConfigurationFragment.
     public void onShakeConfigurationSetup(ShakeDetail shakeDetail) {
         this.listener.getShakeChallenge(shakeDetail);
         updateChallengeLayoutColor(ChallengeType.SHAKE);
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
     }
 
     public interface TypeFragmentListener{
