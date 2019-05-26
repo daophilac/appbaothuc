@@ -157,7 +157,6 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
             timePicker.setIs24HourView(false);
         }
 
-
         animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
         animFadein.setAnimationListener(this);
         layoutSettingAlarm.startAnimation(animFadein);
