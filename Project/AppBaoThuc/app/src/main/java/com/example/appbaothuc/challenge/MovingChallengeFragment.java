@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.models.MovingDetail;
-import com.peanut.androidlib.common.permissionmanager.PermissionInquirer;
 import com.peanut.androidlib.sensormanager.LocationTracker;
 import com.peanut.androidlib.sensormanager.MovingDetector;
 
