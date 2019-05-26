@@ -45,14 +45,35 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Resources resources = getResources();
-        int resId = R.raw.in_the_busting_square;
-        Music.defaultRingtoneUrl = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(resId) + '/' + resources.getResourceTypeName(resId) + '/' + resources.getResourceEntryName(resId);
+
         PermissionInquirer permissionInquirer = new PermissionInquirer(this);
         permissionInquirer.askPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 1);
 
+        setControl();
+
+        Resources resources = getResources();
+        int resId = R.raw.in_the_busting_square;
+        Music.defaultRingtoneUrl = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(resId) + '/' + resources.getResourceTypeName(resId) + '/' + resources.getResourceEntryName(resId);
+
+        appSettingFragment = new AppSettingFragment();
+        appSettingFragment.loadAppSetting(this);
+        appSettingFragment.setEnterTransition(new Slide(Gravity.END));
+        appSettingFragment.setExitTransition(new Slide(Gravity.END));
+
+        upcomingAlarmFragment = new UpcomingAlarmFragment();
+        fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().add(R.id.main_fragment_container, upcomingAlarmFragment).commit();
+        NotificationService.update(this);
+
+        setEvent();
+    }
+
+    private void setControl() {
         buttonAlarm = findViewById(R.id.button_alarm);
         buttonSetting = findViewById(R.id.button_setting);
+    }
+
+    private void setEvent() {
         buttonAlarm.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -73,15 +94,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        appSettingFragment = new AppSettingFragment();
-        appSettingFragment.loadAppSetting(this);
-        appSettingFragment.setEnterTransition(new Slide(Gravity.END));
-        appSettingFragment.setExitTransition(new Slide(Gravity.END));
-        upcomingAlarmFragment = new UpcomingAlarmFragment();
-        fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.main_fragment_container, upcomingAlarmFragment).commit();
-        NotificationService.update(this);
     }
+
     public void test1(View view){
         NotificationService.DEBUG_MODE = true;
         NotificationService.update(this);
@@ -92,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
         switch(requestCode){
             case 1:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                 } else {
                     Toast.makeText(this, "Read external storage permission has not been granted. Terminate!", Toast.LENGTH_LONG).show();
                     finish();
