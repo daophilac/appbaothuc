@@ -82,15 +82,15 @@ public class MusicPickerFragment extends Fragment {
         recyclerViewListMusic.setLayoutManager(new LinearLayoutManager(getContext()));
         isSortingBy = SortBy.NAME;
         isWithOrder = Order.ASC;
-//        buttonRingtone.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v) {
-//                if(chooseMusicType != ChooseMusicType.RINGTONE){
-//                    chooseMusicType = ChooseMusicType.RINGTONE;
-//                    makeListRingtone();
-//                }
-//            }
-//        });
+        buttonRingtone.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if(chooseMusicType != ChooseMusicType.RINGTONE){
+                    chooseMusicType = ChooseMusicType.RINGTONE;
+                    makeListRingtone();
+                }
+            }
+        });
         buttonMusic.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -102,8 +102,7 @@ public class MusicPickerFragment extends Fragment {
         });
         buttonCancel.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {getFragmentManager().popBackStack();
-            }
+            public void onClick(View v) {getFragmentManager().popBackStack(); }
         });
         buttonOk.setOnClickListener(new View.OnClickListener(){
             @Override

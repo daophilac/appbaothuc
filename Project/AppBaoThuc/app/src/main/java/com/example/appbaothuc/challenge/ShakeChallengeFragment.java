@@ -73,10 +73,7 @@ public class ShakeChallengeFragment extends Fragment {
         this.shakeDetector.configure(this.minInterval, this.minForce);
         this.shakeDetector.start(new ShakeDetector.ShakeDetectorListener() {
             @Override
-            public void onAccelerationChange(float x, float y, float z) {
-
-            }
-
+            public void onAccelerationChange(float x, float y, float z) { }
             @Override
             public void onShake(float force) {
                 numberOfProblem--;
@@ -87,21 +84,12 @@ public class ShakeChallengeFragment extends Fragment {
                     textViewShakeNumberOfProblem.setText("Shake for " + numberOfProblem + " times");
                 }
             }
-
             @Override
-            public void onSupportDetection() {
-
-            }
-
+            public void onSupportDetection() { }
             @Override
-            public void onNoSupportDetection() {
-
-            }
-
+            public void onNoSupportDetection() { }
             @Override
-            public void onStopDetection() {
-
-            }
+            public void onStopDetection() { }
         });
 
         if(bundleChallenge != null){
