@@ -8,22 +8,42 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 
 import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.R;
 
 import java.util.ArrayList;
 
-public class RepeatDialogFragment extends DialogFragment{
+public class RepeatDialogFragment extends DialogFragment implements Animation.AnimationListener {
     private Alarm alarm;
     private Button btnOK, btnCancel, btnDays, btnWeekend;
     private CheckBox checkBoxT2, checkBoxT3, checkBoxT4, checkBoxT5, checkBoxT6,
             checkBoxT7, checkBoxCN;
     public static ArrayList<Boolean> listDays = new ArrayList<>();
+    private LinearLayout layoutRepeatDialog;
+    private Animation animFadein;
 
     public RepeatDialogFragment(){
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
     }
 
     public interface RepeatDialogListener{
@@ -43,6 +63,11 @@ public class RepeatDialogFragment extends DialogFragment{
         btnCancel = viewDialog.findViewById(R.id.btnCancel);
         btnDays = viewDialog.findViewById(R.id.btnDays);
         btnWeekend = viewDialog.findViewById(R.id.btnWeekend);
+
+        layoutRepeatDialog = viewDialog.findViewById(R.id.layoutRepeatDialog);
+        animFadein = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+        animFadein.setAnimationListener(this);
+        layoutRepeatDialog.startAnimation(animFadein);
 
         checkBoxT2 = viewDialog.findViewById(R.id.checkBoxT2);
         checkBoxT3 = viewDialog.findViewById(R.id.checkBoxT3);
