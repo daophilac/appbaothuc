@@ -414,7 +414,7 @@ public class SettingAlarmFragment extends Fragment implements LableDialogFragmen
         typeFragment.setEnterTransition(new Slide(Gravity.TOP));
         typeFragment.setExitTransition(new Slide(Gravity.TOP));
 
-        musicPickerFragment = MusicPickerFragment.newInstance(this, alarm);
+        //musicPickerFragment = MusicPickerFragment.newInstance(this, alarm);
         musicPickerFragment.setEnterTransition(new Slide(Gravity.BOTTOM));
         musicPickerFragment.setExitTransition(new Slide(Gravity.BOTTOM));
 
