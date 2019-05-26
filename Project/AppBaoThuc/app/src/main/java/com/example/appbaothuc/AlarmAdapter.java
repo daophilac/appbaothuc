@@ -10,9 +10,13 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.appbaothuc.alarmsetting.SettingAlarmFragment;
 import com.example.appbaothuc.appsetting.AppSettingFragment;
@@ -66,6 +70,8 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         ImageView btnAlarmType = alarmViewHolder.btnAlarmType;
         mapViewAlarm.put(constraintLayoutParent, alarm);
 
+        final Animation animItemAlarm=AnimationUtils.loadAnimation(context, R.anim.anim_item_alarm_press);
+
         swcEnable.setChecked(alarm.isEnable());
 
         int hour = alarm.getHour();
@@ -116,6 +122,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         constraintLayoutParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                constraintLayoutParent.startAnimation(animItemAlarm);
                 Alarm checkedAlarm = mapViewAlarm.get(constraintLayoutParent);
                 checkedAlarm.validateRingtoneUrl(context);
                 settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
@@ -127,6 +134,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         btnAlarmType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                constraintLayoutParent.startAnimation(animItemAlarm);
                 Alarm checkedAlarm = mapViewAlarm.get(constraintLayoutParent);
                 checkedAlarm.validateRingtoneUrl(context);
                 settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
