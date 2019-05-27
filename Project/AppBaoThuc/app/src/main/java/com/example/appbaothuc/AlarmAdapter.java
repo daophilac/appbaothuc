@@ -1,6 +1,5 @@
 package com.example.appbaothuc;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -11,9 +10,13 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.appbaothuc.alarmsetting.SettingAlarmFragment;
 import com.example.appbaothuc.appsetting.AppSettingFragment;
@@ -62,36 +65,38 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         final SwitchCompat swcEnable = alarmViewHolder.swcEnable;
         TextView tvHour = alarmViewHolder.tvHour;
         TextView tvMinute = alarmViewHolder.tvMinute;
-        TextView tvAMPM=alarmViewHolder.tvAMPM;
+        TextView tvAMPM = alarmViewHolder.tvAMPM;
         TextView tvRepeatDay = alarmViewHolder.tvRepeatDay;
         ImageView btnAlarmType = alarmViewHolder.btnAlarmType;
         mapViewAlarm.put(constraintLayoutParent, alarm);
 
+        final Animation animItemAlarm=AnimationUtils.loadAnimation(context, R.anim.anim_item_alarm_press);
+
         swcEnable.setChecked(alarm.isEnable());
 
-        int hour=alarm.getHour();
-        if(AppSettingFragment.hourMode==HOUR_MODE_24){
+        int hour = alarm.getHour();
+        if (AppSettingFragment.hourMode == HOUR_MODE_24) {
             tvAMPM.setText("");
-            if(hour<10){
-                tvHour.setText("0"+hour);
-            }else{
+            if (hour < 10) {
+                tvHour.setText("0" + hour);
+            } else {
                 tvHour.setText(String.valueOf(hour));
             }
-        }else{
-            if(hour<12){
+        } else {
+            if (hour < 12) {
                 tvAMPM.setText("AM");
-                if(hour==0){
+                if (hour == 0) {
                     tvHour.setText("12");
-                } else if (hour<10){
-                    tvHour.setText("0"+hour);
-                } else tvHour.setText(""+hour);
+                } else if (hour < 10) {
+                    tvHour.setText("0" + hour);
+                } else tvHour.setText("" + hour);
             } else {//hour >=12
                 tvAMPM.setText("PM");
-                if(hour==12) tvHour.setText(""+hour);
-                else{
-                    if((hour-12)<10){
-                        tvHour.setText("0"+(hour-12));
-                    } else tvHour.setText(""+(hour-12));
+                if (hour == 12) tvHour.setText("" + hour);
+                else {
+                    if ((hour - 12) < 10) {
+                        tvHour.setText("0" + (hour - 12));
+                    } else tvHour.setText("" + (hour - 12));
                 }
             }
         }
@@ -99,8 +104,9 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         if (alarm.getMinute() < 10) {
             tvMinute.setText("0" + alarm.getMinute());
         } else {
-            tvMinute.setText(String.valueOf(alarm.getMinute()));
+            tvMinute.setText("" + alarm.getMinute());
         }
+
         tvRepeatDay.setText(alarm.getDescribeRepeatDay());
 
         swcEnable.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +122,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         constraintLayoutParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                constraintLayoutParent.startAnimation(animItemAlarm);
                 Alarm checkedAlarm = mapViewAlarm.get(constraintLayoutParent);
                 checkedAlarm.validateRingtoneUrl(context);
                 settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
@@ -127,10 +134,13 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         btnAlarmType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                constraintLayoutParent.startAnimation(animItemAlarm);
                 Alarm checkedAlarm = mapViewAlarm.get(constraintLayoutParent);
                 checkedAlarm.validateRingtoneUrl(context);
                 settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
-                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, settingAlarmFragment).addToBackStack(null).commit();
+                fragmentManager.beginTransaction()
+                        .add(R.id.full_screen_fragment_container, settingAlarmFragment)
+                        .addToBackStack(null).commit();
             }
         });
         switch (alarm.getChallengeType()) {
@@ -142,6 +152,8 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
                 break;
             case SHAKE:
                 btnAlarmType.setImageDrawable(context.getDrawable(R.drawable.icons8_shake_phone_60));
+                break;
+            case WALK:
                 break;
         }
     }
@@ -157,11 +169,11 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
         AlarmViewHolder(@NonNull View itemView) {
             super(itemView);
-            constraintLayoutParent = itemView.findViewById(R.id.constraint_layout_parent);
+            constraintLayoutParent = itemView.findViewById(R.id.constraintLayoutParent);
             swcEnable = itemView.findViewById(R.id.switchCompatEnable);
-            tvHour = itemView.findViewById(R.id.textviewHour);
-            tvMinute = itemView.findViewById(R.id.textviewMinute);
-            tvRepeatDay = itemView.findViewById(R.id.textviewRepeatDay);
+            tvHour = itemView.findViewById(R.id.textViewHour);
+            tvMinute = itemView.findViewById(R.id.textViewMinute);
+            tvRepeatDay = itemView.findViewById(R.id.textViewRepeatDay);
             btnAlarmType = itemView.findViewById(R.id.buttonAlarmType);
             tvAMPM = itemView.findViewById(R.id.textViewAMPM);
         }

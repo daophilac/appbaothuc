@@ -130,8 +130,8 @@ public class ChallengeDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_challenge_dialog, container, false);
         textViewLabel = view.findViewById(R.id.text_view_label);
         textViewRingtoneName = view.findViewById(R.id.text_view_ringtone_name);
-        textViewHour = view.findViewById(R.id.textviewHour);
-        textViewMinute = view.findViewById(R.id.textviewMinute);
+        textViewHour = view.findViewById(R.id.textViewHour);
+        textViewMinute = view.findViewById(R.id.textViewMinute);
         buttonGiveUp = view.findViewById(R.id.button_give_up);
         buttonMute = view.findViewById(R.id.button_mute);
         textViewCountDownReason = view.findViewById(R.id.text_view_count_down_reason);

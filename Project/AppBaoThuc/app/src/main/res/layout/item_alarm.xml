@@ -2,7 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraint_layout_parent"
+    android:id="@+id/constraintLayoutParent"
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_marginStart="5dp"
@@ -19,42 +19,42 @@
         android:theme="@style/ToggleSwitchTheme"/>
 
     <TextView
-        android:id="@+id/textviewHour"
+        android:id="@+id/textViewHour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="5"
         android:textColor="@android:color/white"
         android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/textviewRepeatDay"
-        app:layout_constraintEnd_toStartOf="@+id/textviewColon"
+        app:layout_constraintBottom_toTopOf="@+id/textViewRepeatDay"
+        app:layout_constraintEnd_toStartOf="@+id/textViewColon"
         app:layout_constraintStart_toEndOf="@+id/switchCompatEnable"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textviewColon"
+        android:id="@+id/textViewColon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=":"
         android:textColor="@android:color/white"
         android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/textviewRepeatDay"
-        app:layout_constraintEnd_toStartOf="@+id/textviewMinute"
-        app:layout_constraintStart_toEndOf="@+id/textviewHour"
+        app:layout_constraintBottom_toTopOf="@+id/textViewRepeatDay"
+        app:layout_constraintEnd_toStartOf="@+id/textViewMinute"
+        app:layout_constraintStart_toEndOf="@+id/textViewHour"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textviewMinute"
+        android:id="@+id/textViewMinute"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="00"
         android:textColor="@android:color/white"
         android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/textviewRepeatDay"
-        app:layout_constraintStart_toEndOf="@+id/textviewColon"
+        app:layout_constraintBottom_toTopOf="@+id/textViewRepeatDay"
+        app:layout_constraintStart_toEndOf="@+id/textViewColon"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textviewRepeatDay"
+        android:id="@+id/textViewRepeatDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -64,7 +64,7 @@
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/switchCompatEnable"
-        app:layout_constraintTop_toBottomOf="@+id/textviewHour" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewHour" />
 
     <ImageButton
         android:id="@+id/buttonAlarmType"
@@ -83,7 +83,7 @@
         android:text="AM"
         android:textColor="@android:color/white"
         android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/textviewMinute"
+        app:layout_constraintStart_toEndOf="@+id/textViewMinute"
         app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
