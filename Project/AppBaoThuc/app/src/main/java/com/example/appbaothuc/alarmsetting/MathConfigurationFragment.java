@@ -31,7 +31,7 @@ import static com.example.appbaothuc.models.MathDetail.MathDifficulty.NIGHTMARE;
 
 public class MathConfigurationFragment extends Fragment {
     private Context context;
-    private MathConfigurationFragmentListener listener;
+    private MathConfigurationFragmentListener mathConfigurationFragmentListener;
     private Alarm alarm;
     private MathDetail mathDetail;
     private DatabaseHandler databaseHandler;
@@ -48,8 +48,7 @@ public class MathConfigurationFragment extends Fragment {
     private Button buttonOk;
     private List<RadioButton> listRadioButton;
 
-    public void configure(TypeFragment typeFragment, Alarm alarm){
-        this.listener = typeFragment;
+    public void setAlarm(Alarm alarm){
         this.alarm = alarm;
     }
 
@@ -85,7 +84,7 @@ public class MathConfigurationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_math_configuration2, container, false);
+        View view = inflater.inflate(R.layout.fragment_configuration_math, container, false);
         this.textViewMathNumberOfProblem = view.findViewById(R.id.text_view_math_number_of_problem);
         this.numberPickerNumberOfProblem = view.findViewById(R.id.number_picker_math_number_of_problem);
         this.textViewCalculationExample = view.findViewById(R.id.text_view_calculation_example);
@@ -95,7 +94,7 @@ public class MathConfigurationFragment extends Fragment {
         this.radioButtonInsane = view.findViewById(R.id.radio_button_insane);
         this.radioButtonNightmare = view.findViewById(R.id.radio_button_nightmare);
         this.radioButtonInfernal = view.findViewById(R.id.radio_button_infernal);
-        this.buttonCancel = view.findViewById(R.id.button_give_up);
+        this.buttonCancel = view.findViewById(R.id.button_cancel);
         this.buttonOk = view.findViewById(R.id.button_ok);
 
         this.numberPickerNumberOfProblem.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -162,7 +161,7 @@ public class MathConfigurationFragment extends Fragment {
         this.buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onMathConfigurationSetup(mathDetail);
+                mathConfigurationFragmentListener.onMathConfigurationSetup(mathDetail);
                 getFragmentManager().popBackStack();
             }
         });
@@ -212,6 +211,10 @@ public class MathConfigurationFragment extends Fragment {
                 return;
             }
         }
+    }
+
+    public void setMathConfigurationFragmentListener(MathConfigurationFragmentListener mathConfigurationFragmentListener) {
+        this.mathConfigurationFragmentListener = mathConfigurationFragmentListener;
     }
 
     public interface MathConfigurationFragmentListener{

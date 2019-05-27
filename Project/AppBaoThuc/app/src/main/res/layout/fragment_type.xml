@@ -89,7 +89,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:contentDescription="@null"
-                app:srcCompat="@drawable/ic_camera_60dp" />
+                app:srcCompat="@drawable/ic_directions_walk_black_60dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -104,7 +104,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="9"
-                    android:text="Chụp ảnh"
+                    android:text="Di chuyển"
                     android:textColor="@color/colortext"
                     android:textSize="18sp" />
 

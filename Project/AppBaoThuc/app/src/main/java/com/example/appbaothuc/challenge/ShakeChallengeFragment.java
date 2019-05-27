@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.models.ShakeDetail;
@@ -55,7 +54,7 @@ public class ShakeChallengeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Bundle bundleChallenge = getArguments();
-        View view = inflater.inflate(R.layout.fragment_shake_challenge, container, false);
+        View view = inflater.inflate(R.layout.fragment_challenge_shake, container, false);
         this.textViewShakeNumberOfProblem = view.findViewById(R.id.text_view_shake_number_of_problem);
         this.textViewShakeNumberOfProblem.setText(String.valueOf(this.numberOfProblem));
         shakeDetector = new ShakeDetector(challengeActivity);
@@ -74,10 +73,7 @@ public class ShakeChallengeFragment extends Fragment {
         this.shakeDetector.configure(this.minInterval, this.minForce);
         this.shakeDetector.start(new ShakeDetector.ShakeDetectorListener() {
             @Override
-            public void onAccelerationChange(float x, float y, float z) {
-
-            }
-
+            public void onAccelerationChange(float x, float y, float z) { }
             @Override
             public void onShake(float force) {
                 numberOfProblem--;
@@ -88,21 +84,12 @@ public class ShakeChallengeFragment extends Fragment {
                     textViewShakeNumberOfProblem.setText("Shake for " + numberOfProblem + " times");
                 }
             }
-
             @Override
-            public void onSupportDetection() {
-
-            }
-
+            public void onSupportDetection() { }
             @Override
-            public void onNoSupportDetection() {
-
-            }
-
+            public void onNoSupportDetection() { }
             @Override
-            public void onStopDetection() {
-
-            }
+            public void onStopDetection() { }
         });
 
         if(bundleChallenge != null){

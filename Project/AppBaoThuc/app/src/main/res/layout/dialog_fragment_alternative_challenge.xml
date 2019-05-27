@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thử thách di chuyển có thể khó thực hiện. Trong trường hợp bạn không thể thực hiện thử thách di chuyển trong tương lai, bạn sẽ phải làm một thử thách thay thế. Và vì di chuyển là thử thách khó nhất nên thử thách thay thế cũng sẽ khó hơn bình thường."
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="parent" />
+</android.support.constraint.ConstraintLayout>
