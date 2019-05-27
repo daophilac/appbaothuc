@@ -118,6 +118,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         constraintLayoutParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                constraintLayoutParent.startAnimation(animItemAlarm);
                 settingAlarmFragment.configure(upcomingAlarmFragment, alarm);
                 fragmentManager.beginTransaction()
                         .add(R.id.full_screen_fragment_container, settingAlarmFragment)
@@ -127,6 +128,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         btnAlarmType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                constraintLayoutParent.startAnimation(animItemAlarm);
                 settingAlarmFragment.configure(upcomingAlarmFragment, alarm);
                 fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, settingAlarmFragment).addToBackStack(null).commit();
             }

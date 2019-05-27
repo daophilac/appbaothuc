@@ -42,15 +42,14 @@ public class MainActivity extends AppCompatActivity {
 
         PermissionInquirer permissionInquirer = new PermissionInquirer(this);
         permissionInquirer.askPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 1);
+        permissionInquirer.askPermission(Manifest.permission.ACCESS_FINE_LOCATION, 2);
 
         setControl();
 
         Resources resources = getResources();
         int resId = R.raw.in_the_busting_square;
         Music.defaultRingtoneUrl = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(resId) + '/' + resources.getResourceTypeName(resId) + '/' + resources.getResourceEntryName(resId);
-        PermissionInquirer permissionInquirer = new PermissionInquirer(this);
-//        permissionInquirer.askPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 1);
-        permissionInquirer.askPermission(Manifest.permission.ACCESS_FINE_LOCATION, 2);
+
 
         Animation animBtn= AnimationUtils.loadAnimation(this,R.anim.anim_rotate);
 
