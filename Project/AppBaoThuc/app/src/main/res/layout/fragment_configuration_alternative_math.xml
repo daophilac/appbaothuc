@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraint_layout_parent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ffffffff">
+    android:background="#ffffffff"
+    android:layout_height="match_parent">
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline_horizontal_center"
@@ -29,9 +30,8 @@
             android:id="@+id/text_view_math_number_of_problem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="text_view_math_number_of_problem"
             android:textAlignment="center"
-            android:textSize="23sp"
+            android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@id/number_picker_math_number_of_problem"
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
@@ -40,81 +40,48 @@
         android:id="@+id/constraint_layout_math_difficulty"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/linear_layout_confirmation_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline_horizontal_center">
 
         <TextView
             android:id="@+id/text_view_calculation_example"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="text_view_calculation_example"
             android:textAlignment="center"
-            android:textSize="23sp"
-            app:layout_constraintBottom_toTopOf="@id/linear_layout_math_difficulty_row_1"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/radio_group_math_difficulty"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/linear_layout_math_difficulty_row_1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@id/linear_layout_math_difficulty_row_2"
-            app:layout_constraintTop_toBottomOf="@id/text_view_calculation_example">
-
-            <RadioButton
-                android:id="@+id/radio_button_easy"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Easy" />
-
-            <RadioButton
-                android:id="@+id/radio_button_moderate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Moderate" />
-
-            <RadioButton
-                android:id="@+id/radio_button_hard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Hard" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linear_layout_math_difficulty_row_2"
+        <RadioGroup
+            android:id="@+id/radio_group_math_difficulty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linear_layout_math_difficulty_row_1">
+            app:layout_constraintTop_toBottomOf="@id/text_view_calculation_example">
 
             <RadioButton
                 android:id="@+id/radio_button_insane"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Insane" />
+                android:text="INSANE" />
 
             <RadioButton
                 android:id="@+id/radio_button_nightmare"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Nightmare" />
+                android:text="NIGHTMARE" />
 
             <RadioButton
                 android:id="@+id/radio_button_infernal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Infernal" />
-
-        </LinearLayout>
+                android:text="INFERNAL" />
+        </RadioGroup>
     </android.support.constraint.ConstraintLayout>
-
     <LinearLayout
         android:id="@+id/linear_layout_confirmation_button"
         android:layout_width="match_parent"
@@ -123,19 +90,17 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
-            android:id="@+id/button_give_up"
+            android:id="@+id/button_cancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancel"
-            android:textSize="18sp" />
+            android:text="Cancel" />
 
         <Button
             android:id="@+id/button_ok"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="OK"
-            android:textSize="18sp" />
+            android:text="OK" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

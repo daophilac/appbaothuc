@@ -13,13 +13,6 @@ public class ServiceCreator extends JobIntentService {
     }
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
-        Intent notificationIntent = new Intent(getBaseContext(), NotificationService.class);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            getBaseContext().startForegroundService(notificationIntent);
-            getBaseContext().startService(notificationIntent);
-        }
-        else{
-            getBaseContext().startService(notificationIntent);
-        }
+        NotificationService.update(getBaseContext());
     }
 }

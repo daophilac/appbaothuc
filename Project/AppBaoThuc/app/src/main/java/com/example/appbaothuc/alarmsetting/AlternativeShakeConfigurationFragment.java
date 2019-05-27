@@ -17,18 +17,19 @@ import android.widget.TextView;
 import com.example.appbaothuc.DatabaseHandler;
 import com.example.appbaothuc.R;
 import com.example.appbaothuc.models.Alarm;
+import com.example.appbaothuc.models.MovingDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 
-import static com.example.appbaothuc.models.ShakeDetail.ShakeDifficulty.EASY;
+import static com.example.appbaothuc.models.ChallengeType.MOVING;
 import static com.example.appbaothuc.models.ShakeDetail.ShakeDifficulty.HARD;
 import static com.example.appbaothuc.models.ShakeDetail.ShakeDifficulty.MODERATE;
 
-public class ShakeConfigurationFragment extends Fragment {
-    private Context context;
-    private ShakeConfigurationFragmentListener shakeConfigurationFragmentListener;
-    private Alarm alarm;
-    private ShakeDetail shakeDetail;
+public class AlternativeShakeConfigurationFragment extends Fragment {
+    private MovingConfigurationFragment movingConfigurationFragment;
     private DatabaseHandler databaseHandler;
+    private Alarm alarm;
+    private MovingDetail movingDetail;
+    private ShakeDetail shakeDetail;
     private TextView textViewShakeNumberOfProblem;
     private NumberPicker numberPickerNumberOfProblem;
     private TextView textViewPlus25;
@@ -36,72 +37,55 @@ public class ShakeConfigurationFragment extends Fragment {
     private TextView textViewPlus50;
     private TextView textViewMinus50;
     private RadioGroup radioGroup;
-    private RadioButton radioButtonEasy;
     private RadioButton radioButtonModerate;
     private RadioButton radioButtonHard;
     private Button buttonCancel;
     private Button buttonOk;
-
-    public void setAlarm(Alarm alarm){
+    public void configure(MovingConfigurationFragment movingConfigurationFragment, Alarm alarm, MovingDetail movingDetail){
+        this.movingConfigurationFragment = movingConfigurationFragment;
         this.alarm = alarm;
+        this.movingDetail = movingDetail;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context = context;
-        this.databaseHandler = new DatabaseHandler(this.context);
-        this.shakeDetail = this.databaseHandler.getAlarmShakeDetail(this.alarm.getIdAlarm());
-        if(this.shakeDetail == null){
-            this.shakeDetail = ShakeDetail.obtain(this.alarm.getIdAlarm());
+        this.databaseHandler = new DatabaseHandler(context);
+        if(alarm.getChallengeType() != MOVING){
+            shakeDetail = ShakeDetail.obtainAlternative(movingDetail.getIdAlarm());
         }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        this.radioGroup.clearCheck();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        this.databaseHandler = null;
-        this.context = null;
-        this.alarm = null;
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        initializeDefaultValue();
+        else {
+            shakeDetail = databaseHandler.getAlarmShakeDetail(movingDetail.getIdAlarm());
+            if(shakeDetail == null){
+                shakeDetail = ShakeDetail.obtainAlternative(movingDetail.getIdAlarm());
+            }
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_configuration_shake, container, false);
-        this.textViewShakeNumberOfProblem = view.findViewById(R.id.text_view_shake_number_of_problem);
-        this.numberPickerNumberOfProblem = view.findViewById(R.id.number_picker_shake_number_of_problem);
-        this.textViewPlus25 = view.findViewById(R.id.text_view_plus_25);
-        this.textViewMinus25 = view.findViewById(R.id.text_view_minus_25);
-        this.textViewPlus50 = view.findViewById(R.id.text_view_plus_50);
-        this.textViewMinus50 = view.findViewById(R.id.text_view_minus_50);
-        this.radioGroup = view.findViewById(R.id.radio_group_shake_difficulty);
-        this.radioButtonEasy = view.findViewById(R.id.radio_button_easy);
-        this.radioButtonModerate = view.findViewById(R.id.radio_button_moderate);
-        this.radioButtonHard = view.findViewById(R.id.radio_button_hard);
-        this.buttonCancel = view.findViewById(R.id.button_cancel);
-        this.buttonOk = view.findViewById(R.id.button_ok);
+        View view = inflater.inflate(R.layout.fragment_configuration_alternative_shake, container, false);
+        textViewShakeNumberOfProblem = view.findViewById(R.id.text_view_shake_number_of_problem);
+        numberPickerNumberOfProblem = view.findViewById(R.id.number_picker_shake_number_of_problem);
+        textViewPlus25 = view.findViewById(R.id.text_view_plus_25);
+        textViewMinus25 = view.findViewById(R.id.text_view_minus_25);
+        textViewPlus50 = view.findViewById(R.id.text_view_plus_50);
+        textViewMinus50 = view.findViewById(R.id.text_view_minus_50);
+        radioGroup = view.findViewById(R.id.radio_group_shake_difficulty);
+        radioButtonModerate = view.findViewById(R.id.radio_button_moderate);
+        radioButtonHard = view.findViewById(R.id.radio_button_hard);
+        buttonOk = view.findViewById(R.id.button_ok);
+        buttonCancel = view.findViewById(R.id.button_cancel);
 
-        this.numberPickerNumberOfProblem.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        numberPickerNumberOfProblem.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 shakeDetail.setNumberOfProblem(newVal);
                 textViewShakeNumberOfProblem.setText("Shake for " + newVal + " times");
             }
         });
-        this.textViewPlus25.setOnClickListener(new View.OnClickListener() {
+        textViewPlus25.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int newValue = shakeDetail.getNumberOfProblem() + 25;
@@ -110,7 +94,7 @@ public class ShakeConfigurationFragment extends Fragment {
                 textViewShakeNumberOfProblem.setText("Shake for " + newValue + " times");
             }
         });
-        this.textViewMinus25.setOnClickListener(new View.OnClickListener() {
+        textViewMinus25.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(shakeDetail.getNumberOfProblem() <= 50){
@@ -122,7 +106,7 @@ public class ShakeConfigurationFragment extends Fragment {
                 textViewShakeNumberOfProblem.setText("Shake for " + newValue + " times");
             }
         });
-        this.textViewPlus50.setOnClickListener(new View.OnClickListener() {
+        textViewPlus50.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int newValue = shakeDetail.getNumberOfProblem() + 50;
@@ -131,7 +115,7 @@ public class ShakeConfigurationFragment extends Fragment {
                 textViewShakeNumberOfProblem.setText("Shake for " + newValue + " times");
             }
         });
-        this.textViewMinus50.setOnClickListener(new View.OnClickListener() {
+        textViewMinus50.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(shakeDetail.getNumberOfProblem() <= 50){
@@ -143,65 +127,57 @@ public class ShakeConfigurationFragment extends Fragment {
                 textViewShakeNumberOfProblem.setText("Shake for " + newValue + " times");
             }
         });
-        this.radioButtonEasy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                shakeDetail.setDifficulty(EASY);
-            }
-        });
-        this.radioButtonModerate.setOnClickListener(new View.OnClickListener() {
+        radioButtonModerate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 shakeDetail.setDifficulty(MODERATE);
             }
         });
-        this.radioButtonHard.setOnClickListener(new View.OnClickListener() {
+        radioButtonHard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 shakeDetail.setDifficulty(HARD);
             }
         });
-        this.buttonCancel.setOnClickListener(new View.OnClickListener() {
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getFragmentManager().popBackStack();
             }
         });
-        this.buttonOk.setOnClickListener(new View.OnClickListener() {
+        buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shakeConfigurationFragmentListener.onShakeConfigurationSetup(shakeDetail);
+                movingDetail.setShakeDetail(shakeDetail);
+                movingConfigurationFragment.getAlternativeShake(shakeDetail);
                 getFragmentManager().popBackStack();
             }
         });
         return view;
     }
 
-    private void initializeDefaultValue(){
-        textViewShakeNumberOfProblem.setText("Shake for " + this.shakeDetail.getNumberOfProblem() + " times");
-        this.numberPickerNumberOfProblem.setMinValue(50);
-        this.numberPickerNumberOfProblem.setMaxValue(1000000000);
-        this.numberPickerNumberOfProblem.setWrapSelectorWheel(false);
-        this.numberPickerNumberOfProblem.setValue(this.shakeDetail.getNumberOfProblem());
-
-        switch(this.shakeDetail.getDifficulty()){
-            case EASY:
-                this.radioButtonEasy.setChecked(true);
-                break;
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        textViewShakeNumberOfProblem.setText("Shake for " + shakeDetail.getNumberOfProblem() + " times");
+        numberPickerNumberOfProblem.setWrapSelectorWheel(false);
+        numberPickerNumberOfProblem.setMinValue(200);
+        numberPickerNumberOfProblem.setMaxValue(1000000000);
+        numberPickerNumberOfProblem.setValue(shakeDetail.getNumberOfProblem());
+        switch(shakeDetail.getDifficulty()){
             case MODERATE:
-                this.radioButtonModerate.setChecked(true);
+                radioButtonModerate.setChecked(true);
                 break;
             case HARD:
-                this.radioButtonHard.setChecked(true);
+                radioButtonHard.setChecked(true);
                 break;
         }
     }
-
-    public void setShakeConfigurationFragmentListener(ShakeConfigurationFragmentListener shakeConfigurationFragmentListener) {
-        this.shakeConfigurationFragmentListener = shakeConfigurationFragmentListener;
-    }
-
-    public interface ShakeConfigurationFragmentListener{
-        void onShakeConfigurationSetup(ShakeDetail shakeDetail);
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        alarm = null;
+        movingDetail = null;
+        radioGroup.clearCheck();
     }
 }

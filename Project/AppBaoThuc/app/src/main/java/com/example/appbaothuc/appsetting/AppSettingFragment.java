@@ -21,8 +21,8 @@ import android.widget.Toast;
 
 import com.example.appbaothuc.MainActivity;
 import com.example.appbaothuc.R;
-import com.peanut.androidlib.filemanager.InternalFileReader;
-import com.peanut.androidlib.filemanager.InternalFileWriter;
+import com.peanut.androidlib.common.filemanager.InternalFileReader;
+import com.peanut.androidlib.common.filemanager.InternalFileWriter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,12 +73,14 @@ public class AppSettingFragment extends Fragment implements Animation.AnimationL
         super.onDestroyView();
         ((MainActivity)this.context).appSettingFragmentIsAdded = false;
         this.internalFileWriter = new InternalFileWriter(this.context, fileName);
-        this.internalFileWriter.writeLine(String.valueOf(muteAlarmIn), false);
-        this.internalFileWriter.writeLine(String.valueOf(canMuteAlarmFor), true);
-        this.internalFileWriter.writeLine(String.valueOf(autoDismissAfter), true);
-        this.internalFileWriter.writeLine(String.valueOf(graduallyIncreaseVolume), true);
-        this.internalFileWriter.writeLine(String.valueOf(preventTurnOffPhone), true);
-        this.internalFileWriter.writeLine(String.valueOf(hourMode), true);
+        this.internalFileWriter.setAppend(false);
+        this.internalFileWriter.writeLine(String.valueOf(muteAlarmIn));
+        this.internalFileWriter.writeLine(String.valueOf(canMuteAlarmFor));
+        this.internalFileWriter.writeLine(String.valueOf(autoDismissAfter));
+        this.internalFileWriter.writeLine(String.valueOf(graduallyIncreaseVolume));
+        this.internalFileWriter.writeLine(String.valueOf(preventTurnOffPhone));
+        this.internalFileWriter.writeLine(String.valueOf(hourMode));
+        this.internalFileWriter.close();
     }
 
     @Override
@@ -208,6 +210,7 @@ public class AppSettingFragment extends Fragment implements Animation.AnimationL
             graduallyIncreaseVolume = Boolean.parseBoolean(internalFileReader.readLine());
             preventTurnOffPhone = Boolean.parseBoolean(internalFileReader.readLine());
             hourMode = Integer.parseInt(internalFileReader.readLine());
+            internalFileReader.close();
         }
         listRingtoneDirectory = new ArrayList<>();
         listRingtoneDirectory.add(Environment.getExternalStorageDirectory().getAbsolutePath());

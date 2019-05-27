@@ -23,7 +23,6 @@ import com.example.appbaothuc.appsetting.AppSettingFragment;
 import com.example.appbaothuc.models.Alarm;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.example.appbaothuc.appsetting.AppSettingFragment.HOUR_MODE_24;
@@ -34,7 +33,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     private List<Alarm> listAlarm;
     private SettingAlarmFragment settingAlarmFragment;
     private FragmentManager fragmentManager;
-    private HashMap<ConstraintLayout, Alarm> mapViewAlarm;
 
     public AlarmAdapter(Context context, UpcomingAlarmFragment upcomingAlarmFragment, List<Alarm> listAlarm) {
         this.context = context;
@@ -42,7 +40,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         this.listAlarm = listAlarm;
         this.settingAlarmFragment = new SettingAlarmFragment();
         this.fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
-        this.mapViewAlarm = new HashMap<>();
     }
 
     @Override
@@ -68,7 +65,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         TextView tvAMPM = alarmViewHolder.tvAMPM;
         TextView tvRepeatDay = alarmViewHolder.tvRepeatDay;
         ImageView btnAlarmType = alarmViewHolder.btnAlarmType;
-        mapViewAlarm.put(constraintLayoutParent, alarm);
 
         final Animation animItemAlarm=AnimationUtils.loadAnimation(context, R.anim.anim_item_alarm_press);
 
@@ -122,10 +118,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         constraintLayoutParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                constraintLayoutParent.startAnimation(animItemAlarm);
-                Alarm checkedAlarm = mapViewAlarm.get(constraintLayoutParent);
-                checkedAlarm.validateRingtoneUrl(context);
-                settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
+                settingAlarmFragment.configure(upcomingAlarmFragment, alarm);
                 fragmentManager.beginTransaction()
                         .add(R.id.full_screen_fragment_container, settingAlarmFragment)
                         .addToBackStack(null).commit();
@@ -134,13 +127,8 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         btnAlarmType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                constraintLayoutParent.startAnimation(animItemAlarm);
-                Alarm checkedAlarm = mapViewAlarm.get(constraintLayoutParent);
-                checkedAlarm.validateRingtoneUrl(context);
-                settingAlarmFragment.configure(upcomingAlarmFragment, checkedAlarm);
-                fragmentManager.beginTransaction()
-                        .add(R.id.full_screen_fragment_container, settingAlarmFragment)
-                        .addToBackStack(null).commit();
+                settingAlarmFragment.configure(upcomingAlarmFragment, alarm);
+                fragmentManager.beginTransaction().add(R.id.full_screen_fragment_container, settingAlarmFragment).addToBackStack(null).commit();
             }
         });
         switch (alarm.getChallengeType()) {
@@ -153,7 +141,8 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             case SHAKE:
                 btnAlarmType.setImageDrawable(context.getDrawable(R.drawable.icons8_shake_phone_60));
                 break;
-            case WALK:
+            case MOVING:
+                btnAlarmType.setImageDrawable(context.getDrawable(R.drawable.ic_move_white_64px));
                 break;
         }
     }

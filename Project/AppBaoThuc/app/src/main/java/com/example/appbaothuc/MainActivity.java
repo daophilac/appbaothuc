@@ -1,13 +1,9 @@
 package com.example.appbaothuc;
 
 import android.Manifest;
-import android.app.Notification;
 import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -16,16 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.transition.Slide;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.appbaothuc.appsetting.AppSettingFragment;
-import com.example.appbaothuc.models.Alarm;
 import com.example.appbaothuc.services.NotificationService;
-import com.peanut.androidlib.permissionmanager.PermissionInquirer;
-
-import java.io.File;
-
+import com.peanut.androidlib.common.permissionmanager.PermissionInquirer;
 
 public class MainActivity extends AppCompatActivity {
     private ImageButton buttonAlarm;
@@ -54,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
         Resources resources = getResources();
         int resId = R.raw.in_the_busting_square;
         Music.defaultRingtoneUrl = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(resId) + '/' + resources.getResourceTypeName(resId) + '/' + resources.getResourceEntryName(resId);
+        PermissionInquirer permissionInquirer = new PermissionInquirer(this);
+//        permissionInquirer.askPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 1);
+        permissionInquirer.askPermission(Manifest.permission.ACCESS_FINE_LOCATION, 2);
+
+        Animation animBtn= AnimationUtils.loadAnimation(this,R.anim.anim_rotate);
 
         appSettingFragment = new AppSettingFragment();
         appSettingFragment.loadAppSetting(this);
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().add(R.id.main_fragment_container, upcomingAlarmFragment).commit();
         NotificationService.update(this);
 
-        setEvent();
+        setEvent(animBtn);
     }
 
     private void setControl() {
@@ -73,10 +72,11 @@ public class MainActivity extends AppCompatActivity {
         buttonSetting = findViewById(R.id.button_setting);
     }
 
-    private void setEvent() {
+    private void setEvent(final Animation anim) {
         buttonAlarm.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                buttonAlarm.startAnimation(anim);
                 if(appSettingFragmentIsAdded){
                     fragmentManager.popBackStack();
                 }
@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         buttonSetting.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                buttonSetting.startAnimation(anim);
                 if(!appSettingFragmentIsAdded){
                     appSettingFragmentIsAdded = true;
                     fragmentTransaction = fragmentManager.beginTransaction();
@@ -108,6 +109,14 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 } else {
                     Toast.makeText(this, "Read external storage permission has not been granted. Terminate!", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+                break;
+            case 2:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                    Toast.makeText(this, "Access location permission has not been granted. Terminate!", Toast.LENGTH_LONG).show();
                     finish();
                 }
                 break;
