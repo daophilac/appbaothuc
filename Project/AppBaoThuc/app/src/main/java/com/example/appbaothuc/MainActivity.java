@@ -16,6 +16,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.transition.Slide;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         int resId = R.raw.in_the_busting_square;
         Music.defaultRingtoneUrl = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(resId) + '/' + resources.getResourceTypeName(resId) + '/' + resources.getResourceEntryName(resId);
 
+        Animation animBtn= AnimationUtils.loadAnimation(this,R.anim.anim_rotate);
+
         appSettingFragment = new AppSettingFragment();
         appSettingFragment.loadAppSetting(this);
         appSettingFragment.setEnterTransition(new Slide(Gravity.END));
@@ -65,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().add(R.id.main_fragment_container, upcomingAlarmFragment).commit();
         NotificationService.update(this);
 
-        setEvent();
+        setEvent(animBtn);
     }
 
     private void setControl() {
@@ -73,10 +77,11 @@ public class MainActivity extends AppCompatActivity {
         buttonSetting = findViewById(R.id.button_setting);
     }
 
-    private void setEvent() {
+    private void setEvent(final Animation anim) {
         buttonAlarm.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                buttonAlarm.startAnimation(anim);
                 if(appSettingFragmentIsAdded){
                     fragmentManager.popBackStack();
                 }
@@ -85,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         buttonSetting.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                buttonSetting.startAnimation(anim);
                 if(!appSettingFragmentIsAdded){
                     appSettingFragmentIsAdded = true;
                     fragmentTransaction = fragmentManager.beginTransaction();
