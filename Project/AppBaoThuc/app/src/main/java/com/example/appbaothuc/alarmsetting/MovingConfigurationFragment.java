@@ -75,15 +75,8 @@ public class MovingConfigurationFragment extends Fragment {
         constraintLayoutAlternativeMathChallenge = view.findViewById(R.id.constraint_layout_alternative_math_challenge);
         buttonCancel = view.findViewById(R.id.button_cancel);
         buttonOk = view.findViewById(R.id.button_ok);
-        distancePicker.setBaseMinValue(2)
-                .setBaseMaxValue(1000)
-                .setMultiplicationFactor(50)
-                .setSelectedValueIndex(0)
-                .perform();
         distancePicker.updateWrapSelectorWheel(false);
         distancePicker.setMeasurements(new MeasurementPicker.Measurement[]{MeasurementPicker.Measurement.METER, MeasurementPicker.Measurement.KILOMETER});
-        distancePicker.perform();
-        distancePicker.setSelectedValue(movingDetail.getDistance());
         distancePicker.setMeasurement(movingDetail.getMeasurement());
         switch (movingDetail.getAlternativeChallenge()){
             case MATH:
@@ -93,15 +86,31 @@ public class MovingConfigurationFragment extends Fragment {
                 constraintLayoutAlternativeShakeChallenge.setBackgroundColor(getResources().getColor(R.color.challenge_layout_activate));
                 break;
         }
+        switch (movingDetail.getMeasurement()){
+            case METER:
+                linearLayoutAddMoreDistance.setVisibility(View.VISIBLE);
+                distancePicker.setBaseMinValue(2).setBaseMaxValue(1000).setMultiplicationFactor(50).perform();
+                distancePicker.setSelectedValue(movingDetail.getDistance());
+                break;
+            case KILOMETER:
+                linearLayoutAddMoreDistance.setVisibility(View.INVISIBLE);
+                distancePicker.setBaseMinValue(1).setBaseMaxValue(1000).setMultiplicationFactor(1).perform();
+                distancePicker.setSelectedValue(movingDetail.getDistance());
+                break;
+        }
         distancePicker.setOnMeasurementChangeListener(new MeasurementPicker.OnMeasurementChangeListener() {
             @Override
             public void onMeasurementChange(MeasurementPicker measurementPicker, MeasurementPicker.Measurement oldValue, MeasurementPicker.Measurement newValue) {
                 movingDetail.setMeasurement(newValue);
                 if(newValue == MeasurementPicker.Measurement.KILOMETER){
                     linearLayoutAddMoreDistance.setVisibility(View.INVISIBLE);
+                    distancePicker.setBaseMinValue(1).setBaseMaxValue(1000).setMultiplicationFactor(1).perform();
+                    distancePicker.setSelectedValue(1);
                 }
                 else{
                     linearLayoutAddMoreDistance.setVisibility(View.VISIBLE);
+                    distancePicker.setBaseMinValue(2).setBaseMaxValue(1000).setMultiplicationFactor(50).perform();
+                    distancePicker.setSelectedValue(100);
                 }
             }
         });

@@ -23,7 +23,7 @@ public class GiveUpDialogFragment extends DialogFragment {
     private int countDownFrom;
     public static GiveUpDialogFragment newInstance(){
         GiveUpDialogFragment giveUpDialogFragment = new GiveUpDialogFragment();
-        giveUpDialogFragment.countDownFrom = 500;
+        giveUpDialogFragment.countDownFrom = 10;
         return giveUpDialogFragment;
     }
 

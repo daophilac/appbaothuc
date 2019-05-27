@@ -20,6 +20,7 @@ import com.example.appbaothuc.models.MovingDetail;
 import com.example.appbaothuc.models.ShakeDetail;
 import com.peanut.androidlib.sensormanager.LocationTracker;
 import com.peanut.androidlib.sensormanager.MovingDetector;
+import com.peanut.androidlib.view.MeasurementPicker;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -172,6 +173,9 @@ public class MovingChallengeFragment extends Fragment {
         }
         else{
             distance = movingDetail.getDistance();
+            if(movingDetail.getMeasurement() == MeasurementPicker.Measurement.KILOMETER){
+                distance *= 1000;
+            }
             textViewDistance.setText(String.format("%.3f", distance));
         }
         return view;
